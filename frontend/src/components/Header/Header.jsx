@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import './Header.css'; 
 import { Link } from "react-router-dom";
 
 const Header = () => {
   const [menuVisible, setMenuVisible] = useState(false);
+  const menuRef = useRef(null); // Referencia al menú
 
   const toggleMenu = () => {
     setMenuVisible(prevState => !prevState); 
@@ -12,6 +13,23 @@ const Header = () => {
   const closeMenu = () => {
     setMenuVisible(false);
   };
+
+  // Detecta clics fuera del menú para cerrarlo
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setMenuVisible(false);
+      }
+    };
+
+    // Escucha el evento de clic
+    document.addEventListener("mousedown", handleClickOutside);
+
+    // Limpia el evento al desmontar
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <div className="header">
@@ -30,7 +48,7 @@ const Header = () => {
       </div>
 
       {menuVisible && (
-        <nav className="mobile-menu">
+        <nav className="mobile-menu" ref={menuRef}>
           <ul>
             <Link to="singup" onClick={closeMenu}><li>Crear cuenta</li></Link>
             <Link to="login" onClick={closeMenu}><li>Iniciar sesión</li></Link>
@@ -42,4 +60,3 @@ const Header = () => {
 };
 
 export default Header;
-
