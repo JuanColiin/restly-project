@@ -1,12 +1,16 @@
 import { useState } from "react";
-import './Header.css'; // Verifica que esté correctamente importado
+import './Header.css'; 
+import { Link } from "react-router-dom";
 
 const Header = () => {
   const [menuVisible, setMenuVisible] = useState(false);
 
-  // Función para alternar la visibilidad del menú
   const toggleMenu = () => {
-    setMenuVisible(prevState => !prevState); // Alternar el estado
+    setMenuVisible(prevState => !prevState); 
+  };
+
+  const closeMenu = () => {
+    setMenuVisible(false);
   };
 
   return (
@@ -16,23 +20,20 @@ const Header = () => {
         <p className="slogan">Comodidad en cada destino</p>
       </div>
       <div className="header-right">
-        <button className="btn">Crear cuenta</button>
-        <button className="btn">Iniciar sesión</button>
+        <Link to="singup"><button className="btn">Crear cuenta</button></Link> 
+        <Link to="login"><button className="btn">Iniciar sesión</button></Link> 
       </div>
-      
-      {/* Icono de hamburguesa visible solo en móviles */}
       <div className="hamburger" onClick={toggleMenu}>
         <div className="bar"></div>
         <div className="bar"></div>
         <div className="bar"></div>
       </div>
 
-      {/* Menú desplegable */}
       {menuVisible && (
         <nav className="mobile-menu">
           <ul>
-            <li><a href="#">Crear cuenta</a></li>
-            <li><a href="#">Iniciar sesión</a></li>
+            <Link to="singup" onClick={closeMenu}><li>Crear cuenta</li></Link>
+            <Link to="login" onClick={closeMenu}><li>Iniciar sesión</li></Link>
           </ul>
         </nav>
       )}
@@ -41,7 +42,4 @@ const Header = () => {
 };
 
 export default Header;
-
-
-
 
