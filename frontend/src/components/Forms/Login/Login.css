@@ -47,14 +47,14 @@ html, body {
   
   input:focus {
     outline: none;
-    border-color: #ff5722;
+    border-color: #00c98c;
     box-shadow: 0 2px 4px rgba(255, 87, 34, 0.1);
   }
   
   .submit-button {
     width: 100%;
     padding: 12px;
-    background-color: #ff5722;
+    background-color: #00c98c;
     color: white;
     border: none;
     border-radius: 4px;
@@ -65,7 +65,7 @@ html, body {
   }
   
   .submit-button:hover {
-    background-color: #f4511e;
+    background-color: #339989;
   }
   
   .register-link {

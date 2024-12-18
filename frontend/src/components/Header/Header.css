@@ -22,7 +22,7 @@
   .logo {
     font-size: 2rem; 
     font-weight: bold;
-    color: #f0572d;
+    color: #00c98c;
     text-decoration: none;
     margin: 0; 
   }
@@ -44,7 +44,7 @@
   }
   
   .btn {
-    background-color: #f0572d;
+    background-color: #00c98c;
     border: 2px solid transparent;
     color: #fff;
     padding: 8px 15px;
@@ -56,9 +56,9 @@
   
   .btn:hover {
     background-color: #fff; 
-    border: 2px solid #f0572d;
+    border: 2px solid #339989;
     color: #000;
-    border-radius: 2px solid #f0572d;
+    border-radius: 2px solid ;
   }
  
   .hamburger {

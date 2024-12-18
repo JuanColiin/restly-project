@@ -1,10 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;0,700;1,300&display=swap');
 
 :root {
-  --primary-color: #f0572d; /* orange-color */
-  --primary-color-hover: #d33c13;
-  --secondary-color: #31363f; /* dark-grey-color */
-  --thirth-color: #191b1d; /* dark-cyanblue-color */
+  --primary-color: #f0572d;
+  --primary-color-hover: #00c98c;
+  --secondary-color: #339989; 
+  --thirth-color: #2B2C28;
   --light-grey-color: #dfe4ea;
   --white-color: #ffffff;
   --red-color: #ff0000;
