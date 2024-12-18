@@ -1,6 +1,8 @@
-import { useState } from 'react';
-import './SingUp.css'
-import { Link } from 'react-router-dom';
+import { useState, useContext } from 'react';
+import axios from 'axios';
+import './SingUp.css';
+import { Link, useNavigate } from 'react-router-dom';
+import AuthContext from '../../../context/AuthContext';
 
 export default function SignUp() {
   const [formData, setFormData] = useState({
@@ -17,6 +19,9 @@ export default function SignUp() {
     confirmPassword: ''
   });
 
+  const { login } = useContext(AuthContext); // Obtener la función login desde el contexto
+  const navigate = useNavigate();
+
   const validateEmail = (email) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(email);
@@ -24,44 +29,72 @@ export default function SignUp() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       [name]: value
     }));
 
-    // Validate in real time
     if (name === 'email') {
-      setErrors(prev => ({
+      setErrors((prev) => ({
         ...prev,
         email: !validateEmail(value) ? 'Correo electrónico incorrecto' : ''
       }));
     }
 
     if (name === 'password') {
-      setErrors(prev => ({
+      setErrors((prev) => ({
         ...prev,
-        password: value.length < 7 || value.length > 25 
-          ? 'La contraseña debe tener entre 7 y 25 caracteres' 
+        password: value.length < 7 || value.length > 25
+          ? 'La contraseña debe tener entre 7 y 25 caracteres'
           : ''
       }));
     }
 
     if (name === 'confirmPassword') {
-      setErrors(prev => ({
+      setErrors((prev) => ({
         ...prev,
         confirmPassword: value !== formData.password ? 'Las contraseñas deben ser iguales' : ''
       }));
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    //TODO: Agregar lógica de registro
-    console.log('Form submitted:', formData);
+
+    if (errors.email || errors.password || errors.confirmPassword) {
+      return;
+    }
+
+    const registerData = {
+      firstname: formData.nombre,
+      lastname: formData.apellido,
+      email: formData.email,
+      password: formData.password
+    };
+
+    try {
+      const response = await axios.post('http://localhost:8080/auth/register', registerData);
+
+      // Almacenar los datos del usuario y el token en el contexto
+      const userData = {
+        token: response.data.token,
+        firstname: response.data.firstname, // Obtener firstname del response
+        email: response.data.email,
+        role: response.data.role, // Agregado si es necesario
+        userId: response.data.userId // Agregado si es necesario
+      };
+
+      // Llamar a login para actualizar el contexto
+      login(userData);
+
+      // Redirigir al usuario a la página principal
+      navigate('/');
+    } catch (error) {
+      console.error('Error en el registro:', error);
+    }
   };
 
   return (
-    <>
     <div className="signup-container">
       <h1>Crear cuenta</h1>
       <form onSubmit={handleSubmit}>
@@ -139,11 +172,9 @@ export default function SignUp() {
         </button>
 
         <p className="login-link">
-          ¿Ya tienes una cuenta? <Link to= "/login"><a>Iniciar sesión</a></Link>
+          ¿Ya tienes una cuenta? <Link to="/login">Iniciar sesión</Link>
         </p>
       </form>
     </div>
-    </>
   );
 }
-
