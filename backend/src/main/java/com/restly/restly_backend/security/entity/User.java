@@ -1,10 +1,7 @@
 package com.restly.restly_backend.security.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,6 +22,7 @@ public class User implements UserDetails {
     @Column(name = "USER_ID")
     private Long id;
 
+    @Getter
     @Column(name = "FIRST_NAME")
     private String firstname;
 
@@ -82,4 +80,5 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
 }

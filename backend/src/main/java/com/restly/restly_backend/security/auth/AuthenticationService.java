@@ -20,7 +20,8 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
 
     public AuthenticationResponse register(RegisterRequest request) {
-        var user = User.builder().firstname(request.getFirstname())
+        var user = User.builder()
+                .firstname(request.getFirstname())
                 .lastname(request.getLastname())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
@@ -30,10 +31,19 @@ public class AuthenticationService {
         userRepository.save(user);
 
         var jwt = jwtService.generateToken(user);
+
+        // Agregar mensaje en la respuesta
         return AuthenticationResponse.builder()
                 .token(jwt)
+                .message("User registered successfully")
+                .userId(user.getId())
+                .firstname(user.getFirstname())
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .role(user.getRole().name())
                 .build();
     }
+
 
     public AuthenticationResponse login(AuthenticationRequest request) {
         authenticationManager.authenticate(
@@ -44,12 +54,19 @@ public class AuthenticationService {
         );
 
         var user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow();
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
         var jwt = jwtService.generateToken(user);
+
+        // Si el username debe ser el correo electrónico:
         return AuthenticationResponse.builder()
                 .token(jwt)
+                .message("Login successful")
+                .userId(user.getId())
+                .firstname(user.getFirstname())
+                .username(user.getUsername()) // Aquí username es el correo
+                .email(user.getEmail())
+                .role(user.getRole().name())
                 .build();
-
     }
 }
