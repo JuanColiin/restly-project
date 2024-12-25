@@ -40,7 +40,7 @@ public class User implements UserDetails {
     @Column(name = "password")
     private String password;
 
-    @JsonBackReference("user-reserves") // Referencia específica para reservas
+    @JsonBackReference("user-reserves")
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Reserve> reserves;
 
@@ -49,7 +49,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.name()));
+        return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
     }
 
     @Override
@@ -71,5 +71,17 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+    @Override
+    public String getUsername() {
+        return email; // Añadido el método getUsername()
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
 }
+
+
 

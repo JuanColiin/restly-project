@@ -1,7 +1,6 @@
 package com.restly.restly_backend.image.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.restly.restly_backend.product.entity.Product;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
