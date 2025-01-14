@@ -1,5 +1,6 @@
 package com.restly.restly_backend.locations.address.controller;
 
+import com.restly.restly_backend.locations.address.dto.AddressDTO;
 import com.restly.restly_backend.locations.address.entity.Address;
 import com.restly.restly_backend.locations.address.service.IAddressService;
 import lombok.RequiredArgsConstructor;
@@ -11,15 +12,19 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/v1/addresses")
+@RequestMapping("/addresses")
 @RequiredArgsConstructor
 public class AddressController {
 
     private final IAddressService addressService;
 
     @GetMapping
-    public ResponseEntity<List<Address>> getAllAddresses() {
-        return ResponseEntity.ok(addressService.getAllAddresses());
+    public ResponseEntity<List<AddressDTO>> getAllAddresses() {
+        List<AddressDTO> addresses = addressService.getAllAddresses();
+        if (addresses.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+        return ResponseEntity.ok(addresses);
     }
 
     @GetMapping("/{id}")
@@ -30,7 +35,7 @@ public class AddressController {
         }
 
         try {
-            Optional<Address> address = addressService.getAddressById(id);
+            Optional<AddressDTO> address = addressService.getAddressById(id);
             if (address.isPresent()) {
                 return ResponseEntity.ok(address.get());
             } else {
@@ -44,10 +49,10 @@ public class AddressController {
     }
 
     @PostMapping
-    public ResponseEntity<?> saveAddress(@RequestBody Address address) {
+    public ResponseEntity<?> saveAddress(@RequestBody AddressDTO addressDTO) {
         try {
-            Address savedAddress = addressService.saveAddress(address);
-            return ResponseEntity.status(HttpStatus.CREATED).body(savedAddress);
+            AddressDTO savedAddressDTO = addressService.saveAddress(addressDTO);
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedAddressDTO);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
@@ -57,12 +62,15 @@ public class AddressController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateAddress(@PathVariable Long id, @RequestBody Address address) {
-        address.setId(id);
-
+    public ResponseEntity<?> updateAddress(@PathVariable Long id, @RequestBody AddressDTO addressDTO) {
         try {
-            Address updatedAddress = addressService.updateAddress(address);
-            return ResponseEntity.ok(updatedAddress);
+            // Llamamos al servicio de actualización pasando el ID y el DTO
+            AddressDTO updatedAddressDTO = addressService.updateAddress(id, addressDTO);
+            if (updatedAddressDTO != null) {
+                return ResponseEntity.ok(updatedAddressDTO);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Dirección no encontrada para actualizar.");
+            }
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (RuntimeException e) {

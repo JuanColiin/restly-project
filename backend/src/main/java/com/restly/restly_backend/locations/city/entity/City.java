@@ -24,9 +24,9 @@ public class City {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @JsonBackReference
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER , cascade = CascadeType.ALL)
     @JoinColumn(name = "state_id", nullable = false)
     private State state;
 }
+
 

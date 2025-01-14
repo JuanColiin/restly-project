@@ -1,5 +1,6 @@
 package com.restly.restly_backend.locations.country.controller;
 
+import com.restly.restly_backend.locations.country.dto.CountryDTO;
 import com.restly.restly_backend.locations.country.entity.Country;
 import com.restly.restly_backend.locations.country.service.ICountryService;
 import lombok.RequiredArgsConstructor;
@@ -19,8 +20,8 @@ public class CountryController {
     private final ICountryService countryService;
 
     @GetMapping
-    public ResponseEntity<List<Country>> getAllCountries() {
-        List<Country> countries = countryService.getAllCountries();
+    public ResponseEntity<List<CountryDTO>> getAllCountries() {
+        List<CountryDTO> countries = countryService.getAllCountries();
         if (countries.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
@@ -28,13 +29,13 @@ public class CountryController {
     }
 
     @PostMapping
-    public ResponseEntity<?> saveCountry(@RequestBody Country country) {
+    public ResponseEntity<?> saveCountry(@RequestBody CountryDTO countryDTO) {
         try {
-            if (country.getName() == null || country.getName().trim().isEmpty()) {
+            if (countryDTO.getName() == null || countryDTO.getName().trim().isEmpty()) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("El nombre del país es obligatorio.");
             }
 
-            Country savedCountry = countryService.saveCountry(country);
+            CountryDTO savedCountry = countryService.saveCountry(countryDTO);
 
             if (savedCountry != null) {
                 return ResponseEntity.status(HttpStatus.CREATED).body(savedCountry);

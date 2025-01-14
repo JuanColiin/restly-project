@@ -1,13 +1,16 @@
 package com.restly.restly_backend.locations.city.controller;
 
+import com.restly.restly_backend.locations.city.dto.CityDTO;
 import com.restly.restly_backend.locations.city.entity.City;
 import com.restly.restly_backend.locations.city.service.ICityService;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/cities")
@@ -15,49 +18,58 @@ import java.util.List;
 public class CityController {
 
     private final ICityService cityService;
+    private final ModelMapper modelMapper;  // Necesario para mapear entre entidades y DTOs
 
     @GetMapping
-    public ResponseEntity<List<City>> getAllCities() {
-        return ResponseEntity.ok(cityService.getAllCities());
+    public ResponseEntity<List<CityDTO>> getAllCities() {
+        List<CityDTO> cities = cityService.getAllCities();
+        if (cities.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+        return ResponseEntity.ok(cities);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<City> getCityById(@PathVariable Long id) {
-        return cityService.getCityById(id)
-                .map(ResponseEntity::ok)
+    public ResponseEntity<CityDTO> getCityById(@PathVariable Long id) {
+        Optional<CityDTO> cityDTO = cityService.getCityById(id);
+        return cityDTO.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
     }
 
     @PostMapping
-    public ResponseEntity<City> createCity(@RequestBody City city) {
+    public ResponseEntity<CityDTO> createCity(@RequestBody CityDTO cityDTO) {
         try {
-            City createdCity = cityService.saveCity(city);
-            return ResponseEntity.status(HttpStatus.CREATED).body(createdCity);
-        } catch (IllegalArgumentException e) {
+            // Convertimos el CityDTO a City antes de pasarlo al servicio
+            City city = modelMapper.map(cityDTO, City.class);
+            City savedCity = cityService.saveCity(city);  // Guardamos la entidad City
+            // Convertimos la entidad guardada a CityDTO antes de devolverla
+            CityDTO savedCityDTO = modelMapper.map(savedCity, CityDTO.class);
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedCityDTO);
+        } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
 
-    @PutMapping
-    public ResponseEntity<City> updateCity(@RequestBody City city) {
+    @PutMapping("/{id}")
+    public ResponseEntity<CityDTO> updateCity(@PathVariable Long id, @RequestBody CityDTO cityDTO) {
         try {
-            City updatedCity = cityService.updateCity(city);
-            return ResponseEntity.ok(updatedCity);
+            // Convertimos el CityDTO a City antes de pasarlo al servicio
+            City city = modelMapper.map(cityDTO, City.class);
+            // Actualizamos la ciudad con el id correspondiente
+            CityDTO updatedCityDTO = cityService.updateCity(id, city);  // Aquí el servicio ahora maneja CityDTO
+            return ResponseEntity.ok(updatedCityDTO);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteCityById(@PathVariable Long id) {
-        try {
-            String response = cityService.deleteCityById(id);
-            return ResponseEntity.ok(response);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("Ciudad con ID " + id + " no encontrada para eliminar");
-        }
+        String response = cityService.deleteCityById(id);
+        return ResponseEntity.ok(response);
     }
 }
+
+
+
+

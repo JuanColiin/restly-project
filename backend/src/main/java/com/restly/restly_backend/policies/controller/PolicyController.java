@@ -1,6 +1,6 @@
 package com.restly.restly_backend.policies.controller;
 
-import com.restly.restly_backend.policies.entity.Policy;
+import com.restly.restly_backend.policies.dto.PolicyDTO;
 import com.restly.restly_backend.policies.service.IPolicyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 import java.util.Optional;
+
 
 @RestController
 @RequestMapping("/policies")
@@ -20,7 +21,7 @@ public class PolicyController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getPolicyById(@PathVariable Long id) {
         try {
-            Optional<Policy> policy = policyService.getPolicyById(id);
+            Optional<PolicyDTO> policy = policyService.getPolicyById(id);
 
             if (policy.isPresent()) {
                 return ResponseEntity.ok(policy.get());
@@ -34,12 +35,10 @@ public class PolicyController {
         }
     }
 
-
-
     @PostMapping
-    public ResponseEntity<?> createPolicy(@RequestBody Policy policy) {
+    public ResponseEntity<?> createPolicy(@RequestBody PolicyDTO policyDTO) {
         try {
-            Policy createdPolicy = policyService.savePolicy(policy);
+            PolicyDTO createdPolicy = policyService.savePolicy(policyDTO);
             return new ResponseEntity<>(createdPolicy, HttpStatus.CREATED);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -47,17 +46,11 @@ public class PolicyController {
         }
     }
 
-
-    // Actualizar política
     @PutMapping("/{id}")
-    public ResponseEntity<?> updatePolicy(@PathVariable Long id, @RequestBody Policy policy) {
-        policy.setId(id);
+    public ResponseEntity<?> updatePolicy(@PathVariable Long id, @RequestBody PolicyDTO policyDTO) {
         try {
-            Policy updatedPolicy = policyService.updatePolicy(policy);
+            PolicyDTO updatedPolicy = policyService.updatePolicy(id, policyDTO);
             return ResponseEntity.ok(updatedPolicy);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("La política no es válida para actualizar: " + e.getMessage());
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("Política con ID " + id + " no encontrada");
@@ -67,7 +60,6 @@ public class PolicyController {
         }
     }
 
-    // Eliminar política
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deletePolicy(@PathVariable Long id) {
         try {

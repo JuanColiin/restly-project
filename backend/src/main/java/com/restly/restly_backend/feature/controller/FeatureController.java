@@ -1,15 +1,15 @@
 package com.restly.restly_backend.feature.controller;
 
-import com.restly.restly_backend.feature.entity.Feature;
+import com.restly.restly_backend.feature.dto.FeatureDTO;
 import com.restly.restly_backend.feature.service.IFeatureService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
+
 import java.util.List;
-import java.util.Optional;
+
 
 @RestController
 @RequestMapping("/features")
@@ -19,42 +19,31 @@ public class FeatureController {
     private final IFeatureService featureService;
 
     @GetMapping
-    public ResponseEntity<List<Feature>> getAllFeatures() {
-        try {
-            List<Feature> features = featureService.getAllFeatures();
-            return ResponseEntity.ok(features);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Collections.emptyList());
+    public ResponseEntity<List<FeatureDTO>> getAllFeatures() {
+        List<FeatureDTO> features = featureService.getAllFeatures();
+        if (features.isEmpty()) {
+            return ResponseEntity.noContent().build();
         }
+        return ResponseEntity.ok(features);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getFeatureById(@PathVariable Long id) {
-        if (id == null || id <= 0) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("El ID proporcionado no es válido. Debe ser un número positivo.");
-        }
-
         try {
-            Optional<Feature> feature = featureService.getFeatureById(id);
-            if (feature.isPresent()) {
-                return ResponseEntity.ok(feature.get());
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body("Característica con ID " + id + " no encontrada.");
-            }
+            FeatureDTO featureDTO = featureService.getFeatureById(id);
+            return ResponseEntity.ok(featureDTO);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error al obtener la característica. Detalles: " + e.getMessage());
+                    .body("Error al obtener la característica: " + e.getMessage());
         }
     }
 
-
     @PostMapping
-    public ResponseEntity<?> saveFeature(@RequestBody Feature feature) {
+    public ResponseEntity<?> saveFeature(@RequestBody FeatureDTO featureDTO) {
         try {
-            Feature savedFeature = featureService.saveFeature(feature);
+            FeatureDTO savedFeature = featureService.saveFeature(featureDTO); // Se deja la validación al servicio
             return ResponseEntity.status(HttpStatus.CREATED).body(savedFeature);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
@@ -65,10 +54,9 @@ public class FeatureController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateFeature(@PathVariable Long id, @RequestBody Feature feature) {
-        feature.setId(id);
+    public ResponseEntity<?> updateFeature(@PathVariable Long id, @RequestBody FeatureDTO featureDTO) {
         try {
-            Feature updatedFeature = featureService.updateFeature(feature);
+            FeatureDTO updatedFeature = featureService.updateFeature(id, featureDTO);
             return ResponseEntity.ok(updatedFeature);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());

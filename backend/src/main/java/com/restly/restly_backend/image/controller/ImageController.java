@@ -1,11 +1,13 @@
 package com.restly.restly_backend.image.controller;
 
-import com.restly.restly_backend.image.entity.Image;
+import com.restly.restly_backend.image.dto.ImageDTO;
 import com.restly.restly_backend.image.service.IImageService;
-import lombok.RequiredArgsConstructor;
+
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,15 +20,15 @@ public class ImageController {
     private final IImageService imageService;
 
     @GetMapping
-    public ResponseEntity<List<Image>> getAllImages() {
-        List<Image> images = imageService.getAllImages();
+    public ResponseEntity<List<ImageDTO>> getAllImages() {
+        List<ImageDTO> images = imageService.getAllImages();
         return ResponseEntity.ok(images);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getImageById(@PathVariable Long id) {
         try {
-            Optional<Image> image = imageService.getImageById(id);
+            Optional<ImageDTO> image = imageService.getImageById(id);
             if (image.isPresent()) {
                 return ResponseEntity.ok(image.get());
             } else {
@@ -39,11 +41,10 @@ public class ImageController {
         }
     }
 
-
     @GetMapping("/product/{productId}")
     public ResponseEntity<?> getImagesByProductId(@PathVariable Long productId) {
         try {
-            List<Image> images = imageService.getImagesByProductId(productId);
+            List<ImageDTO> images = imageService.getImagesByProductId(productId);
             if (images.isEmpty()) {
                 return new ResponseEntity<>("No se encontraron imágenes para el producto con ID " + productId, HttpStatus.NOT_FOUND);
             }
@@ -54,9 +55,9 @@ public class ImageController {
     }
 
     @PostMapping
-    public ResponseEntity<?> saveImage(@RequestBody Image image) {
+    public ResponseEntity<?> saveImage(@Valid @RequestBody ImageDTO imageDTO) {
         try {
-            Image savedImage = imageService.saveImage(image);
+            ImageDTO savedImage = imageService.saveImage(imageDTO);
             return new ResponseEntity<>(savedImage, HttpStatus.CREATED);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>("Datos de la imagen no válidos: " + e.getMessage(), HttpStatus.BAD_REQUEST);
@@ -66,13 +67,10 @@ public class ImageController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateImage(@PathVariable Long id, @RequestBody Image image) {
-        image.setId(id);
+    public ResponseEntity<?> updateImage(@PathVariable Long id, @Valid @RequestBody ImageDTO imageDTO) {
         try {
-            Image updatedImage = imageService.updateImage(image);
+            ImageDTO updatedImage = imageService.updateImage(id, imageDTO);
             return ResponseEntity.ok(updatedImage);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>("Datos de la imagen no válidos: " + e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (RuntimeException e) {
             return new ResponseEntity<>("Imagen con ID " + id + " no encontrada", HttpStatus.NOT_FOUND);
         } catch (Exception e) {

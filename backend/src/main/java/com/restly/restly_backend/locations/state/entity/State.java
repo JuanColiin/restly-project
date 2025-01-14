@@ -29,14 +29,10 @@ public class State {
     @Column(name = "name")
     private String name;
 
-    @JsonBackReference
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "country_id")
     private Country country;
 
-    @OneToMany(fetch = FetchType.EAGER,
-            mappedBy = "state",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "state", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<City> cities = new HashSet<>();
 }

@@ -47,11 +47,11 @@ public class Product {
     @Column(name = "stars")
     private Integer stars;
 
-    @ManyToOne
-    @JoinColumn(name = "city_id")  // Asegúrate de que el nombre de la columna sea correcto
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "city_id")
     private City city;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false, cascade = CascadeType.ALL)
     @JoinColumn(name = "category_id")
     private Category category;
 

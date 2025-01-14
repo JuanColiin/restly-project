@@ -1,7 +1,9 @@
 package com.restly.restly_backend.category.controller;
 
-import com.restly.restly_backend.category.entity.Category;
+import com.restly.restly_backend.category.dto.CategoryDTO;
+import com.restly.restly_backend.category.exception.CategoryNotFoundException;
 import com.restly.restly_backend.category.service.ICategoryService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,68 +21,53 @@ public class CategoryController {
     private final ICategoryService categoryService;
 
     @GetMapping
-    public ResponseEntity<List<Category>> getAllCategories() {
-        List<Category> categories = categoryService.getAllCategories();
-        if (categories.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<>(categories, HttpStatus.OK);
+    public ResponseEntity<List<CategoryDTO>> getAllCategories() {
+        List<CategoryDTO> categories = categoryService.getAllCategories();
+        return categories.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(categories);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Category> getCategoryById(@PathVariable Long id) {
-        Optional<Category> category = categoryService.getCategoryById(id);
-        if (category.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    public ResponseEntity<?> getCategoryById(@PathVariable Long id) {
+        try {
+            Optional<CategoryDTO> category = categoryService.getCategoryById(id);
+            return category.map(ResponseEntity::ok)
+                    .orElseThrow(() -> new CategoryNotFoundException("Categoría no encontrada."));
+        } catch (CategoryNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Se produjo un error al obtener la categoría. Detalles: " + e.getMessage());
         }
-        return new ResponseEntity<>(category.get(), HttpStatus.OK);
-    }
-
-    @GetMapping("/search")
-    public ResponseEntity<Category> getCategoryByName(@RequestParam String name) {
-        Optional<Category> category = categoryService.getCategoryByName(name);
-        if (category.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(category.get(), HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<Category> createCategory(@RequestBody Category category) {
+    public ResponseEntity<?> createCategory(@Valid @RequestBody CategoryDTO categoryDTO) {
         try {
-            Category savedCategory = categoryService.saveCategory(category);
+            CategoryDTO savedCategory = categoryService.saveCategory(categoryDTO);
             return new ResponseEntity<>(savedCategory, HttpStatus.CREATED);
         } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);  // Si el nombre está vacío o nulo
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);  // Otros errores
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateCategory(@PathVariable Long id, @RequestBody Category category) {
-        category.setId(id);
+    public ResponseEntity<?> updateCategory(@PathVariable Long id, @Valid @RequestBody CategoryDTO categoryDTO) {
         try {
-            Category updatedCategory = categoryService.updateCategory(category);
-            return new ResponseEntity<>(updatedCategory, HttpStatus.OK);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>("El título de la categoría no puede ser nulo o vacío", HttpStatus.BAD_REQUEST);
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>("Categoría con ID " + id + " no encontrada", HttpStatus.NOT_FOUND);
-        } catch (Exception e) {
-            return new ResponseEntity<>("Error interno del servidor: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            CategoryDTO updatedCategory = categoryService.updateCategory(id, categoryDTO);
+            return ResponseEntity.ok(updatedCategory);
+        } catch (CategoryNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteCategory(@PathVariable Long id) {
+    public ResponseEntity<?> deleteCategory(@PathVariable Long id) {
         try {
-            String response = categoryService.deleteCategoryById(id);
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);  // Si no se encuentra la categoría
-        } catch (Exception e) {
-            return new ResponseEntity<>("Error interno del servidor", HttpStatus.INTERNAL_SERVER_ERROR);
+            String message = categoryService.deleteCategoryById(id);
+            return ResponseEntity.ok(message);
+        } catch (CategoryNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 }
+

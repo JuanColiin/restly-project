@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface IProductRepository extends JpaRepository<Product, Long> {
@@ -30,11 +31,13 @@ public interface IProductRepository extends JpaRepository<Product, Long> {
     @Query(value = "SELECT P FROM Product P WHERE P.city.id = :cityId AND P.id NOT IN " +
             "(SELECT DISTINCT R.product.id FROM Reserve R WHERE " +
             "(R.checkOut >= :startDate AND R.checkIn <= :endDate))")
-    List<Product> getByCityAndRangeDate(@Param("cityId") Integer cityId,
+    List<Product> getByCityAndRangeDate(@Param("cityId") Long cityId,
                                         @Param("startDate") LocalDate startDate,
                                         @Param("endDate") LocalDate endDate);
 
     // Obtener productos aleatorios
     @Query(value = "SELECT P FROM Product P ORDER BY RAND()")
     List<Product> getRandomProduct();
+
+
 }

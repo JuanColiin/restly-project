@@ -38,5 +38,9 @@ public class Category {
     @JsonManagedReference
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     private List<Product> products = new ArrayList<>();
+
+    @Version
+    private Long version; // Control de concurrencia optimista
 }
+
 

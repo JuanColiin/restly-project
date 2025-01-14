@@ -28,7 +28,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         auth -> auth
                                 .requestMatchers("/auth/**").permitAll()
-                                .requestMatchers("/countries").hasRole("USER")  // Usar hasRole() con 'ROLE_' ya incluido
+                                .requestMatchers("/products/**").permitAll()
+                                .requestMatchers("/categories/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/swagger-ui/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/v3/api-docs/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/swagger-ui.html").permitAll()
