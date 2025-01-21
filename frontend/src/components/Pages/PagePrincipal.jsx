@@ -1,4 +1,5 @@
 
+import CreateProductForm from '../Forms/CreateProduct/PropertyForm'
 import NavBar from '../NavBar/NavBar'
 
 export const PagePrincipal = () => {
@@ -6,6 +7,10 @@ export const PagePrincipal = () => {
     <>
         <NavBar />
         <h1>CATEGORIAS</h1>
+        <CreateProductForm />
+  
+
+
     </>
 
     

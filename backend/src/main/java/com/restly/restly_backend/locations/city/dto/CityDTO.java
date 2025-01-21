@@ -12,7 +12,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class CityDTO {
 
-    private String name;  // Nombre de la ciudad
+    private String name;
 
-    private StateDTO state;  // Relación con StateDTO (sin ID)
+    private StateDTO state;
 }

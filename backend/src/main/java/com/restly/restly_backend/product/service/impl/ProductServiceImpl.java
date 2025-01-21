@@ -195,21 +195,20 @@ public class ProductServiceImpl implements IProductService {
 
     // Método privado para resolver una ciudad o crearla si no existe
     private City resolveCity(CityDTO cityDTO) {
-        // Obtener el StateDTO usando el nombre del estado
+
         Optional<StateDTO> stateDTOOptional = stateService.getStateByName(cityDTO.getState().getName());
         State state;
 
         if (stateDTOOptional.isPresent()) {
-            // Mapear el StateDTO a una entidad State
             state = modelMapper.map(stateDTOOptional.get(), State.class);
         } else {
-            // Si el estado no existe, lo creamos
-            StateDTO newStateDTO = cityDTO.getState();  // Aquí usamos el StateDTO del CityDTO recibido
+
+            StateDTO newStateDTO = cityDTO.getState();
             state = modelMapper.map(newStateDTO, State.class);
-            stateRepository.save(state);  // Guardamos el nuevo estado
+            stateRepository.save(state);
         }
 
-        // Verificar si el país ya existe, si no, lo creamos
+
         Optional<Country> countryOptional = countryRepository.findByName(cityDTO.getState().getCountry().getName());
         Country country;
         if (countryOptional.isPresent()) {
@@ -217,28 +216,26 @@ public class ProductServiceImpl implements IProductService {
         } else {
             CountryDTO countryDTO = cityDTO.getState().getCountry();
             country = modelMapper.map(countryDTO, Country.class);
-            countryRepository.save(country);  // Guardamos el país si no existe
+            countryRepository.save(country);
         }
 
-        // Asignamos el país al estado
+
         state.setCountry(country);
 
-        // Buscar la ciudad por nombre y estado
         Optional<City> cityOptional = cityService.getCityByNameAndState(cityDTO.getName(), state);
 
         if (cityOptional.isEmpty()) {
-            // Si no existe, crear una nueva ciudad
             City newCity = new City();
             newCity.setName(cityDTO.getName());
             newCity.setState(state);
 
-            // Guardar la ciudad (entidad) y devolver el DTO
-            City savedCity = cityService.saveCity(newCity);  // Guardamos la entidad City
-            return savedCity;  // Devolvemos la entidad City
+
+            City savedCity = cityService.saveCity(newCity);
+            return savedCity;
         }
 
-        // Si ya existe, devolver la entidad City correspondiente
-        return cityOptional.get();  // Devolvemos la entidad City existente
+
+        return cityOptional.get();
     }
 
 }

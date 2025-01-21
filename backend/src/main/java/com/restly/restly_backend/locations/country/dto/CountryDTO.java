@@ -1,5 +1,6 @@
 package com.restly.restly_backend.locations.country.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.restly.restly_backend.locations.state.dto.StateDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,6 +18,7 @@ public class CountryDTO {
 
     private String name;
 
+    @JsonIgnore
     private Set<StateDTO> states = new HashSet<>();
 }
 

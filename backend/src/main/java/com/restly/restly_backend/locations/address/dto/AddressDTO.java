@@ -14,5 +14,5 @@ import lombok.Setter;
 public class AddressDTO {
     private String street;
     private String number;
-    private CityDTO city;  // Relación con la ciudad utilizando CityDTO
+    private CityDTO city;
 }

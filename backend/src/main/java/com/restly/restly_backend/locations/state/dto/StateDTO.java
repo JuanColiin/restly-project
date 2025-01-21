@@ -1,5 +1,6 @@
 package com.restly.restly_backend.locations.state.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.restly.restly_backend.locations.city.dto.CityDTO;
 import com.restly.restly_backend.locations.country.dto.CountryDTO;
 import lombok.AllArgsConstructor;
@@ -16,10 +17,11 @@ import java.util.Set;
 @AllArgsConstructor
 public class StateDTO {
 
-    private String name;  // Nombre del estado
+    private String name;
 
-    private CountryDTO country;  // Relación con CountryDTO (sin ID)
+    private CountryDTO country;
 
-    private Set<CityDTO> cities = new HashSet<>();  // Relación con CityDTO (sin ID)
+    @JsonIgnore
+    private Set<CityDTO> cities = new HashSet<>();
 }
 

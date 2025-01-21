@@ -19,21 +19,13 @@ import java.util.Set;
 @NoArgsConstructor
 public class ProductDTO {
     private String title;
-    private AddressDTO address;  // DTO de dirección para facilitar la persistencia
+    private AddressDTO address;
     private String description;
     private Integer stars;
     private String review;
-
-    // Usamos CategoryDTO para incluir toda la información relacionada con la categoría
     private CategoryDTO category;
-
-    // Usamos PolicyDTO para incluir toda la información relacionada con la política
     private PolicyDTO policy;
-
-    // Usamos FeatureDTO en lugar de solo IDs, para manejar características completas
     private Set<FeatureDTO> features = new HashSet<>();
-
-    // Usamos ImageDTO en lugar de solo IDs, para manejar imágenes completas
     private List<ImageDTO> images = new ArrayList<>();
 }
 
