@@ -79,14 +79,21 @@ export default function PropertyForm() {
 
   // Fetch de categorías
   useEffect(() => {
-    axios
-      .get("http://localhost:8080/categories")
-      .then((response) => {
-        setCategories(response.data);
-      })
-      .catch((error) => console.error("Error fetching categories:", error));
-  }, []);
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get("http://localhost:8080/categories");
+        if (response.data && Array.isArray(response.data)) {
+          setCategories(response.data); 
+        } else {
+          console.error("Error: La respuesta no es un array válido.");
+        }
+      } catch (error) {
+        console.error("Error fetching categories:", error); 
+      }
+    };
 
+    fetchCategories(); // Llama a la función al montar el componente
+  }, []);
   useEffect(() => {
     if (formData.country) {
       const countryData = countries.find((country) => country.name === formData.country)
@@ -146,9 +153,9 @@ export default function PropertyForm() {
 
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
   
-    // Asegúrate de que el objeto `address` esté bien formado
+
     const addressData = {
       street: formData.street,
       number: formData.number,
@@ -161,33 +168,37 @@ export default function PropertyForm() {
           },
         },
       },
-    }
+    };
   
-    const endpoint = "http://localhost:8080/products/create"
-  
-    // Crear un arreglo de características seleccionadas (FeatureDTO)
+
     const selectedFeatures = Object.keys(formData.features)
       .filter((key) => formData.features[key])
-      .map((key) => ({ name: key }))
+      .map((key) => ({ name: key }));
   
-    // Crear los datos a enviar al backend
+
     const dataToSend = {
       ...formData,
-      address: addressData, // Asegúrate de incluir la dirección correctamente
+      address: addressData, 
       features: selectedFeatures,
-    }
+    };
+  
+
+    console.log("Datos a enviar:", JSON.stringify(dataToSend, null, 2));
+  
+    const endpoint = "http://localhost:8080/products/create";
   
     try {
       const response = await axios.post(endpoint, dataToSend, {
         headers: {
           "Content-Type": "application/json",
         },
-      })
-      console.log("Producto creado exitosamente:", response.data)
+      });
+      console.log("Producto creado exitosamente:", response.data);
     } catch (error) {
-      console.error("Error al crear el producto:", error)
+      console.error("Error al crear el producto:", error);
     }
-  }
+  };
+  
   
   
 
@@ -224,35 +235,34 @@ export default function PropertyForm() {
             required
           />
         </div>
-
         <div className={styles.section}>
-          <h2>Categorías</h2>
-          <div className={styles.inputGroup}>
-            <label htmlFor="category">Seleccionar Categoría</label>
-            <select
-              id="category"
-              name="category"
-              value={formData.category.name}
-              onChange={(e) =>
-                setFormData((prev) => ({
-                  ...prev,
-                  category: {
-                    ...prev.category,
-                    name: e.target.value,
-                  },
-                }))
-              }
-              required
-            >
-              <option value="">Seleccionar categoría</option>
-              {categories.map((category, index) => (
-                <option key={index} value={category.name}>
-                  {category.name}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
+      <h2>Categorías</h2>
+      <div className={styles.inputGroup}>
+        <label htmlFor="category">Seleccionar Categoría</label>
+        <select
+          id="category"
+          name="category"
+          value={formData.category.name}
+          onChange={(e) =>
+            setFormData((prev) => ({
+              ...prev,
+              category: {
+                ...prev.category,
+                name: e.target.value,
+              },
+            }))
+          }
+          required
+        >
+          <option value="">Seleccionar categoría</option>
+          {categories.map((category, index) => (
+            <option key={index} value={category.name}>
+              {category.name}
+            </option>
+          ))}
+        </select>
+      </div>
+    </div>
 
 
         <div className={styles.addressSection}>
