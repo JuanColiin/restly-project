@@ -222,6 +222,4 @@ public class ProductServiceImpl implements IProductService {
                     return cityRepository.save(newCity);
                 });
     }
-
-
 }

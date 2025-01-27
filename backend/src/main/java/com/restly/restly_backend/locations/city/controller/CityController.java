@@ -39,10 +39,8 @@ public class CityController {
     @PostMapping
     public ResponseEntity<CityDTO> createCity(@RequestBody CityDTO cityDTO) {
         try {
-            // Convertimos el CityDTO a City antes de pasarlo al servicio
             City city = modelMapper.map(cityDTO, City.class);
-            City savedCity = cityService.saveCity(city);  // Guardamos la entidad City
-            // Convertimos la entidad guardada a CityDTO antes de devolverla
+            City savedCity = cityService.saveCity(city);
             CityDTO savedCityDTO = modelMapper.map(savedCity, CityDTO.class);
             return ResponseEntity.status(HttpStatus.CREATED).body(savedCityDTO);
         } catch (RuntimeException e) {
@@ -53,10 +51,8 @@ public class CityController {
     @PutMapping("/{id}")
     public ResponseEntity<CityDTO> updateCity(@PathVariable Long id, @RequestBody CityDTO cityDTO) {
         try {
-            // Convertimos el CityDTO a City antes de pasarlo al servicio
             City city = modelMapper.map(cityDTO, City.class);
-            // Actualizamos la ciudad con el id correspondiente
-            CityDTO updatedCityDTO = cityService.updateCity(id, city);  // Aquí el servicio ahora maneja CityDTO
+            CityDTO updatedCityDTO = cityService.updateCity(id, city);
             return ResponseEntity.ok(updatedCityDTO);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
