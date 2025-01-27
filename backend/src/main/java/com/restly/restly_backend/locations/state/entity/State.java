@@ -14,7 +14,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "STATES")
+@Table(name = "STATES", uniqueConstraints = @UniqueConstraint(columnNames = {"name", "country_id"}))
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -26,13 +26,13 @@ public class State {
     @Column(name = "state_id")
     private Long id;
 
-    @Column(name = "name")
+    @Column(name = "name", nullable = false)
     private String name;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "country_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "country_id", nullable = false)
     private Country country;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "state", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "state", orphanRemoval = true)
     private Set<City> cities = new HashSet<>();
 }

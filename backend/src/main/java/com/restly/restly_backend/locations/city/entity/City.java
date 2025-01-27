@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "CITIES")
+@Table(name = "CITIES", uniqueConstraints = @UniqueConstraint(columnNames = {"name", "state_id"}))
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -24,7 +24,7 @@ public class City {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @ManyToOne(fetch = FetchType.EAGER , cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "state_id", nullable = false)
     private State state;
 }

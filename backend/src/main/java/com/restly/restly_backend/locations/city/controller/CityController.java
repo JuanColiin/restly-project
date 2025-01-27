@@ -18,7 +18,7 @@ import java.util.Optional;
 public class CityController {
 
     private final ICityService cityService;
-    private final ModelMapper modelMapper;  // Necesario para mapear entre entidades y DTOs
+    private final ModelMapper modelMapper;
 
     @GetMapping
     public ResponseEntity<List<CityDTO>> getAllCities() {

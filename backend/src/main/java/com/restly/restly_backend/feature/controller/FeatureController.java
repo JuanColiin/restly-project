@@ -3,6 +3,7 @@ package com.restly.restly_backend.feature.controller;
 import com.restly.restly_backend.feature.dto.FeatureDTO;
 import com.restly.restly_backend.feature.service.IFeatureService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -47,11 +48,17 @@ public class FeatureController {
             return ResponseEntity.status(HttpStatus.CREATED).body(savedFeature);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (DataIntegrityViolationException e) {
+            // Maneja el caso cuando la entrada ya existe (duplicada)
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("La característica con el título '"
+                    + featureDTO.getTitle() + "' ya existe.");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error al guardar la característica: " + e.getMessage());
         }
     }
+
+
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateFeature(@PathVariable Long id, @RequestBody FeatureDTO featureDTO) {

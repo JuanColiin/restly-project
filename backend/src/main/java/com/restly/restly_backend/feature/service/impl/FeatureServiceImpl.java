@@ -10,6 +10,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,9 +38,19 @@ public class FeatureServiceImpl implements IFeatureService {
     @Override
     @Transactional
     public FeatureDTO saveFeature(FeatureDTO featureDTO) {
-        Feature savedFeature = resolveFeature(featureDTO); // La validación de 'title' ya está aquí
+
+        Optional<Feature> existingFeature = featureRepository.findByTitle(featureDTO.getTitle());
+
+        if (existingFeature.isPresent()) {
+            throw new IllegalArgumentException("La característica con el título '" + featureDTO.getTitle() + "' ya existe.");
+        }
+
+        Feature newFeature = modelMapper.map(featureDTO, Feature.class);
+        Feature savedFeature = featureRepository.save(newFeature);
         return modelMapper.map(savedFeature, FeatureDTO.class);
     }
+
+
 
     @Override
     @Transactional
@@ -68,15 +79,15 @@ public class FeatureServiceImpl implements IFeatureService {
     }
 
     private Feature resolveFeature(FeatureDTO featureDTO) {
-        Feature feature = modelMapper.map(featureDTO, Feature.class);
+        Optional<Feature> existingFeature = featureRepository.findByTitle(featureDTO.getTitle());
 
-        // Verificar que el 'title' no sea null o vacío
-        if (feature.getTitle() == null || feature.getTitle().trim().isEmpty()) {
-            throw new IllegalArgumentException("El título de la característica no puede ser nulo o vacío.");
+        if (existingFeature.isPresent()) {
+            return existingFeature.get();
+        } else {
+            Feature newFeature = modelMapper.map(featureDTO, Feature.class);
+            return featureRepository.save(newFeature);
         }
-
-        // Guardar la entidad Feature
-        return featureRepository.save(feature);
     }
+
 }
 
