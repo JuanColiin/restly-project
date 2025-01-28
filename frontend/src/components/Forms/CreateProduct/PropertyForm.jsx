@@ -173,7 +173,7 @@ export default function PropertyForm() {
 
     const selectedFeatures = Object.keys(formData.features)
       .filter((key) => formData.features[key])
-      .map((key) => ({ name: key }));
+      .map((key) => ({ title: key }));
   
 
     const dataToSend = {

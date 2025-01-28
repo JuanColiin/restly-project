@@ -49,7 +49,7 @@ export default function Login() {
 
   return (
     <div className="login-container">
-      <h1>Iniciar Sesión</h1>
+      <h1 className='titleForm'>Iniciar Sesión</h1>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label htmlFor="email">Correo electrónico</label>

@@ -10,7 +10,7 @@
   transform: translate(-50%, -50%); /* Esto asegura que el formulario esté centrado vertical y horizontalmente */
 }
 
-h1 {
+.signup-container h1 {
   text-align: center;
   margin-bottom: 40px;
   font-size: 24px;

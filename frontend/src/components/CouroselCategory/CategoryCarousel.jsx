@@ -20,8 +20,11 @@ export default function CategoryCarousel() {
 
   return (
     <>
-      <h1 >Buscar por tipo de alojamiento</h1>
+
+
+       <h1 >Buscar por tipo de alojamiento</h1>
       <div className="carousel-container">
+     
         {categories.map((category, index) => (
           <div
             key={index}
@@ -35,7 +38,7 @@ export default function CategoryCarousel() {
             </div>
             <div className="carousel-card-content">
               <h3>{category.name}</h3>
-              <p>#NUMERO</p>
+              <p>Disponibles: {category.totalProducts}</p>
             </div>
           </div>
         ))}
