@@ -1,24 +1,24 @@
 .footer {
   display: flex;
-  bottom: 0;
   justify-content: space-between;
   background-color: #00c98c;
   padding: 10px 40px;
   height: 58px;
   width: 100%;
   box-sizing: border-box;
-  position: relative;
   align-items: center;
+  margin-top: auto; 
 }
 
 .copyright {
-    padding-bottom: 2px;
-    font-weight: 700;
-    color: #dfe4ea;
+  padding-bottom: 2px;
+  font-weight: 700;
+  color: #dfe4ea;
 }
+
 .footer-links {
-    display: flex;
-    gap: 20px;
-    align-items: center;
-   color: #dfe4ea;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  color: #dfe4ea;
 }

@@ -9,7 +9,7 @@ export const PagePrincipal = () => {
         <NavBar />
         <CategoryCarousel />
         <RecomendationCard />
-  
+
 
 
     </>

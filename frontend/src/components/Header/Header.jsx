@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useContext } from "react";
 import './Header.css'; 
 import { Link } from "react-router-dom";
 import AuthContext from "../../context/AuthContext";  // Importa el contexto
+import Dropdown from "./DropDown";
 
 const Header = () => {
   const [menuVisible, setMenuVisible] = useState(false);
@@ -41,7 +42,9 @@ const Header = () => {
             <button className="btn" onClick={logout}>Cerrar sesión</button>
           </div>
         ) : (
-          <>
+          <> 
+
+          <Dropdown />
             <Link to="/singup"><button className="btn">Crear cuenta</button></Link> 
             <Link to="/login"><button className="btn">Iniciar sesión</button></Link>
           </>

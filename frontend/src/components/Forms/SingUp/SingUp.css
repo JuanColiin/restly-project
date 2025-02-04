@@ -1,13 +1,10 @@
 .signup-container {
   max-width: 600px;
-  width: 100%; /* Mantener el ancho original */
-  padding: 20px;
-  font-family: Arial, sans-serif;
+  width: 100%;
+  padding: 1.6rem;
   background-color: #fff;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%); /* Esto asegura que el formulario esté centrado vertical y horizontalmente */
+  margin: 40px auto 0px; 
+  border-radius: 8px;
 }
 
 .signup-container h1 {

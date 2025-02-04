@@ -11,18 +11,20 @@ import { Footer } from './components/Footer/Footer';
 function App() {
   return (
     <AuthProvider>  {/* Envuelve todo con el AuthProvider */}
-      <Header />
-      <Routes>
-        <Route path="/" element={<PagePrincipal/>} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/singup" element={<SignUp />} />
-        <Route path="/CreateProduct" element={<PropertyForm/>} />
-      </Routes>
-
-      <Footer />
+      <div className="app-container">
+        <Header />
+        <main className="main-content">
+          <Routes>
+            <Route path="/" element={<PagePrincipal/>} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/singup" element={<SignUp />} />
+            <Route path="/CreateProduct" element={<PropertyForm/>} />
+          </Routes>
+        </main>
+        <Footer />
+      </div>
     </AuthProvider>
   );
 }
 
 export default App;
-

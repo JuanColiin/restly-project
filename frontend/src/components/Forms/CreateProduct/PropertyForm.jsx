@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { FiHome, FiMapPin, FiWifi } from "react-icons/fi"
+import {FiMapPin, FiWifi } from "react-icons/fi"
 import {
   FaSwimmingPool,
   FaAirFreshener,
@@ -28,7 +28,8 @@ export default function PropertyForm() {
     },
     policy: {
       cancellation: "",
-      payment: "",
+      rules: "",
+      security: "",
     },
     features: {
       wifi: false,
@@ -206,7 +207,7 @@ export default function PropertyForm() {
   return (
     <form onSubmit={handleSubmit} className={styles.form}>
       <div className={styles.header}>
-        <FiHome className={styles.headerIcon} />
+        
         <h1>Crear Nueva Propiedad</h1>
       </div>
 
@@ -480,18 +481,34 @@ export default function PropertyForm() {
             />
           </div>
           <div className={styles.inputGroup}>
-            <label htmlFor="payment">Política de Pago</label>
+            <label htmlFor="security">Política de seguridad</label>
             <textarea
-              id="payment"
-              name="payment"
+              id="security"
+              name="security"
               value={formData.policy.payment}
               onChange={(e) =>
                 setFormData((prev) => ({
                   ...prev,
-                  policy: { ...prev.policy, payment: e.target.value },
+                  policy: { ...prev.policy, security: e.target.value },
                 }))
               }
-              placeholder="Ej: Pago completo al momento de la reserva."
+              placeholder="Ej: En caso de emergencia siga las indicaciones."
+              required
+            />
+          </div>
+          <div className={styles.inputGroup}>
+            <label htmlFor="rules">Política de reglas</label>
+            <textarea
+              id="rules"
+              name="rules"
+              value={formData.policy.payment}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  policy: { ...prev.policy, rules: e.target.value },
+                }))
+              }
+              placeholder="Ej: No se puede tener la musica con bastante volumen después de las 10 pm."
               required
             />
           </div>

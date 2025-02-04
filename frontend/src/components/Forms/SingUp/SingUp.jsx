@@ -75,19 +75,19 @@ export default function SignUp() {
     try {
       const response = await axios.post('http://localhost:8080/auth/register', registerData);
 
-      // Almacenar los datos del usuario y el token en el contexto
+    
       const userData = {
         token: response.data.token,
-        firstname: response.data.firstname, // Obtener firstname del response
+        firstname: response.data.firstname, 
         email: response.data.email,
-        role: response.data.role, // Agregado si es necesario
-        userId: response.data.userId // Agregado si es necesario
+        role: response.data.role, 
+        userId: response.data.userId 
       };
 
-      // Llamar a login para actualizar el contexto
+
       login(userData);
 
-      // Redirigir al usuario a la página principal
+
       navigate('/');
     } catch (error) {
       console.error('Error en el registro:', error);
