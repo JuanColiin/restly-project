@@ -18,6 +18,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 public class ProductDTO {
+    private Long id;
     private String title;
     private AddressDTO address;
     private String description;

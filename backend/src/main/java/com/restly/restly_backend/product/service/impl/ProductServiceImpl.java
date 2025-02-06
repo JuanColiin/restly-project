@@ -18,6 +18,7 @@ import com.restly.restly_backend.locations.state.service.IStateService;
 import com.restly.restly_backend.policies.entity.Policy;
 import com.restly.restly_backend.product.dto.ProductDTO;
 import com.restly.restly_backend.product.entity.Product;
+import com.restly.restly_backend.product.exception.ProductAlreadyExistsException;
 import com.restly.restly_backend.product.repository.IProductRepository;
 import com.restly.restly_backend.product.service.IProductService;
 import lombok.RequiredArgsConstructor;
@@ -72,10 +73,13 @@ public class ProductServiceImpl implements IProductService {
     @Transactional
     @Override
     public ProductDTO saveProduct(ProductDTO productDTO) {
+        if (productRepository.existsByTitle(productDTO.getTitle())) {
+            throw new ProductAlreadyExistsException("El nombre del producto ya está en uso.");
+        }
+
         Category category = categoryService.getCategory(productDTO.getCategory().getName());
         Policy policy = modelMapper.map(productDTO.getPolicy(), Policy.class);
 
-        // Verificar y agregar las features, evitando duplicados
         Set<Feature> features = productDTO.getFeatures().stream()
                 .map(featureDTO -> {
                     Optional<Feature> existingFeature = featureRepository.findByTitle(featureDTO.getTitle());
@@ -117,6 +121,10 @@ public class ProductServiceImpl implements IProductService {
         Product existingProduct = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Producto no encontrado con ID: " + id));
 
+        if (!existingProduct.getTitle().equals(productDTO.getTitle()) && productRepository.existsByTitle(productDTO.getTitle())) {
+            throw new RuntimeException("El nombre del producto ya está en uso.");
+        }
+
         existingProduct.setTitle(productDTO.getTitle());
         existingProduct.setDescription(productDTO.getDescription());
         existingProduct.setStars(productDTO.getStars());
@@ -127,7 +135,6 @@ public class ProductServiceImpl implements IProductService {
         Policy policy = modelMapper.map(productDTO.getPolicy(), Policy.class);
         existingProduct.setPolicy(policy);
 
-        // Verificar y agregar las features, evitando duplicados
         Set<Feature> features = productDTO.getFeatures().stream()
                 .map(featureDTO -> {
                     Optional<Feature> existingFeature = featureRepository.findByTitle(featureDTO.getTitle());
@@ -157,7 +164,6 @@ public class ProductServiceImpl implements IProductService {
 
         return modelMapper.map(productRepository.save(existingProduct), ProductDTO.class);
     }
-
 
     @Override
     public void deleteProductById(Long id) {
@@ -200,13 +206,11 @@ public class ProductServiceImpl implements IProductService {
     }
 
     private City resolveCity(CityDTO cityDTO) {
-
         Country country = countryRepository.findByName(cityDTO.getState().getCountry().getName())
                 .orElseGet(() -> {
                     Country newCountry = modelMapper.map(cityDTO.getState().getCountry(), Country.class);
                     return countryRepository.save(newCountry);
                 });
-
 
         State state = stateRepository.findByNameAndCountry(cityDTO.getState().getName(), country)
                 .orElseGet(() -> {
@@ -223,3 +227,4 @@ public class ProductServiceImpl implements IProductService {
                 });
     }
 }
+

@@ -10,24 +10,21 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface IProductRepository extends JpaRepository<Product, Long> {
 
-    // Buscar productos por categoría
     List<Product> getByCategory(Category category);
 
-    // Buscar productos por ciudad
     List<Product> getByCity(City city);
 
-    // Buscar productos que no estén reservados en un rango de fechas
+
     @Query(value = "SELECT P FROM Product P WHERE P.id NOT IN " +
             "(SELECT DISTINCT R.product.id FROM Reserve R WHERE " +
             "(R.checkOut >= :startDate AND R.checkIn <= :endDate))")
     List<Product> getByRangeDate(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
 
-    // Buscar productos por ciudad y que no estén reservados en un rango de fechas
+
     @Query(value = "SELECT P FROM Product P WHERE P.city.id = :cityId AND P.id NOT IN " +
             "(SELECT DISTINCT R.product.id FROM Reserve R WHERE " +
             "(R.checkOut >= :startDate AND R.checkIn <= :endDate))")
@@ -35,9 +32,10 @@ public interface IProductRepository extends JpaRepository<Product, Long> {
                                         @Param("startDate") LocalDate startDate,
                                         @Param("endDate") LocalDate endDate);
 
-    // Obtener productos aleatorios
+
     @Query(value = "SELECT P FROM Product P ORDER BY RAND()")
     List<Product> getRandomProduct();
 
 
+    boolean existsByTitle(String title);
 }
