@@ -7,6 +7,7 @@ import { AuthProvider } from './context/AuthContext'; // Importa el AuthProvider
 import { PagePrincipal } from './components/Pages/PagePrincipal';
 import PropertyForm from './components/Forms/CreateProduct/PropertyForm';
 import { Footer } from './components/Footer/Footer';
+import ProductList from './components/ProductList/ProductList';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/singup" element={<SignUp />} />
             <Route path="/CreateProduct" element={<PropertyForm/>} />
+            <Route path="ProductList" element={<ProductList/>} />
           </Routes>
         </main>
         <Footer />

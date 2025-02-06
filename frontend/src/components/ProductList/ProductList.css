@@ -1,0 +1,44 @@
+.product-list {
+    margin: 20px;
+  }
+  
+  .product-list h2 {
+    text-align: center;
+    color: #333;
+  }
+  
+  .product-list table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  .product-list th, .product-list td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+  }
+  
+  .product-list th {
+    background-color: #f4f4f4;
+  }
+  
+  .product-list button {
+    margin-right: 8px;
+    padding: 8px 12px;
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+  }
+  
+  .product-list button:hover {
+    background-color: #0056b3;
+  }
+  
+  .product-list button:focus {
+    outline: none;
+  }
+  
