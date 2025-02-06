@@ -12,6 +12,8 @@ import {
 } from "react-icons/fa"
 import axios from "axios"
 import styles from "./PropertyForm.module.css"
+import Swal from 'sweetalert2';
+
 
 export default function PropertyForm() {
   const [formData, setFormData] = useState({
@@ -51,6 +53,7 @@ export default function PropertyForm() {
   const [countries, setCountries] = useState([])
   const [states, setStates] = useState([])
   const [cities, setCities] = useState([])
+  const [errorMessage, setErrorMessage] = useState("");
 
   const countryTranslations = {
     "United States": "Estados Unidos",
@@ -93,7 +96,7 @@ export default function PropertyForm() {
       }
     };
 
-    fetchCategories(); // Llama a la función al montar el componente
+    fetchCategories(); 
   }, []);
   useEffect(() => {
     if (formData.country) {
@@ -155,8 +158,8 @@ export default function PropertyForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrorMessage(""); 
   
-
     const addressData = {
       street: formData.street,
       number: formData.number,
@@ -171,19 +174,16 @@ export default function PropertyForm() {
       },
     };
   
-
     const selectedFeatures = Object.keys(formData.features)
       .filter((key) => formData.features[key])
       .map((key) => ({ title: key }));
   
-
     const dataToSend = {
       ...formData,
       address: addressData, 
       features: selectedFeatures,
     };
   
-
     console.log("Datos a enviar:", JSON.stringify(dataToSend, null, 2));
   
     const endpoint = "http://localhost:8080/products/create";
@@ -195,8 +195,26 @@ export default function PropertyForm() {
         },
       });
       console.log("Producto creado exitosamente:", response.data);
+      
+
+      Swal.fire({
+        icon: 'success',
+        title: '¡Éxito!',
+        text: 'Producto creado exitosamente.',
+      });
     } catch (error) {
-      console.error("Error al crear el producto:", error);
+      if (error.response && error.response.data.error) {
+        setErrorMessage(error.response.data.error); 
+      } else {
+        setErrorMessage("Ocurrió un error al procesar la solicitud.");
+      }
+  
+
+      Swal.fire({
+        icon: 'error',
+        title: '¡Error!',
+        text: errorMessage || 'No se pudo crear el producto, porque el nombre ya existe.',
+      });
     }
   };
   
@@ -210,6 +228,9 @@ export default function PropertyForm() {
         
         <h1>Crear Nueva Propiedad</h1>
       </div>
+
+      {errorMessage && <div className={styles.error}>{errorMessage}</div>} {/* Muestra el mensaje de error */}
+
 
       <div className={styles.section}>
         <h2>Información Básica</h2>
