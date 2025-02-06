@@ -24,4 +24,5 @@ public class GlobalExceptionHandler {
         response.put("error", "Ocurrió un error inesperado");
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
     }
+
 }

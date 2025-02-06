@@ -19,6 +19,7 @@ import com.restly.restly_backend.policies.entity.Policy;
 import com.restly.restly_backend.product.dto.ProductDTO;
 import com.restly.restly_backend.product.entity.Product;
 import com.restly.restly_backend.product.exception.ProductAlreadyExistsException;
+import com.restly.restly_backend.product.exception.ProductNotFoundException;
 import com.restly.restly_backend.product.repository.IProductRepository;
 import com.restly.restly_backend.product.service.IProductService;
 import lombok.RequiredArgsConstructor;
@@ -165,13 +166,22 @@ public class ProductServiceImpl implements IProductService {
         return modelMapper.map(productRepository.save(existingProduct), ProductDTO.class);
     }
 
+    @Transactional
     @Override
     public void deleteProductById(Long id) {
         if (!productRepository.existsById(id)) {
-            throw new RuntimeException("Producto no encontrado con ID: " + id);
+            throw new ProductNotFoundException("Producto no encontrado con ID: " + id);
         }
+
+        Product product = productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException("Producto no encontrado con ID: " + id));
+
+        product.setCategory(null);
+        productRepository.save(product);
+
+
         productRepository.deleteById(id);
     }
+
 
     @Override
     public List<ProductDTO> getProductsByCity(Long cityId) {
