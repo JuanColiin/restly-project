@@ -24,6 +24,7 @@ export default function PropertyForm() {
     state: "",
     city: "",
     description: "",
+    shortDescription: "",
     category: {
       name: "",
       description: "",
@@ -45,6 +46,9 @@ export default function PropertyForm() {
       wheelchairAccessible: false,
     },
     images: [
+      { title: "", imageUrl: "" },
+      { title: "", imageUrl: "" },
+      { title: "", imageUrl: "" },
       { title: "", imageUrl: "" },
       { title: "", imageUrl: "" },
     ],
@@ -254,6 +258,17 @@ export default function PropertyForm() {
             value={formData.description}
             onChange={handleChange}
             placeholder="Describe la propiedad..."
+            required
+          />
+        </div>
+        <div className={styles.inputGroup}>
+          <label htmlFor="shortDescription">Descripción corta</label>
+          <textarea
+            id="shortDescription"
+            name="shortDescription"
+            value={formData.shortDescription}
+            onChange={handleChange}
+            placeholder="Describe la propiedad de manera corta..."
             required
           />
         </div>

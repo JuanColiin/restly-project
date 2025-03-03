@@ -10,6 +10,7 @@ import {
   FaShuttleVan,
   FaWheelchair,
 } from "react-icons/fa";
+import { Link } from "react-router-dom";  // Importamos Link
 import "./RecomendationCard.css";
 import { useEffect, useState } from "react";
 
@@ -17,16 +18,16 @@ const getFeatureIcon = (feature, size = 20) => {
   const icons = {
     wifi: FiWifi,
     pool: FaSwimmingPool,
-    airconditioning: FaAirFreshener, 
+    airconditioning: FaAirFreshener,
     parking: FaParking,
     gym: FaDumbbell,
     petsallowed: FaPaw,
-    breakfastincluded: FaUtensils, 
+    breakfastincluded: FaUtensils,
     airportshuttle: FaShuttleVan,
     wheelchairaccessible: FaWheelchair,
   };
 
-  const normalizedFeature = feature.trim().toLowerCase().replace(/\s+/g, ""); // Elimina espacios
+  const normalizedFeature = feature.trim().toLowerCase().replace(/\s+/g, "");
   const IconComponent = icons[normalizedFeature];
 
   return IconComponent ? <IconComponent size={size} /> : null;
@@ -79,11 +80,11 @@ export const RecomendationCard = () => {
               <div className="address">
                 <MapPin />
                 <span>
-                  {product.address.street} {product.address.number}, {product.address.city.name}
+                  {product.address.street}, {"#  "}{product.address.number}, {product.address.city.name}
                 </span>
               </div>
 
-              <p className="description">{product.description}</p>
+              <p className="description">{product.shortDescription}</p>
 
               <div className="features">
                 {product.features?.map((feature, index) => (
@@ -94,7 +95,9 @@ export const RecomendationCard = () => {
               </div>
 
               <div className="button-container">
-                <button className="details-button">Ver detalles</button>
+                <Link to={`/details/${product.id}`}>
+                  <button className="details-button">Ver detalles</button>
+                </Link>
               </div>
             </div>
           </div>

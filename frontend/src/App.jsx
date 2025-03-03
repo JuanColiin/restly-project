@@ -3,11 +3,12 @@ import './App.css';
 import SignUp from './components/Forms/SingUp/SingUp';
 import Header from './components/Header/Header';
 import Login from './components/Forms/Login/Login';
-import { AuthProvider } from './context/AuthContext'; // Importa el AuthProvider
+import { AuthProvider } from './context/AuthContext'; 
 import { PagePrincipal } from './components/Pages/PagePrincipal';
 import PropertyForm from './components/Forms/CreateProduct/PropertyForm';
 import { Footer } from './components/Footer/Footer';
 import ProductList from './components/ProductList/ProductList';
+import ProductDetails from './components/ProductDetails/ProductDetails';
 
 function App() {
   return (
@@ -20,7 +21,8 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/singup" element={<SignUp />} />
             <Route path="/CreateProduct" element={<PropertyForm/>} />
-            <Route path="ProductList" element={<ProductList/>} />
+            <Route path="/ProductList" element={<ProductList/>} />
+            <Route path="/details/:id" element={<ProductDetails/>} />
           </Routes>
         </main>
         <Footer />
