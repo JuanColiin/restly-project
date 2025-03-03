@@ -16,6 +16,7 @@ import {
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import ImageCarousel from "./ImageCarousel";
 
 const getFeatureIconAndName = (feature) => {
     if (!feature?.title) return { icon: null, name: "Desconocido" };
@@ -42,6 +43,7 @@ const ProductDetails = () => {
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [modalImages, setModalImages] = useState([]);
     const closeButtonRef = useRef(null);
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
     useEffect(() => {
         fetch(`http://localhost:8080/products/${id}`)
@@ -52,6 +54,10 @@ const ProductDetails = () => {
 
     useEffect(() => {
         Modal.setAppElement("#root");
+
+        const handleResize = () => setIsMobile(window.innerWidth <= 768);
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
     }, []);
 
     useEffect(() => {
@@ -62,16 +68,12 @@ const ProductDetails = () => {
 
     const openModal = () => {
         if (product?.images?.length > 0) {
-            console.log("Abriendo modal con imágenes:", product.images);
             setModalImages([...product.images]);
             setModalIsOpen(true);
-        } else {
-            console.warn("No hay imágenes disponibles para mostrar en la modal.");
         }
     };
 
     const closeModal = () => {
-        console.log("Cerrando modal");
         setModalIsOpen(false);
         setModalImages([]);
     };
@@ -98,21 +100,24 @@ const ProductDetails = () => {
                 </p>
             </div>
 
-            {product.images?.length > 0 && (
-                <div className="image-gallery">
-                    <img className="main-image" src={product.images[0].imageUrl} alt="Principal" />
-                    <div className="grid-images">
-                        {product.images.slice(1, 5).map((img, index) => (
-                            <img key={index} className="grid-image" src={img.imageUrl} alt={img.title || "Imagen"} />
-                        ))}
+            {isMobile ? (
+                <ImageCarousel productId={id} />
+            ) : (
+                product.images?.length > 0 && (
+                    <div className="image-gallery">
+                        <img className="main-image" src={product.images[0].imageUrl} alt="Principal" />
+                        <div className="grid-images">
+                            {product.images.slice(1, 5).map((img, index) => (
+                                <img key={index} className="grid-image" src={img.imageUrl} alt={img.title || "Imagen"} />
+                            ))}
+                        </div>
+                        {product.images.length > 1 && (
+                            <button className="view-more-btn" onClick={openModal}>
+                                Ver más fotografías del lugar
+                            </button>
+                        )}
                     </div>
-                </div>
-            )}
-
-            {product.images?.length > 1 && (
-                <button className="view-more-btn" onClick={openModal}>
-                    Ver más fotografías del lugar
-                </button>
+                )
             )}
 
             <div className="product-description-section">

@@ -1,0 +1,48 @@
+.image-carousel {
+    width: 100%;
+    max-width: 500px;
+    margin: 30px auto;
+    position: relative;
+}
+
+.carousel-item {
+    display: flex;
+    justify-content: center;
+}
+
+.carousel-image {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    aspect-ratio: 16/9;
+    object-fit: cover; 
+}
+
+
+.custom-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10;
+    transition: background 0.3s ease;
+}
+
+.custom-arrow:hover {
+    background: rgba(0, 0, 0, 0.8);
+}
+
+
+.prev-arrow {
+    left: 10px;
+}
+
+
+.next-arrow {
+    right: 10px;
+}

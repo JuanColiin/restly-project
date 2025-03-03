@@ -1,16 +1,8 @@
 import { Heart, MapPin } from "lucide-react";
 import { FiWifi } from "react-icons/fi";
-import {
-  FaSwimmingPool,
-  FaAirFreshener,
-  FaParking,
-  FaDumbbell,
-  FaPaw,
-  FaUtensils,
-  FaShuttleVan,
-  FaWheelchair,
-} from "react-icons/fa";
-import { Link } from "react-router-dom";  // Importamos Link
+import { FaSwimmingPool, FaAirFreshener, FaParking, FaDumbbell, FaPaw, FaUtensils, FaShuttleVan, FaWheelchair } from "react-icons/fa";
+import { Link } from "react-router-dom";
+import { AiOutlineDoubleLeft, AiOutlineLeft, AiOutlineRight, AiOutlineDoubleRight } from "react-icons/ai"; 
 import "./RecomendationCard.css";
 import { useEffect, useState } from "react";
 
@@ -35,6 +27,8 @@ const getFeatureIcon = (feature, size = 20) => {
 
 export const RecomendationCard = () => {
   const [products, setProducts] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const productsPerPage = 10;
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -52,11 +46,36 @@ export const RecomendationCard = () => {
     fetchProducts();
   }, []);
 
+  const indexOfLastProduct = currentPage * productsPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+  const currentProducts = products.slice(indexOfFirstProduct, indexOfLastProduct);
+  const totalPages = Math.ceil(products.length / productsPerPage);
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const handleFirstPage = () => {
+    setCurrentPage(1);
+  };
+
+  const handleLastPage = () => {
+    setCurrentPage(totalPages);
+  };
+
   return (
     <>
       <h1>Recomendaciones</h1>
       <div className="cards-container">
-        {products.map((product, index) => (
+        {currentProducts.map((product, index) => (
           <div className="card" key={index}>
             <div className="card-image-container">
               <img
@@ -102,6 +121,21 @@ export const RecomendationCard = () => {
             </div>
           </div>
         ))}
+      </div>
+      <div className="pagination">
+        <button onClick={handleFirstPage} disabled={currentPage === 1}>
+          <AiOutlineDoubleLeft />
+        </button>
+        <button onClick={handlePrevPage} disabled={currentPage === 1}>
+          <AiOutlineLeft />
+        </button>
+        <span>Página {currentPage} de {totalPages}</span>
+        <button onClick={handleNextPage} disabled={currentPage === totalPages}>
+          <AiOutlineRight />
+        </button>
+        <button onClick={handleLastPage} disabled={currentPage === totalPages}>
+          <AiOutlineDoubleRight />
+        </button>
       </div>
     </>
   );
