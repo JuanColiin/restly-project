@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom"; // Importamos Link de react-router-dom
 import Modal from "react-modal";
 import "./ProductDetails.css";
-import { FiWifi, FiMapPin, FiX } from "react-icons/fi";
+import { FiWifi, FiMapPin, FiX, FiArrowLeft } from "react-icons/fi"; // Importamos FiArrowLeft
 import {
     FaSwimmingPool,
     FaAirFreshener,
@@ -93,12 +93,16 @@ const ProductDetails = () => {
         <div className="product-details-container">
             <div className="product-header">
                 <h2 className="product-title">{product.title}</h2>
-                <p className="product-category">{product.category?.name}</p>
+                <Link to="/" className="back-to-home">
+                    <FiArrowLeft size={24} />
+                </Link>
+       
+            </div>
+            <p className="product-category">{product.category?.name}</p>
                 <p className="product-address">
                     <FiMapPin /> {product.address?.street} {product.address?.number},{" "}
                     {product.address?.city?.name}, {product.address?.city?.state?.country?.name}
                 </p>
-            </div>
 
             {isMobile ? (
                 <ImageCarousel productId={id} />

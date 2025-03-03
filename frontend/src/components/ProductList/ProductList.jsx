@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom'; // Importamos Link de react-router-dom
 import './ProductList.css'; // Archivo de estilos CSS
 
 const ProductList = () => {
@@ -16,21 +17,20 @@ const ProductList = () => {
   }, []);
 
   const handleDelete = (id) => {
-    axios.delete(`http://localhost:8080/products/${id}`)
-      .then(() => {
-        setProducts(products.filter(product => product.id !== id));
-      })
-      .catch(error => {
-        console.error('Error deleting product:', error);
-      });
+    const confirmDelete = window.confirm('¿Estás seguro de que deseas eliminar este producto?');
+    if (confirmDelete) {
+      axios.delete(`http://localhost:8080/products/${id}`)
+        .then(() => {
+          setProducts(products.filter(product => product.id !== id));
+        })
+        .catch(error => {
+          console.error('Error deleting product:', error);
+        });
+    }
   };
 
   const handleUpdate = (id) => {
     console.log(`Updating product with id: ${id}`);
-  };
-
-  const handleViewDetails = (id) => {
-    console.log(`Viewing details of product with id: ${id}`);
   };
 
   return (
@@ -51,7 +51,9 @@ const ProductList = () => {
               <td>
                 <button onClick={() => handleDelete(product.id)}>Eliminar</button>
                 <button onClick={() => handleUpdate(product.id)}>Actualizar</button>
-                <button onClick={() => handleViewDetails(product.id)}>Ver Detalles</button>
+                <Link to={`/details/${product.id}`}>
+                  <button>Ver Detalles</button>
+                </Link>
               </td>
               <td>{product.id}</td>
               <td>{product.title}</td>

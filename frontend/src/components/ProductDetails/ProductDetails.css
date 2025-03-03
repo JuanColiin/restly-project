@@ -1,16 +1,33 @@
-/* CONTENEDOR PRINCIPAL */
+
 .product-details-container {
     max-width: 1200px;
     margin: 90px auto;
     padding: 20px;
 }
 
-/* ENCABEZADO */
+
 .product-header {
     display: flex;
-    flex-direction: column;
+    align-items: center;
+    justify-content: space-between; 
     text-align: left;
     margin-bottom: 20px;
+}
+
+.product-title {
+    flex-grow: 1;
+}
+
+.back-to-home {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+    margin-left: 10px;
+}
+
+.back-to-home:hover {
+    color: #007bff;
 }
 
 .product-description-title {
@@ -36,16 +53,16 @@
     gap: 5px;
 }
 
-/* GALERÍA DE IMÁGENES */
+
 .image-gallery {
     display: grid;
-    grid-template-columns: 1fr 1fr; /* Imagen principal a la izquierda, grilla a la derecha */
+    grid-template-columns: 1fr 1fr; 
     gap: 10px;
     margin-top: 20px;
     width: 100%;
 }
 
-/* IMAGEN PRINCIPAL */
+
 .main-image {
     width: 100%;
     height: 100%;
@@ -53,7 +70,7 @@
     border-radius: 10px;
 }
 
-/* GRILLA DE IMÁGENES */
+
 .grid-images {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -70,7 +87,7 @@
     border-radius: 10px;
 }
 
-/* BOTÓN "VER MÁS" */
+
 .view-more-btn {
     align-self: flex-end;
     margin-top: 10px;
@@ -90,7 +107,7 @@
     outline: none;
 }
 
-/* MODAL */
+
 .modal-overlay {
     position: fixed;
     inset: 0;
@@ -113,12 +130,11 @@
     position: relative;
 }
 
-/* Evitar desplazamiento cuando la modal está abierta */
 body.modal-open {
     overflow: hidden;
 }
 
-/* BOTÓN CERRAR */
+
 .close-btn {
     position: absolute;
     top: 10px;
@@ -136,7 +152,7 @@ body.modal-open {
     outline: none;
 }
 
-/* SLIDER */
+
 .slider {
     width: 100%;
     position: relative;
@@ -148,7 +164,7 @@ body.modal-open {
     align-items: center;
 }
 
-/* Contenedor de imágenes con relación de aspecto 16:9 */
+
 .slider-item {
     width: 100%;
     position: relative;
@@ -166,7 +182,7 @@ body.modal-open {
     border-radius: 10px;
 }
 
-/* Botones de navegación */
+
 .slick-prev,
 .slick-next {
     position: absolute;
@@ -205,7 +221,7 @@ body.modal-open {
     background: rgba(0, 0, 0, 0.8);
 }
 
-/* SECCIÓN DE CARACTERÍSTICAS */
+
 .features-section {
     margin-top: 20px;
 }
@@ -246,7 +262,7 @@ body.modal-open {
     color: #ff5a5f;
 }
 
-/* RESPONSIVE */
+
 @media (max-width: 1024px) {
     .image-gallery {
         display: flex;
