@@ -22,6 +22,7 @@ public class ProductDTO {
     private String title;
     private AddressDTO address;
     private String description;
+    private String shortDescription;
     private Integer stars;
     private String review;
     private CategoryDTO category;

@@ -38,10 +38,10 @@ public class Product {
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Address address;
 
-    @Column(name = "description", nullable = false)
+    @Column(name = "description", nullable = false, columnDefinition = "TEXT")
     private String description;
 
-    @Column(name = "short_description")
+    @Column(name = "short_description", nullable = false, columnDefinition = "TEXT")
     private String shortDescription;
 
     @Column(name = "stars")

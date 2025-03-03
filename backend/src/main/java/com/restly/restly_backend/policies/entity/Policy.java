@@ -21,17 +21,16 @@ public class Policy {
     @Column(name = "policy_id", nullable = false)
     private Long id;
 
-    @Column(name = "rules", length = 500)
+    @Column(name = "rules", columnDefinition = "TEXT")
     private String rules;
 
-    @Column(name = "security", length = 500)
+    @Column(name = "security", columnDefinition = "TEXT")
     private String security;
 
-    @Column(name = "cancellation", length = 500)
+    @Column(name = "cancellation", columnDefinition = "TEXT")
     private String cancellation;
 
     @JsonBackReference
     @OneToOne(mappedBy = "policy", optional = false, cascade = CascadeType.MERGE)
     private Product product;
 }
-

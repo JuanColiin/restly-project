@@ -26,14 +26,22 @@ public class CategoryServiceImpl implements ICategoryService {
     public List<CategoryDTO> getAllCategories() {
         return categoryRepository.findAll()
                 .stream()
-                .map(category -> modelMapper.map(category, CategoryDTO.class))
+                .map(category -> {
+                    CategoryDTO dto = modelMapper.map(category, CategoryDTO.class);
+                    dto.setTotalProducts((long) category.getProducts().size()); // Asigna el total de productos
+                    return dto;
+                })
                 .collect(Collectors.toList());
     }
 
     @Override
     public Optional<CategoryDTO> getCategoryById(Long id) {
         return categoryRepository.findById(id)
-                .map(category -> modelMapper.map(category, CategoryDTO.class));
+                .map(category -> {
+                    CategoryDTO dto = modelMapper.map(category, CategoryDTO.class);
+                    dto.setTotalProducts((long) category.getProducts().size()); // Asigna el total de productos
+                    return dto;
+                });
     }
 
     @Override
@@ -72,10 +80,9 @@ public class CategoryServiceImpl implements ICategoryService {
             newCategory.setName(categoryName);
             return categoryRepository.save(newCategory);
         });
-        return category; // Devolvemos la entidad Category
+        return category;
     }
 }
-
 
 
 
