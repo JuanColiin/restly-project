@@ -9,6 +9,7 @@ import PropertyForm from './components/Forms/CreateProduct/PropertyForm';
 import { Footer } from './components/Footer/Footer';
 import ProductList from './components/ProductList/ProductList';
 import ProductDetails from './components/ProductDetails/ProductDetails';
+import CategoryForm from './components/Forms/CategoryForm/CategoryForm';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
             <Route path="/CreateProduct" element={<PropertyForm/>} />
             <Route path="/ProductList" element={<ProductList/>} />
             <Route path="/details/:id" element={<ProductDetails/>} />
+            <Route path="Categories" element={<CategoryForm/>} />
           </Routes>
         </main>
         <Footer />
