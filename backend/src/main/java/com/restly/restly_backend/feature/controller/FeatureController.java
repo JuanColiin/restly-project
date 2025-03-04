@@ -49,7 +49,6 @@ public class FeatureController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (DataIntegrityViolationException e) {
-            // Maneja el caso cuando la entrada ya existe (duplicada)
             return ResponseEntity.status(HttpStatus.CONFLICT).body("La característica con el título '"
                     + featureDTO.getTitle() + "' ya existe.");
         } catch (Exception e) {

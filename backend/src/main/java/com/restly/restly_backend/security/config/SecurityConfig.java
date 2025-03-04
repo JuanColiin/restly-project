@@ -31,6 +31,8 @@ public class SecurityConfig {
                                 .requestMatchers("/products/**").permitAll()
                                 .requestMatchers("/categories/**").permitAll()
                                 .requestMatchers("/cities/**").permitAll()
+                                .requestMatchers("/features/**").permitAll()
+                                .requestMatchers("/products/category/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/swagger-ui/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/v3/api-docs/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/swagger-ui.html").permitAll()

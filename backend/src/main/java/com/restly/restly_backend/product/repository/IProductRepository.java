@@ -14,7 +14,8 @@ import java.util.List;
 @Repository
 public interface IProductRepository extends JpaRepository<Product, Long> {
 
-    List<Product> getByCategory(Category category);
+    List<Product> findByCategoryId(Long categoryId);
+
 
     List<Product> getByCity(City city);
 

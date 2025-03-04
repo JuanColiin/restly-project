@@ -1,6 +1,7 @@
 package com.restly.restly_backend.product.service.impl;
 
 import com.restly.restly_backend.category.entity.Category;
+import com.restly.restly_backend.category.repository.ICategoryRepository;
 import com.restly.restly_backend.category.service.ICategoryService;
 import com.restly.restly_backend.feature.entity.Feature;
 import com.restly.restly_backend.feature.repository.IFeatureRepository;
@@ -18,6 +19,7 @@ import com.restly.restly_backend.locations.state.service.IStateService;
 import com.restly.restly_backend.policies.entity.Policy;
 import com.restly.restly_backend.product.dto.ProductDTO;
 import com.restly.restly_backend.product.entity.Product;
+import com.restly.restly_backend.product.exception.NoProductsInCategoryException;
 import com.restly.restly_backend.product.exception.ProductAlreadyExistsException;
 import com.restly.restly_backend.product.exception.ProductNotFoundException;
 import com.restly.restly_backend.product.repository.IProductRepository;
@@ -46,6 +48,7 @@ public class ProductServiceImpl implements IProductService {
     private final ICountryRepository countryRepository;
     private final ICityRepository cityRepository;
     private final IFeatureRepository featureRepository;
+    private final ICategoryRepository categoryRepository;
 
     @Override
     public List<ProductDTO> getAllProducts() {
@@ -62,14 +65,22 @@ public class ProductServiceImpl implements IProductService {
 
     @Override
     public List<ProductDTO> getProductsByCategory(Long categoryId) {
-        Category category = categoryService.getCategoryById(categoryId)
-                .map(dto -> modelMapper.map(dto, Category.class))
-                .orElseThrow(() -> new RuntimeException("Categoría no encontrada con ID: " + categoryId));
+        if (!categoryRepository.existsById(categoryId)) {
+            throw new RuntimeException("Categoría no encontrada con ID: " + categoryId);
+        }
 
-        return productRepository.getByCategory(category).stream()
+        List<Product> products = productRepository.findByCategoryId(categoryId);
+
+        if (products.isEmpty()) {
+            throw new NoProductsInCategoryException("No hay propiedades en esta categoría.");
+        }
+
+        return products.stream()
                 .map(product -> modelMapper.map(product, ProductDTO.class))
                 .collect(Collectors.toList());
     }
+
+
 
     @Transactional
     @Override

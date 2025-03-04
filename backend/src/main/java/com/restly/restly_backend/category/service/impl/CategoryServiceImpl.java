@@ -2,6 +2,7 @@ package com.restly.restly_backend.category.service.impl;
 
 import com.restly.restly_backend.category.dto.CategoryDTO;
 import com.restly.restly_backend.category.entity.Category;
+import com.restly.restly_backend.category.exception.CategoryAlreadyExistsException;
 import com.restly.restly_backend.category.exception.CategoryNotFoundException;
 import com.restly.restly_backend.category.repository.ICategoryRepository;
 import com.restly.restly_backend.category.service.ICategoryService;
@@ -28,7 +29,7 @@ public class CategoryServiceImpl implements ICategoryService {
                 .stream()
                 .map(category -> {
                     CategoryDTO dto = modelMapper.map(category, CategoryDTO.class);
-                    dto.setTotalProducts((long) category.getProducts().size()); // Asigna el total de productos
+                    dto.setTotalProducts((long) category.getProducts().size());
                     return dto;
                 })
                 .collect(Collectors.toList());
@@ -39,7 +40,7 @@ public class CategoryServiceImpl implements ICategoryService {
         return categoryRepository.findById(id)
                 .map(category -> {
                     CategoryDTO dto = modelMapper.map(category, CategoryDTO.class);
-                    dto.setTotalProducts((long) category.getProducts().size()); // Asigna el total de productos
+                    dto.setTotalProducts((long) category.getProducts().size());
                     return dto;
                 });
     }
@@ -47,10 +48,15 @@ public class CategoryServiceImpl implements ICategoryService {
     @Override
     @Transactional
     public CategoryDTO saveCategory(CategoryDTO categoryDTO) {
+        if (categoryRepository.findByName(categoryDTO.getName()).isPresent()) {
+            throw new CategoryAlreadyExistsException("Ya existe una categoría con el nombre '" + categoryDTO.getName() + "'.");
+        }
+
         Category category = modelMapper.map(categoryDTO, Category.class);
         Category savedCategory = categoryRepository.save(category);
         return modelMapper.map(savedCategory, CategoryDTO.class);
     }
+
 
     @Override
     @Transactional
