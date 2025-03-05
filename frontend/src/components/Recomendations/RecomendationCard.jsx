@@ -2,9 +2,10 @@ import { Heart, MapPin } from "lucide-react";
 import { FiWifi } from "react-icons/fi";
 import { FaSwimmingPool, FaAirFreshener, FaParking, FaDumbbell, FaPaw, FaUtensils, FaShuttleVan, FaWheelchair } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import { AiOutlineDoubleLeft, AiOutlineLeft, AiOutlineRight, AiOutlineDoubleRight } from "react-icons/ai"; 
+import { AiOutlineDoubleLeft, AiOutlineLeft, AiOutlineRight, AiOutlineDoubleRight } from "react-icons/ai";
+import PropTypes from "prop-types";
 import "./RecomendationCard.css";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const getFeatureIcon = (feature, size = 20) => {
   const icons = {
@@ -25,26 +26,9 @@ const getFeatureIcon = (feature, size = 20) => {
   return IconComponent ? <IconComponent size={size} /> : null;
 };
 
-export const RecomendationCard = () => {
-  const [products, setProducts] = useState([]);
+export const RecomendationCard = ({ products }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 10;
-
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await fetch("http://localhost:8080/products");
-        let data = await response.json();
-
-        data = data.sort(() => Math.random() - 0.5);
-        setProducts(data);
-      } catch (error) {
-        console.error("Error fetching products:", error);
-      }
-    };
-
-    fetchProducts();
-  }, []);
 
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
@@ -139,4 +123,8 @@ export const RecomendationCard = () => {
       </div>
     </>
   );
+};
+
+RecomendationCard.propTypes = {
+  products: PropTypes.array.isRequired,
 };

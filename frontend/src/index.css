@@ -25,7 +25,7 @@
 }
 
 body {
-  min-height: 100vh; /* Asegura que el body ocupe al menos el 100% del viewport */
+  min-height: 100vh;
   background-color: var(--white-color);
   display: flex;
   flex-direction: column;
