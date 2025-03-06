@@ -57,7 +57,6 @@ export const RecomendationCard = ({ products }) => {
 
   return (
     <>
-      <h1>Recomendaciones</h1>
       <div className="cards-container">
         {currentProducts.map((product, index) => (
           <div className="card" key={index}>

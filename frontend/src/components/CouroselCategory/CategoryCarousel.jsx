@@ -19,6 +19,15 @@ export default function CategoryCarousel({ onSelectCategory }) {
     fetchCategories();
   }, []);
 
+  const handleCategoryClick = async (categoryId) => {
+    try {
+      const response = await axios.get(`http://localhost:8080/products/category/${categoryId}`);
+      onSelectCategory(response.data); // Actualiza los productos en RecomendationCard
+    } catch (error) {
+      console.error("Error fetching products by category:", error);
+    }
+  };
+
   return (
     <>
       <h1>Buscar por tipo de alojamiento</h1>
@@ -27,7 +36,7 @@ export default function CategoryCarousel({ onSelectCategory }) {
           <div
             key={category.id}
             className="carousel-card"
-            onClick={() => onSelectCategory(category.id)}
+            onClick={() => handleCategoryClick(category.id)}
           >
             <div className="carousel-card-image">
               <img
@@ -45,7 +54,6 @@ export default function CategoryCarousel({ onSelectCategory }) {
     </>
   );
 }
-
 
 CategoryCarousel.propTypes = {
   onSelectCategory: PropTypes.func.isRequired,

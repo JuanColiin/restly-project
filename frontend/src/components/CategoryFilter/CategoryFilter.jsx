@@ -7,6 +7,7 @@ const CategoryFilter = ({ onProductsUpdate }) => {
   const [categories, setCategories] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [totalProducts, setTotalProducts] = useState(0);
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     axios.get("http://localhost:8080/categories")
@@ -48,37 +49,48 @@ const CategoryFilter = ({ onProductsUpdate }) => {
 
   const clearFilters = () => {
     setSelectedCategories([]);
-    fetchProducts(); 
+    fetchProducts();
   };
 
   return (
+    <> 
+    <h1>Recomendaciones</h1>
     <div className="category-filter-container">
-    <div className="category-filter">
-      <h2>Filtrar por Categoría</h2>
-      <p>Mostrando {totalProducts} productos</p>
-      <div className="category-list">
-        {categories.map(category => (
-          <label key={category.id} className="category-item">
-            <input 
-              type="checkbox" 
-              value={category.id} 
-              checked={selectedCategories.includes(category.id)} 
-              onChange={() => handleCategoryChange(category.id)}
-            />
-            <span>{category.name} ({category.totalProducts})</span>
-          </label>
-        ))}
+    
+      <div className={`category-filter ${isOpen ? "open" : ""}`}>
+        <h2 onClick={() => setIsOpen(!isOpen)}>
+          Filtrar por categorías
+          <span className={`dropdown-icon ${isOpen ? "rotated" : ""}`}>&#9660;</span>
+        </h2>
+        {isOpen && (
+          <>
+            <p>Mostrando {totalProducts} productos</p>
+            <div className="category-list">
+              {categories.map(category => (
+                <label key={category.id} className="category-item">
+                  <input 
+                    type="checkbox" 
+                    value={category.id} 
+                    checked={selectedCategories.includes(category.id)} 
+                    onChange={() => handleCategoryChange(category.id)}
+                  />
+                  <span>{category.name} ({category.totalProducts})</span>
+                </label>
+              ))}
+            </div>
+            <div className="category-filter-buttons">
+              <button onClick={fetchProducts} className="category-filter-btn">
+                Filtrar
+              </button>
+              <button onClick={clearFilters} className="category-filter-clear-btn">
+                Limpiar Filtros
+              </button>
+            </div>
+          </>
+        )}
       </div>
-      <div className="buttons-container">
-      <button onClick={fetchProducts} className="search-button">
-        Buscar
-      </button>
-      <button onClick={clearFilters} className="search-button">
-        Limpiar Filtros
-      </button>
-        </div>
     </div>
-    </div>
+    </>
   );
 };
 

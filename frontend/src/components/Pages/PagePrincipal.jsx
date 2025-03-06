@@ -17,7 +17,7 @@ export const PagePrincipal = () => {
   return (
     <>
       <NavBar />
-      <CategoryCarousel />
+      <CategoryCarousel onSelectCategory={setProducts} />
       <CategoryFilter onProductsUpdate={setProducts} />
       <RecomendationCard products={products} />
     </>
