@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useContext } from "react";
 import "./Header.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import AuthContext from "../../context/AuthContext";
 import Dropdown from "./DropDown";
 
@@ -9,14 +9,15 @@ const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const menuRef = useRef(null);
   const profileRef = useRef(null);
+  const navigate = useNavigate();
   const { user, logout } = useContext(AuthContext);
 
   const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
+    setIsDropdownOpen((prev) => !prev);
   };
 
   const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
+    setIsMobileMenuOpen((prev) => !prev);
   };
 
   const closeMenu = () => {
@@ -25,13 +26,17 @@ const Header = () => {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
+      if (
+        menuRef.current &&
+        !menuRef.current.contains(event.target) &&
+        profileRef.current &&
+        !profileRef.current.contains(event.target)
+      ) {
         setIsMobileMenuOpen(false);
-      }
-      if (profileRef.current && !profileRef.current.contains(event.target)) {
         setIsDropdownOpen(false);
       }
     };
+
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
@@ -46,6 +51,18 @@ const Header = () => {
         : nameParts[0][0];
     }
     return email ? email[0].toUpperCase() : "U";
+  };
+
+  const handleLogout = (event) => {
+    event.preventDefault(); // Evita que el evento cierre el dropdown antes de ejecutar logout
+    logout();
+    setIsDropdownOpen(false);
+  };
+
+  const handleProfileClick = (event) => {
+    event.preventDefault(); // Evita que se cierre antes de redirigir
+    setIsDropdownOpen(false);
+    navigate("/profile");
   };
 
   return (
@@ -68,8 +85,8 @@ const Header = () => {
                 </div>
                 <div className="profile-welcome">Bienvenido, {user?.firstname || user?.email}</div>
                 <div className="profile-email">{user?.email}</div>
-                <Link to="/profile" className="profile-option">Perfil</Link>
-                <Link to="#" className="profile-option" onClick={logout}>Cerrar sesión</Link>
+                <Link to="/profile" className="profile-option" onClick={handleProfileClick}>Perfil</Link>
+                <Link to="#" className="profile-option" onClick={handleLogout}>Cerrar sesión</Link>
               </div>
             )}
           </div>
@@ -112,8 +129,8 @@ const Header = () => {
               </div>
               <div className="profile-welcome">Bienvenido, {user?.firstname || user?.email}</div>
               <div className="profile-email">{user?.email}</div>
-              <Link to="/profile" className="profile-option">Perfil</Link>
-              <Link to="#" className="profile-option" onClick={logout}>Cerrar sesión</Link>
+              <Link to="/profile" className="profile-option" onClick={handleProfileClick}>Perfil</Link>
+              <Link to="#" className="profile-option" onClick={handleLogout}>Cerrar sesión</Link>
             </div>
           )}
         </div>

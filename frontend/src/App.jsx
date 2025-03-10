@@ -10,6 +10,7 @@ import { Footer } from './components/Footer/Footer';
 import ProductList from './components/ProductList/ProductList';
 import ProductDetails from './components/ProductDetails/ProductDetails';
 import CategoryForm from './components/Forms/CategoryForm/CategoryForm';
+import UserProfile from './components/UserProfile/UserProfile';
 
 function App() {
   return (
@@ -24,7 +25,8 @@ function App() {
             <Route path="/CreateProduct" element={<PropertyForm/>} />
             <Route path="/ProductList" element={<ProductList/>} />
             <Route path="/details/:id" element={<ProductDetails/>} />
-            <Route path="Categories" element={<CategoryForm/>} />
+            <Route path="/categories" element={<CategoryForm/>} />
+            <Route path="/profile" element={<UserProfile/>} />
           </Routes>
         </main>
         <Footer />

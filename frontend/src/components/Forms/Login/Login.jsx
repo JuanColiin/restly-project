@@ -27,20 +27,20 @@ export default function Login() {
     try {
       const response = await axios.post('http://localhost:8080/auth/login', formData);
 
-      // Verifica y extrae los datos correctos del response
+
       const userData = {
         token: response.data.token,
-        firstname: response.data.firstname, // Obtén el firstname del response
+        firstname: response.data.firstname,
         email: response.data.email,
-        role: response.data.role, // Agregado si se necesita en otros componentes
-        userId: response.data.userId // Agregado si es necesario
+        role: response.data.role, 
+        userId: response.data.userId
       };
 
-      // Llamada a login para actualizar el contexto
+   
       login(userData);
 
-      // Redirige al dashboard o página principal tras login exitoso
-      navigate('/dashboard');
+
+      navigate('/');
     } catch (err) {
       console.error('Error en el login:', err);
       setError('Correo electrónico o contraseña incorrectos');
