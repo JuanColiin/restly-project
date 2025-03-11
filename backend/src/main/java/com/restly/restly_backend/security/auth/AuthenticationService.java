@@ -5,10 +5,12 @@ import com.restly.restly_backend.security.entity.Role;
 import com.restly.restly_backend.security.entity.User;
 import com.restly.restly_backend.security.repository.IUserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +22,10 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
 
     public AuthenticationResponse register(RegisterRequest request) {
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "El correo electrónico ya está registrado.");
+        }
+
         var user = User.builder()
                 .firstname(request.getFirstname())
                 .lastname(request.getLastname())
@@ -32,10 +38,9 @@ public class AuthenticationService {
 
         var jwt = jwtService.generateToken(user);
 
-        // Agregar mensaje en la respuesta
         return AuthenticationResponse.builder()
                 .token(jwt)
-                .message("User registered successfully")
+                .message("Usuario registrado con éxito")
                 .userId(user.getId())
                 .firstname(user.getFirstname())
                 .username(user.getUsername())
@@ -43,6 +48,8 @@ public class AuthenticationService {
                 .role(user.getRole().name())
                 .build();
     }
+
+
 
 
     public AuthenticationResponse login(AuthenticationRequest request) {
