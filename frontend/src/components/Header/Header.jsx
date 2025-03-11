@@ -54,13 +54,13 @@ const Header = () => {
   };
 
   const handleLogout = (event) => {
-    event.preventDefault(); // Evita que el evento cierre el dropdown antes de ejecutar logout
+    event.preventDefault(); 
     logout();
     setIsDropdownOpen(false);
   };
 
   const handleProfileClick = (event) => {
-    event.preventDefault(); // Evita que se cierre antes de redirigir
+    event.preventDefault(); 
     setIsDropdownOpen(false);
     navigate("/profile");
   };
@@ -128,7 +128,6 @@ const Header = () => {
                 {getInitials(user?.firstname, user?.email)}
               </div>
               <div className="profile-welcome">Bienvenido, {user?.firstname || user?.email}</div>
-              <div className="profile-email">{user?.email}</div>
               <Link to="/profile" className="profile-option" onClick={handleProfileClick}>Perfil</Link>
               <Link to="#" className="profile-option" onClick={handleLogout}>Cerrar sesión</Link>
             </div>

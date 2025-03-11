@@ -12,7 +12,7 @@ export default function Login() {
 
   const [error, setError] = useState(null);
   const navigate = useNavigate();
-  const { login } = useContext(AuthContext); // Obtener la función de login del contexto
+  const { login } = useContext(AuthContext); 
 
   const handleChange = (e) => {
     const { name, value } = e.target;
