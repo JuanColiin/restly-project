@@ -94,31 +94,6 @@
   gap: 1rem;
 }
 
-.features {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-}
-
-.featureCheckbox {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  cursor: pointer;
-  padding: 0.5rem;
-  border-radius: 6px;
-  transition: background-color 0.2s;
-  color: var(--color-dark-secondary);
-}
-
-.featureCheckbox:hover {
-  background-color: rgba(125, 226, 209, 0.1);
-}
-
-.featureCheckbox input[type="checkbox"] {
-  accent-color: var(--color-primary);
-}
 
 .imageInputGroup {
   display: grid;

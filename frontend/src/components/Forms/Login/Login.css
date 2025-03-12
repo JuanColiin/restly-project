@@ -1,13 +1,13 @@
 .login-container {
   max-width: 600px;
-  width: 100%; /* Mantener el ancho original */
+  width: 100%; 
   padding: 20px;
   font-family: Arial, sans-serif;
   background-color: #fff;
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%); /* Esto asegura que el formulario esté centrado vertical y horizontalmente */
+  transform: translate(-50%, -50%); 
 }
 
 .login-container h1 {

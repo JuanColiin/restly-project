@@ -1,36 +1,39 @@
 import { useState, useEffect, useRef } from "react";
-import { useParams, Link } from "react-router-dom"; // Importamos Link de react-router-dom
+import { useParams, Link } from "react-router-dom";
 import Modal from "react-modal";
 import "./ProductDetails.css";
-import { FiWifi, FiMapPin, FiX, FiArrowLeft } from "react-icons/fi"; // Importamos FiArrowLeft
-import {
-    FaSwimmingPool,
-    FaAirFreshener,
-    FaParking,
-    FaDumbbell,
-    FaPaw,
-    FaUtensils,
-    FaShuttleVan,
-    FaWheelchair,
-} from "react-icons/fa";
+import ImageCarousel from "./ImageCarousel";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import ImageCarousel from "./ImageCarousel";
+import {
+    Wifi,
+    Pool,
+    AcUnit,
+    LocalParking,
+    FitnessCenter,
+    Pets,
+    Restaurant,
+    AirportShuttle,
+    Accessible,
+    Place,
+    ArrowBack,
+    Close
+} from "@mui/icons-material";
 
 const getFeatureIconAndName = (feature) => {
     if (!feature?.title) return { icon: null, name: "Desconocido" };
 
     const featuresMap = {
-        wifi: { icon: <FiWifi />, name: "Wi-Fi" },
-        pool: { icon: <FaSwimmingPool />, name: "Piscina" },
-        airconditioning: { icon: <FaAirFreshener />, name: "Aire acondicionado" },
-        parking: { icon: <FaParking />, name: "Parqueadero" },
-        gym: { icon: <FaDumbbell />, name: "Gimnasio" },
-        petsallowed: { icon: <FaPaw />, name: "Mascotas permitidas" },
-        breakfastincluded: { icon: <FaUtensils />, name: "Desayuno incluido" },
-        airportshuttle: { icon: <FaShuttleVan />, name: "Transporte al aeropuerto" },
-        wheelchairaccessible: { icon: <FaWheelchair />, name: "Accesible para sillas de ruedas" },
+        wifi: { icon: <Wifi />, name: "Wi-Fi" },
+        pool: { icon: <Pool />, name: "Piscina" },
+        airconditioning: { icon: <AcUnit />, name: "Aire acondicionado" },
+        parking: { icon: <LocalParking />, name: "Parqueadero" },
+        gym: { icon: <FitnessCenter />, name: "Gimnasio" },
+        petsallowed: { icon: <Pets />, name: "Mascotas permitidas" },
+        breakfastincluded: { icon: <Restaurant />, name: "Desayuno incluido" },
+        airportshuttle: { icon: <AirportShuttle />, name: "Transporte al aeropuerto" },
+        wheelchairaccessible: { icon: <Accessible />, name: "Accesible para sillas de ruedas" },
     };
 
     const normalizedFeature = feature.title.trim().toLowerCase().replace(/\s+/g, "");
@@ -94,15 +97,13 @@ const ProductDetails = () => {
             <div className="product-header">
                 <h2 className="product-title">{product.title}</h2>
                 <Link to="/" className="back-to-home">
-                    <FiArrowLeft size={24} />
+                    <ArrowBack fontSize="large" />
                 </Link>
-       
             </div>
             <p className="product-category">{product.category?.name}</p>
-                <p className="product-address">
-                    <FiMapPin /> {product.address?.street} {product.address?.number},{" "}
-                    {product.address?.city?.name}, {product.address?.city?.state?.country?.name}
-                </p>
+            <p className="product-address">
+                <Place /> {product.address?.street} {product.address?.number}, {product.address?.city?.name}, {product.address?.city?.state?.country?.name}
+            </p>
 
             {isMobile ? (
                 <ImageCarousel productId={id} />
@@ -152,7 +153,7 @@ const ProductDetails = () => {
                 shouldCloseOnOverlayClick={true}
             >
                 <button className="close-btn" onClick={closeModal} ref={closeButtonRef}>
-                    <FiX size={24} />
+                    <Close fontSize="large" />
                 </button>
 
                 {modalImages.length > 0 ? (

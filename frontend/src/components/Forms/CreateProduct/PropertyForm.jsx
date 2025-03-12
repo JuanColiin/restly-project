@@ -1,18 +1,10 @@
 import { useState, useEffect } from "react"
-import {FiMapPin, FiWifi } from "react-icons/fi"
-import {
-  FaSwimmingPool,
-  FaAirFreshener,
-  FaParking,
-  FaDumbbell,
-  FaPaw,
-  FaUtensils,
-  FaShuttleVan,
-  FaWheelchair,
-} from "react-icons/fa"
+import {FiMapPin } from "react-icons/fi"
+
 import axios from "axios"
 import styles from "./PropertyForm.module.css"
 import Swal from 'sweetalert2';
+import FeaturesSelector from "./FeatureSelector"
 
 
 export default function PropertyForm() {
@@ -365,137 +357,7 @@ export default function PropertyForm() {
           </div>
         </div>
 
-        <div className={styles.featuresSection}>
-          <h3>Características</h3>
-          <div className={styles.features}>
-            <label className={styles.featureCheckbox}>
-              <input
-                type="checkbox"
-                name="wifi"
-                checked={formData.features.wifi}
-                onChange={(e) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    features: { ...prev.features, wifi: e.target.checked },
-                  }))
-                }
-              />
-              <FiWifi /> WiFi
-            </label>
-            <label className={styles.featureCheckbox}>
-              <input
-                type="checkbox"
-                name="pool"
-                checked={formData.features.pool}
-                onChange={(e) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    features: { ...prev.features, pool: e.target.checked },
-                  }))
-                }
-              />
-              <FaSwimmingPool /> Piscina
-            </label>
-            <label className={styles.featureCheckbox}>
-              <input
-                type="checkbox"
-                name="airConditioning"
-                checked={formData.features.airConditioning}
-                onChange={(e) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    features: { ...prev.features, airConditioning: e.target.checked },
-                  }))
-                }
-              />
-              <FaAirFreshener /> Aire acondicionado
-            </label>
-            <label className={styles.featureCheckbox}>
-              <input
-                type="checkbox"
-                name="parking"
-                checked={formData.features.parking}
-                onChange={(e) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    features: { ...prev.features, parking: e.target.checked },
-                  }))
-                }
-              />
-              <FaParking /> Estacionamiento
-            </label>
-            <label className={styles.featureCheckbox}>
-              <input
-                type="checkbox"
-                name="gym"
-                checked={formData.features.gym}
-                onChange={(e) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    features: { ...prev.features, gym: e.target.checked },
-                  }))
-                }
-              />
-              <FaDumbbell /> Gimnasio
-            </label>
-            <label className={styles.featureCheckbox}>
-              <input
-                type="checkbox"
-                name="petsAllowed"
-                checked={formData.features.petsAllowed}
-                onChange={(e) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    features: { ...prev.features, petsAllowed: e.target.checked },
-                  }))
-                }
-              />
-              <FaPaw /> Se permiten mascotas
-            </label>
-            <label className={styles.featureCheckbox}>
-              <input
-                type="checkbox"
-                name="breakfastIncluded"
-                checked={formData.features.breakfastIncluded}
-                onChange={(e) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    features: { ...prev.features, breakfastIncluded: e.target.checked },
-                  }))
-                }
-              />
-              <FaUtensils /> Desayuno incluido
-            </label>
-            <label className={styles.featureCheckbox}>
-              <input
-                type="checkbox"
-                name="airportShuttle"
-                checked={formData.features.airportShuttle}
-                onChange={(e) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    features: { ...prev.features, airportShuttle: e.target.checked },
-                  }))
-                }
-              />
-              <FaShuttleVan /> Servicio de transporte
-            </label>
-            <label className={styles.featureCheckbox}>
-              <input
-                type="checkbox"
-                name="wheelchairAccessible"
-                checked={formData.features.wheelchairAccessible}
-                onChange={(e) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    features: { ...prev.features, wheelchairAccessible: e.target.checked },
-                  }))
-                }
-              />
-              <FaWheelchair /> Accesibilidad
-            </label>
-          </div>
-        </div>
+        <FeaturesSelector  formData={formData} setFormData={setFormData} />
 
         {/* Nueva sección de Políticas */}
         <div className={styles.policySection}>

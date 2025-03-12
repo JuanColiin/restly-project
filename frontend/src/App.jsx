@@ -11,6 +11,7 @@ import ProductList from './components/ProductList/ProductList';
 import ProductDetails from './components/ProductDetails/ProductDetails';
 import CategoryForm from './components/Forms/CategoryForm/CategoryForm';
 import UserProfile from './components/UserProfile/UserProfile';
+import FeatureForm from './components/Forms/FeatureForm/FeatureForm';
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
             <Route path="/details/:id" element={<ProductDetails/>} />
             <Route path="/categories" element={<CategoryForm/>} />
             <Route path="/profile" element={<UserProfile/>} />
+            <Route path="/Createfeature" element={<FeatureForm/>} />
           </Routes>
         </main>
         <Footer />

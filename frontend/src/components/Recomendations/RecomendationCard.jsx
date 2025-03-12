@@ -1,29 +1,44 @@
-import { Heart, MapPin } from "lucide-react";
-import { FiWifi } from "react-icons/fi";
-import { FaSwimmingPool, FaAirFreshener, FaParking, FaDumbbell, FaPaw, FaUtensils, FaShuttleVan, FaWheelchair } from "react-icons/fa";
-import { Link } from "react-router-dom";
-import { AiOutlineDoubleLeft, AiOutlineLeft, AiOutlineRight, AiOutlineDoubleRight } from "react-icons/ai";
-import PropTypes from "prop-types";
-import "./RecomendationCard.css";
 import { useState } from "react";
+import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
+import { IconButton, SvgIcon } from "@mui/material";
+import {
+  FavoriteBorder as HeartIcon,
+  LocationOn as MapPinIcon,
+  Wifi as WifiIcon,
+  Pool as PoolIcon,
+  AcUnit as AirConditioningIcon,
+  LocalParking as ParkingIcon,
+  FitnessCenter as GymIcon,
+  Pets as PetsIcon,
+  Restaurant as BreakfastIcon,
+  AirportShuttle as ShuttleIcon,
+  Accessible as WheelchairIcon,
+  FirstPage as FirstPageIcon,
+  NavigateBefore as PrevPageIcon,
+  NavigateNext as NextPageIcon,
+  LastPage as LastPageIcon,
+} from "@mui/icons-material";
+
+import "./RecomendationCard.css";
 
 const getFeatureIcon = (feature, size = 20) => {
   const icons = {
-    wifi: FiWifi,
-    pool: FaSwimmingPool,
-    airconditioning: FaAirFreshener,
-    parking: FaParking,
-    gym: FaDumbbell,
-    petsallowed: FaPaw,
-    breakfastincluded: FaUtensils,
-    airportshuttle: FaShuttleVan,
-    wheelchairaccessible: FaWheelchair,
+    wifi: WifiIcon,
+    pool: PoolIcon,
+    airconditioning: AirConditioningIcon,
+    parking: ParkingIcon,
+    gym: GymIcon,
+    petsallowed: PetsIcon,
+    breakfastincluded: BreakfastIcon,
+    airportshuttle: ShuttleIcon,
+    wheelchairaccessible: WheelchairIcon,
   };
 
   const normalizedFeature = feature.trim().toLowerCase().replace(/\s+/g, "");
   const IconComponent = icons[normalizedFeature];
 
-  return IconComponent ? <IconComponent size={size} /> : null;
+  return IconComponent ? <SvgIcon component={IconComponent} fontSize="small" style={{ fontSize: size }} /> : null;
 };
 
 export const RecomendationCard = ({ products }) => {
@@ -36,24 +51,15 @@ export const RecomendationCard = ({ products }) => {
   const totalPages = Math.ceil(products.length / productsPerPage);
 
   const handleNextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
-    }
+    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
   };
 
   const handlePrevPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
+    if (currentPage > 1) setCurrentPage(currentPage - 1);
   };
 
-  const handleFirstPage = () => {
-    setCurrentPage(1);
-  };
-
-  const handleLastPage = () => {
-    setCurrentPage(totalPages);
-  };
+  const handleFirstPage = () => setCurrentPage(1);
+  const handleLastPage = () => setCurrentPage(totalPages);
 
   return (
     <>
@@ -73,14 +79,14 @@ export const RecomendationCard = ({ products }) => {
 
             <div className="card-content">
               <div className="title-content">
-                <button className="favorite-button">
-                  <Heart />
-                </button>
+                <IconButton className="favorite-button">
+                  <HeartIcon />
+                </IconButton>
                 <h3 className="card-title">{product.title}</h3>
               </div>
 
               <div className="address">
-                <MapPin />
+                <MapPinIcon />
                 <span>
                   {product.address.street}, {"#  "}{product.address.number}, {product.address.city.name}
                 </span>
@@ -105,20 +111,21 @@ export const RecomendationCard = ({ products }) => {
           </div>
         ))}
       </div>
+
       <div className="pagination">
-        <button onClick={handleFirstPage} disabled={currentPage === 1}>
-          <AiOutlineDoubleLeft />
-        </button>
-        <button onClick={handlePrevPage} disabled={currentPage === 1}>
-          <AiOutlineLeft />
-        </button>
+        <IconButton onClick={handleFirstPage} disabled={currentPage === 1}>
+          <FirstPageIcon />
+        </IconButton>
+        <IconButton onClick={handlePrevPage} disabled={currentPage === 1}>
+          <PrevPageIcon />
+        </IconButton>
         <span>Página {currentPage} de {totalPages}</span>
-        <button onClick={handleNextPage} disabled={currentPage === totalPages}>
-          <AiOutlineRight />
-        </button>
-        <button onClick={handleLastPage} disabled={currentPage === totalPages}>
-          <AiOutlineDoubleRight />
-        </button>
+        <IconButton onClick={handleNextPage} disabled={currentPage === totalPages}>
+          <NextPageIcon />
+        </IconButton>
+        <IconButton onClick={handleLastPage} disabled={currentPage === totalPages}>
+          <LastPageIcon />
+        </IconButton>
       </div>
     </>
   );
