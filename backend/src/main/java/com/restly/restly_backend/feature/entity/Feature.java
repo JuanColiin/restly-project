@@ -28,6 +28,9 @@ public class Feature {
     @Column(name = "title", nullable = false, unique = true)
     private String title;
 
+    @Column(name = "icon", nullable = false)
+    private String icon;
+
     @JsonBackReference("product-features")
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "features")
     private Set<Product> products = new HashSet<>();

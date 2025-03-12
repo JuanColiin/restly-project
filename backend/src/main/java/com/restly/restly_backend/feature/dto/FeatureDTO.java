@@ -9,4 +9,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class FeatureDTO {
     private String title;
+    private String icon;
 }

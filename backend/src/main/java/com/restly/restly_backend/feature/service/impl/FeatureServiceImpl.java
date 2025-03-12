@@ -38,19 +38,19 @@ public class FeatureServiceImpl implements IFeatureService {
     @Override
     @Transactional
     public FeatureDTO saveFeature(FeatureDTO featureDTO) {
-
         Optional<Feature> existingFeature = featureRepository.findByTitle(featureDTO.getTitle());
 
         if (existingFeature.isPresent()) {
             throw new IllegalArgumentException("La característica con el título '" + featureDTO.getTitle() + "' ya existe.");
         }
 
-        Feature newFeature = modelMapper.map(featureDTO, Feature.class);
+        Feature newFeature = new Feature();
+        newFeature.setTitle(featureDTO.getTitle());
+        newFeature.setIcon(featureDTO.getIcon());
+
         Feature savedFeature = featureRepository.save(newFeature);
         return modelMapper.map(savedFeature, FeatureDTO.class);
     }
-
-
 
     @Override
     @Transactional
@@ -63,6 +63,7 @@ public class FeatureServiceImpl implements IFeatureService {
                 .orElseThrow(() -> new RuntimeException("Característica con ID " + id + " no encontrada."));
 
         existingFeature.setTitle(featureDTO.getTitle());
+        existingFeature.setIcon(featureDTO.getIcon());
 
         Feature updatedFeature = featureRepository.save(existingFeature);
         return modelMapper.map(updatedFeature, FeatureDTO.class);
@@ -77,17 +78,5 @@ public class FeatureServiceImpl implements IFeatureService {
         featureRepository.deleteById(id);
         return "La característica con ID " + id + " ha sido eliminada correctamente.";
     }
-
-    private Feature resolveFeature(FeatureDTO featureDTO) {
-        Optional<Feature> existingFeature = featureRepository.findByTitle(featureDTO.getTitle());
-
-        if (existingFeature.isPresent()) {
-            return existingFeature.get();
-        } else {
-            Feature newFeature = modelMapper.map(featureDTO, Feature.class);
-            return featureRepository.save(newFeature);
-        }
-    }
-
 }
 
