@@ -1,44 +1,83 @@
 .product-list {
-    margin: 20px;
-  }
-  
-  .product-list h2 {
-    text-align: center;
-    color: #333;
-  }
-  
-  .product-list table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-  }
-  
-  .product-list th, .product-list td {
-    border: 1px solid #ddd;
-    padding: 12px;
-    text-align: left;
-  }
-  
-  .product-list th {
-    background-color: #f4f4f4;
-  }
-  
-  .product-list button {
-    margin-right: 8px;
-    padding: 8px 12px;
-    cursor: pointer;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    font-size: 14px;
-  }
-  
-  .product-list button:hover {
-    background-color: #0056b3;
-  }
-  
-  .product-list button:focus {
-    outline: none;
-  }
-  
+  margin:  110px 20px;
+  padding: 20px;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.product-list h2 {
+  text-align: center;
+  color: #333;
+}
+
+.product-list table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  background: #fafafa;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.product-list th, .product-list td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.product-list th {
+  background-color: #007bff;
+  color: white;
+  text-align: left;
+}
+
+.product-list tr:hover {
+  background-color: #f1f1f1;
+}
+
+.product-list .actions-column {
+  text-align: right;
+}
+
+.product-list .actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.product-list button {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.3s ease;
+}
+
+.product-list .delete-btn {
+  background-color: #dc3545;
+  color: white;
+}
+
+.product-list .delete-btn:hover {
+  background-color: #c82333;
+}
+
+.product-list .edit-btn {
+  background-color: #ffc107;
+  color: black;
+}
+
+.product-list .edit-btn:hover {
+  background-color: #e0a800;
+}
+
+.product-list .details-btn {
+  background-color: #28a745;
+  color: white;
+}
+
+.product-list .details-btn:hover {
+  background-color: #218838;
+}

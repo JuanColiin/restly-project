@@ -5,8 +5,8 @@ import * as Icons from "@mui/icons-material";
 import bookingIcons from "../../../utils/bookingicons";
 import "./FeatureForm.css";
 
-// Filtrar los íconos disponibles en Material UI
-const iconOptions = bookingIcons
+// Filtrar y eliminar íconos duplicados en bookingIcons
+const uniqueIconOptions = Array.from(new Set(bookingIcons))
   .filter(icon => Icons[icon]) // Solo incluir si el ícono existe en Material UI
   .map(icon => ({ label: icon, component: Icons[icon] }));
 
@@ -46,7 +46,7 @@ const FeatureForm = ({ onSubmit = () => {} }) => {
     }
   };
 
-  const filteredIcons = iconOptions.filter((icon) =>
+  const filteredIcons = uniqueIconOptions.filter((icon) =>
     icon.label.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -90,11 +90,11 @@ const FeatureForm = ({ onSubmit = () => {} }) => {
         </div>
 
         <div className="icon-grid">
-          {filteredIcons.map((option) => {
+          {filteredIcons.map((option, index) => {
             const IconComponent = option.component;
             return (
               <div
-                key={option.label}
+                key={`${option.label}-${index}`} // Clave única
                 className={`icon-item ${feature.icon === option.label ? "selected" : ""}`}
                 onClick={() => handleIconSelect(option.label)}
               >

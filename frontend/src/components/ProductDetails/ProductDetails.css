@@ -9,13 +9,14 @@
 .product-header {
     display: flex;
     align-items: center;
-    justify-content: space-between; 
-    text-align: left;
-    margin-bottom: 20px;
+    justify-content: space-between;
+    width: 100%;
 }
 
-.product-title {
+.product-title h2 {
     flex-grow: 1;
+    align-items: center;
+    justify-self: start;
 }
 
 .back-to-home {

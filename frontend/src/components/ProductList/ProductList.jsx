@@ -1,63 +1,52 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom'; // Importamos Link de react-router-dom
-import './ProductList.css'; // Archivo de estilos CSS
+import { Link } from 'react-router-dom';
+import './ProductList.css';
 
 const ProductList = () => {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
     axios.get('http://localhost:8080/products')
-      .then(response => {
-        setProducts(response.data); 
-      })
-      .catch(error => {
-        console.error('Error fetching products:', error);
-      });
+      .then(response => setProducts(response.data))
+      .catch(error => console.error('Error fetching products:', error));
   }, []);
 
   const handleDelete = (id) => {
-    const confirmDelete = window.confirm('¿Estás seguro de que deseas eliminar este producto?');
-    if (confirmDelete) {
+    if (window.confirm('¿Estás seguro de que deseas eliminar este producto?')) {
       axios.delete(`http://localhost:8080/products/${id}`)
-        .then(() => {
-          setProducts(products.filter(product => product.id !== id));
-        })
-        .catch(error => {
-          console.error('Error deleting product:', error);
-        });
+        .then(() => setProducts(products.filter(product => product.id !== id)))
+        .catch(error => console.error('Error deleting product:', error));
     }
-  };
-
-  const handleUpdate = (id) => {
-    console.log(`Updating product with id: ${id}`);
   };
 
   return (
     <div className="product-list">
-      <h2>Product List</h2>
+      <h2>Lista de Productos</h2>
       <table>
         <thead>
           <tr>
-            <th>Actions</th>
             <th>ID</th>
-            <th>Title</th>
-            <th>Category</th>
+            <th>Título</th>
+            <th>Categoría</th>
+            <th className="actions-column">Acciones</th>
           </tr>
         </thead>
         <tbody>
           {products.map(product => (
             <tr key={product.id}>
-              <td>
-                <button onClick={() => handleDelete(product.id)}>Eliminar</button>
-                <button onClick={() => handleUpdate(product.id)}>Actualizar</button>
-                <Link to={`/details/${product.id}`}>
-                  <button>Ver Detalles</button>
-                </Link>
-              </td>
               <td>{product.id}</td>
               <td>{product.title}</td>
               <td>{product.category?.name}</td>
+              <td className="actions">
+                <button className="delete-btn" onClick={() => handleDelete(product.id)}>Eliminar</button>
+                <Link to={`/edit/${product.id}`}>
+                  <button className="edit-btn">Actualizar</button>
+                </Link>
+                <Link to={`/details/${product.id}`}>
+                  <button className="details-btn">Detalles</button>
+                </Link>
+              </td>
             </tr>
           ))}
         </tbody>
