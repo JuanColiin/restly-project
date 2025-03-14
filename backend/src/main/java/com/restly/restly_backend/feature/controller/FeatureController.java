@@ -44,7 +44,7 @@ public class FeatureController {
     @PostMapping
     public ResponseEntity<?> saveFeature(@RequestBody FeatureDTO featureDTO) {
         try {
-            FeatureDTO savedFeature = featureService.saveFeature(featureDTO); // Se deja la validación al servicio
+            FeatureDTO savedFeature = featureService.saveFeature(featureDTO);
             return ResponseEntity.status(HttpStatus.CREATED).body(savedFeature);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());

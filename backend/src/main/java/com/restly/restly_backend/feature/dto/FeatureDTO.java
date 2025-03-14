@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FeatureDTO {
+    private Long id;
     private String title;
     private String icon;
 }
