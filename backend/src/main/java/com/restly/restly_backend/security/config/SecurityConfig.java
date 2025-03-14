@@ -36,7 +36,7 @@ public class SecurityConfig {
                                 .requestMatchers("/features/**").permitAll()
                                 .requestMatchers("/products/category/**").permitAll()
                                 .requestMatchers("/users/**").permitAll()
-                                .requestMatchers("/users/me").authenticated()
+                                .requestMatchers(HttpMethod.PUT, "/users/update-role/**").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.GET, "/swagger-ui/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/v3/api-docs/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/swagger-ui.html").permitAll()

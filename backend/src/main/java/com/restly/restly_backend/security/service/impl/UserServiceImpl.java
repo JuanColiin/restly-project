@@ -1,9 +1,11 @@
 package com.restly.restly_backend.security.service.impl;
 
 import com.restly.restly_backend.security.dto.UserDTO;
+import com.restly.restly_backend.security.entity.Role;
 import com.restly.restly_backend.security.entity.User;
 import com.restly.restly_backend.security.repository.IUserRepository;
 import com.restly.restly_backend.security.service.IUserService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -15,7 +17,6 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-
 public class UserServiceImpl implements IUserService {
 
     private final IUserRepository userRepository;
@@ -42,5 +43,15 @@ public class UserServiceImpl implements IUserService {
         return modelMapper.map(user, UserDTO.class);
     }
 
+    @Override
+    @Transactional
+    public void updateUserRole(Long userId, Role newRole) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        user.setRole(newRole);
+        userRepository.save(user);
+    }
 }
+
 
