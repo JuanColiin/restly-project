@@ -1,0 +1,195 @@
+.container {
+  max-width: 900px;
+  margin: 100px auto 15px;
+  padding: 20px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+/* Tabla */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th, .table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.table th {
+  background-color: #f4f4f4;
+}
+
+.table tbody tr:hover {
+  background-color: #f9f9f9;
+}
+
+/* Botones */
+.editButton, .deleteButton {
+  border: none;
+  padding: 6px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: 0.3s ease;
+}
+
+.editButton {
+  background: #4caf50;
+  color: white;
+}
+
+.editButton:hover {
+  background: #388e3c;
+}
+
+.deleteButton {
+  background: #f44336;
+  color: white;
+  margin-left: 6px;
+}
+
+.deleteButton:hover {
+  background: #d32f2f;
+}
+
+/* Modal */
+.modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 500px;
+  max-height: 80vh;
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  overflow-y: auto;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+/* Contenido del modal */
+.modalContent label {
+  display: block;
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.modalContent input {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Contenedor de iconos con scroll */
+.iconGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+  gap: 10px;
+  max-height: 250px;
+  overflow-y: auto;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background: #fafafa;
+}
+
+/* Opciones de iconos */
+.iconOption {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  transition: 0.3s;
+  background: white;
+}
+
+.iconOption:hover {
+  background: #e0e0e0;
+}
+
+.selected {
+  border: 2px solid #4caf50;
+  background: #e8f5e9;
+}
+
+/* Botones dentro del modal */
+.buttonGroup {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.saveButton {
+  background: #2196f3;
+  color: white;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.saveButton:hover {
+  background: #1976d2;
+}
+
+.cancelButton {
+  background: #757575;
+  color: white;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.cancelButton:hover {
+  background: #616161;
+}
+
+/* Responsivo */
+@media (max-width: 600px) {
+  .modal {
+    width: 95%;
+    max-height: 85vh;
+  }
+
+  .iconOption {
+    width: 40px;
+    height: 40px;
+  }
+
+  .buttonGroup {
+    flex-direction: column;
+  }
+
+  .buttonGroup button {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+}

@@ -2,14 +2,15 @@ import { useState } from "react";
 import PropTypes from "prop-types";
 import axios from "axios";
 import * as Icons from "@mui/icons-material";
+import bookingIcons from "../../../utils/bookingicons";
 import "./FeatureForm.css";
 
-const iconOptions = Object.keys(Icons).map((icon) => ({
-  label: icon,
-  component: Icons[icon],
-}));
+// Filtrar los íconos disponibles en Material UI
+const iconOptions = bookingIcons
+  .filter(icon => Icons[icon]) // Solo incluir si el ícono existe en Material UI
+  .map(icon => ({ label: icon, component: Icons[icon] }));
 
-const FeatureForm = ({ onSubmit = () => {} }) => { // Se asigna un valor por defecto a onSubmit
+const FeatureForm = ({ onSubmit = () => {} }) => { 
   const [feature, setFeature] = useState({ title: "", icon: "" });
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(false);
@@ -33,7 +34,7 @@ const FeatureForm = ({ onSubmit = () => {} }) => { // Se asigna un valor por def
     try {
       const response = await axios.post("http://localhost:8080/features", feature);
       if (typeof onSubmit === "function") {
-        onSubmit(response.data); // Se verifica antes de ejecutar
+        onSubmit(response.data);
       }
       setFeature({ title: "", icon: "" });
       alert("Característica creada con éxito");

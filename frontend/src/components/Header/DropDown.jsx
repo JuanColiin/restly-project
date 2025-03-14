@@ -34,9 +34,10 @@ const Dropdown = () => {
       {isOpen && (
         <div className="dropdown-menu">
           <Link to="/CreateProduct" > <button className="dropdown-item">Crear propiedad</button></Link>
-          <Link to="/ProductList" > <button className="dropdown-item">Lista de Propiedades</button></Link>
+          <Link to="/ProductList" > <button className="dropdown-item">Administrar Propiedades</button></Link>
           <Link to="/Categories" > <button className="dropdown-item">Crear categoría</button></Link>
           <Link to="/CreateFeature" > <button className="dropdown-item">Crear Caracteristica</button></Link>
+          <Link to="/FeatureList" > <button className="dropdown-item">Administrar Caracteristicas</button></Link>
         </div>
       )}
     </div>
