@@ -15,9 +15,14 @@ public interface IProductService {
     ProductDTO saveProduct(ProductDTO productDTO);
     ProductDTO updateProduct(Long id, ProductDTO productDTO);
     void deleteProductById(Long id);
-    List<ProductDTO> getProductsByCity(Long cityId);
-    List<ProductDTO> getProductsByRangeDate(LocalDate checkInDate, LocalDate checkOutDate);
-    List<ProductDTO> getProductsByCityAndRangeDate(Long cityId, LocalDate checkInDate, LocalDate checkOutDate);
-    List<ProductDTO> getRandomProduct();
-}
 
+    List<ProductDTO> searchProductsByKeyword(String keyword);
+    List<ProductDTO> getProductsByCity(Long cityId);
+    List<ProductDTO> getAvailableProducts(LocalDate checkIn, LocalDate checkOut);
+
+
+    List<String> getSuggestions(String query);
+
+    List<ProductDTO> getProductsByLocationAndAvailability(String location, LocalDate checkIn, LocalDate checkOut);
+
+}

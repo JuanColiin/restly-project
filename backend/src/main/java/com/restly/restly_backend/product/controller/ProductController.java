@@ -4,11 +4,13 @@ package com.restly.restly_backend.product.controller;
 import com.restly.restly_backend.product.dto.ProductDTO;
 import com.restly.restly_backend.product.exception.ProductNotFoundException;
 import com.restly.restly_backend.product.service.impl.ProductServiceImpl;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import lombok.RequiredArgsConstructor;
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -60,31 +62,47 @@ public class ProductController {
         return ResponseEntity.ok(products);
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<List<ProductDTO>> searchProducts(@RequestParam String keyword) {
+        return ResponseEntity.ok(productService.searchProductsByKeyword(keyword));
+    }
+
     @GetMapping("/city/{cityId}")
     public ResponseEntity<List<ProductDTO>> getProductsByCity(@PathVariable Long cityId) {
-        List<ProductDTO> products = productService.getProductsByCity(cityId);
-        return ResponseEntity.ok(products);
+        return ResponseEntity.ok(productService.getProductsByCity(cityId));
     }
 
-    @GetMapping("/range")
-    public ResponseEntity<List<ProductDTO>> getProductsByRangeDate(
-            @RequestParam LocalDate startDate, @RequestParam LocalDate endDate) {
-        List<ProductDTO> products = productService.getProductsByRangeDate(startDate, endDate);
-        return ResponseEntity.ok(products);
+    @GetMapping("/availability")
+    public ResponseEntity<List<ProductDTO>> getAvailableProducts(
+            @RequestParam("checkIn") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkIn,
+            @RequestParam("checkOut") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkOut) {
+
+        List<ProductDTO> availableProducts = productService.getAvailableProducts(checkIn, checkOut);
+        return ResponseEntity.ok(availableProducts);
     }
 
-    @GetMapping("/city/{cityId}/range")
-    public ResponseEntity<List<ProductDTO>> getProductsByCityAndRangeDate(
-            @PathVariable Long cityId, @RequestParam LocalDate startDate, @RequestParam LocalDate endDate) {
-        List<ProductDTO> products = productService.getProductsByCityAndRangeDate(cityId, startDate, endDate);
-        return ResponseEntity.ok(products);
+    @GetMapping("/suggestions")
+    public ResponseEntity<List<String>> getSuggestions(@RequestParam String query) {
+        System.out.println("Query recibido: " + query);
+        List<String> suggestions = productService.getSuggestions(query);
+        System.out.println("Sugerencias encontradas: " + suggestions);
+        return ResponseEntity.ok(suggestions);
     }
 
-    @GetMapping("/random")
-    public ResponseEntity<List<ProductDTO>> getRandomProduct() {
-        List<ProductDTO> products = productService.getRandomProduct();
-        return ResponseEntity.ok(products);
+    @GetMapping("/filter")
+    public ResponseEntity<List<ProductDTO>> filterProducts(
+            @RequestParam String location,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkIn,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkOut) {
+
+        if (location == null || location.trim().isEmpty()) {
+            return ResponseEntity.badRequest().body(Collections.emptyList());
+        }
+
+        List<ProductDTO> filteredProducts = productService.getProductsByLocationAndAvailability(location, checkIn, checkOut);
+        return ResponseEntity.ok(filteredProducts);
     }
+
 }
 
 

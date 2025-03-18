@@ -30,10 +30,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -81,7 +80,6 @@ public class ProductServiceImpl implements IProductService {
     }
 
 
-
     @Transactional
     @Override
     public ProductDTO saveProduct(ProductDTO productDTO) {
@@ -103,15 +101,22 @@ public class ProductServiceImpl implements IProductService {
                 })
                 .collect(Collectors.toSet());
 
+        // Asegurar que la ciudad y su jerarquía existen y están bien asociadas
         City city = resolveCity(productDTO.getAddress().getCity());
+
+        // Crear la dirección y vincularla con la ciudad
         Address address = modelMapper.map(productDTO.getAddress(), Address.class);
         address.setCity(city);
 
+        // Mapear el producto y establecer todas las relaciones necesarias
         Product product = modelMapper.map(productDTO, Product.class);
         product.setCategory(category);
         product.setPolicy(policy);
         product.setFeatures(features);
         product.setAddress(address);
+
+        // Asegurar que el producto tenga la ciudad correctamente vinculada
+        product.setCity(city); // <-- CORRECCIÓN IMPORTANTE
 
         if (productDTO.getImages() != null) {
             List<Image> images = productDTO.getImages().stream()
@@ -125,6 +130,7 @@ public class ProductServiceImpl implements IProductService {
 
         return modelMapper.map(productRepository.save(product), ProductDTO.class);
     }
+
 
 
     @Transactional
@@ -193,38 +199,65 @@ public class ProductServiceImpl implements IProductService {
         productRepository.deleteById(id);
     }
 
+    @Override
+    public List<ProductDTO> searchProductsByKeyword(String keyword) {
+        List<Product> products = productRepository.searchByKeyword(keyword);
+        return products.stream()
+                .map(product -> modelMapper.map(product, ProductDTO.class))
+                .collect(Collectors.toList());
+    }
 
     @Override
     public List<ProductDTO> getProductsByCity(Long cityId) {
-        City city = cityService.getCityById(cityId)
-                .map(dto -> modelMapper.map(dto, City.class))
-                .orElseThrow(() -> new RuntimeException("Ciudad no encontrada con ID: " + cityId));
-
-        return productRepository.getByCity(city).stream()
+        List<Product> products = productRepository.findByCity(cityId);
+        return products.stream()
                 .map(product -> modelMapper.map(product, ProductDTO.class))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<ProductDTO> getProductsByRangeDate(LocalDate checkInDate, LocalDate checkOutDate) {
-        return productRepository.getByRangeDate(checkInDate, checkOutDate).stream()
+    public List<ProductDTO> getProductsByLocationAndAvailability(String location, LocalDate checkIn, LocalDate checkOut) {
+        List<Product> products = productRepository.findProductsByLocationAndAvailability(location.trim(), checkIn, checkOut);
+
+        return products.stream()
+                .map(product -> modelMapper.map(product, ProductDTO.class))
+                .collect(Collectors.toList());
+    }
+
+
+
+
+
+    @Override
+    public List<ProductDTO> getAvailableProducts(LocalDate checkIn, LocalDate checkOut) {
+        List<Product> availableProducts = productRepository.findAvailableProducts(checkIn, checkOut);
+        return availableProducts.stream()
                 .map(product -> modelMapper.map(product, ProductDTO.class))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<ProductDTO> getProductsByCityAndRangeDate(Long cityId, LocalDate checkInDate, LocalDate checkOutDate) {
-        return productRepository.getByCityAndRangeDate(cityId, checkInDate, checkOutDate).stream()
-                .map(product -> modelMapper.map(product, ProductDTO.class))
+    public List<String> getSuggestions(String query) {
+        if (query == null || query.trim().length() < 2) {
+            return Collections.emptyList(); // Evita consultas vacías o muy cortas
+        }
+
+        //List<String> productSuggestions = productRepository.findProductTitles(query.trim());
+        List<String> citySuggestions = cityRepository.findCityNames(query.trim());
+        List<String> stateSuggestions = stateRepository.findStateNames(query.trim());
+        List<String> countrySuggestions = countryRepository.findCountryNames(query.trim());
+
+        // Combinar todas las sugerencias en una lista y eliminar duplicados
+        return Stream.of(citySuggestions, stateSuggestions, countrySuggestions)
+                .flatMap(Collection::stream)
+                .distinct() // Evita repetidos
+                .limit(5) // Limita a 5 resultados
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public List<ProductDTO> getRandomProduct() {
-        return productRepository.getRandomProduct().stream()
-                .map(product -> modelMapper.map(product, ProductDTO.class))
-                .collect(Collectors.toList());
-    }
+
+
+
 
     private City resolveCity(CityDTO cityDTO) {
         Country country = countryRepository.findByName(cityDTO.getState().getCountry().getName())
