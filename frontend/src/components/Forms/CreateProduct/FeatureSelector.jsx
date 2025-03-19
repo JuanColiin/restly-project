@@ -1,53 +1,41 @@
 import { useEffect, useState } from "react";
+import PropTypes from "prop-types";
 import axios from "axios";
-import * as MuiIcons from "@mui/icons-material"; // Importa todos los íconos dinámicamente
+import * as MuiIcons from "@mui/icons-material"; 
 import styles from "./FeaturesSelector.module.css";
 
-// Mapeo de iconos para características estáticas
-const staticFeatures = {
-  wifi: { label: "Wi-Fi", icon: <MuiIcons.Wifi className={styles.featureIcon} /> },
-  pool: { label: "Piscina", icon: <MuiIcons.Pool className={styles.featureIcon} /> },
-  parking: { label: "Parqueadero", icon: <MuiIcons.LocalParking className={styles.featureIcon} /> },
-  restaurant: { label: "Restaurante", icon: <MuiIcons.Restaurant className={styles.featureIcon} /> },
-  gym: { label: "Gimnasio", icon: <MuiIcons.FitnessCenter className={styles.featureIcon} /> },
-  pets: { label: "Pet Friendly", icon: <MuiIcons.Pets className={styles.featureIcon} /> },
-};
 
-// Función para obtener el icono dinámicamente
 const getIconComponent = (iconName) => {
-  const IconComponent = MuiIcons[iconName]; // Busca el ícono en los imports de MUI
+  const IconComponent = MuiIcons[iconName];
   return IconComponent ? <IconComponent className={styles.featureIcon} /> : <MuiIcons.HelpOutline className={styles.featureIcon} />;
 };
 
-const FeatureSelector = () => {
+const FeatureSelector = ({ selectedFeatures, setSelectedFeatures }) => {
   const [features, setFeatures] = useState([]);
-  const [selectedFeatures, setSelectedFeatures] = useState([]);
 
   useEffect(() => {
     axios.get("http://localhost:8080/features")
       .then(response => {
-        const fetchedFeatures = response.data;
-
-        // Filtrar características nuevas que no están en las estáticas
-        const newFeatures = fetchedFeatures.filter(feature => !staticFeatures[feature.title]);
-
-        const formattedFeatures = newFeatures.map(feature => ({
+        const formattedFeatures = response.data.map(feature => ({
           name: feature.title,
           label: feature.title,
-          icon: getIconComponent(feature.icon), // Obtiene el icono dinámicamente
+          icon: getIconComponent(feature.icon), // Obtiene el ícono dinámicamente
         }));
 
-        setFeatures([...Object.values(staticFeatures), ...formattedFeatures]);
+        setFeatures(formattedFeatures);
       })
       .catch(error => console.error("Error fetching features:", error));
   }, []);
 
-  const handleCheckboxChange = (featureName) => {
-    setSelectedFeatures(prevSelected =>
-      prevSelected.includes(featureName)
-        ? prevSelected.filter(name => name !== featureName)
-        : [...prevSelected, featureName]
-    );
+  const handleCheckboxChange = (featureLabel) => {
+    setSelectedFeatures(prevSelected => {
+      const updatedFeatures = prevSelected.includes(featureLabel)
+        ? prevSelected.filter(name => name !== featureLabel)
+        : [...prevSelected, featureLabel];
+
+      console.log("Características seleccionadas actualizadas:", updatedFeatures);
+      return updatedFeatures;
+    });
   };
 
   return (
@@ -68,6 +56,12 @@ const FeatureSelector = () => {
       </div>
     </>
   );
+};
+
+// Validación de props
+FeatureSelector.propTypes = {
+  selectedFeatures: PropTypes.array.isRequired,
+  setSelectedFeatures: PropTypes.func.isRequired,
 };
 
 export default FeatureSelector;

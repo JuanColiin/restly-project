@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react"
-import {FiMapPin } from "react-icons/fi"
+import { FiMapPin } from "react-icons/fi"
 
 import axios from "axios"
 import styles from "./PropertyForm.module.css"
 import Swal from 'sweetalert2';
-import FeaturesSelector from "./FeatureSelector"
+import FeatureSelector from "./FeatureSelector"
 
 
 export default function PropertyForm() {
@@ -26,17 +26,7 @@ export default function PropertyForm() {
       rules: "",
       security: "",
     },
-    features: {
-      wifi: false,
-      pool: false,
-      airConditioning: false,
-      parking: false,
-      gym: false,
-      petsAllowed: false,
-      breakfastIncluded: false,
-      airportShuttle: false,
-      wheelchairAccessible: false,
-    },
+    features: [], // Cambiado de objeto a array vacío
     images: [
       { title: "", imageUrl: "" },
       { title: "", imageUrl: "" },
@@ -44,12 +34,17 @@ export default function PropertyForm() {
       { title: "", imageUrl: "" },
       { title: "", imageUrl: "" },
     ],
-  })
+  });
+
 
   const [countries, setCountries] = useState([])
   const [states, setStates] = useState([])
   const [cities, setCities] = useState([])
   const [errorMessage, setErrorMessage] = useState("");
+  const [features, setFeatures] = useState([]);
+  const [selectedFeatures, setSelectedFeatures] = useState([]);
+
+
 
   const countryTranslations = {
     "United States": "Estados Unidos",
@@ -77,22 +72,22 @@ export default function PropertyForm() {
 
   const [categories, setCategories] = useState([]);
 
-  // Fetch de categorías
+
   useEffect(() => {
     const fetchCategories = async () => {
       try {
         const response = await axios.get("http://localhost:8080/categories");
         if (response.data && Array.isArray(response.data)) {
-          setCategories(response.data); 
+          setCategories(response.data);
         } else {
           console.error("Error: La respuesta no es un array válido.");
         }
       } catch (error) {
-        console.error("Error fetching categories:", error); 
+        console.error("Error fetching categories:", error);
       }
     };
 
-    fetchCategories(); 
+    fetchCategories();
   }, []);
   useEffect(() => {
     if (formData.country) {
@@ -152,10 +147,12 @@ export default function PropertyForm() {
   }
 
 
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setErrorMessage(""); 
-  
+    setErrorMessage("");
+
     const addressData = {
       street: formData.street,
       number: formData.number,
@@ -169,21 +166,28 @@ export default function PropertyForm() {
         },
       },
     };
-  
-    const selectedFeatures = Object.keys(formData.features)
-      .filter((key) => formData.features[key])
-      .map((key) => ({ title: key }));
-  
+
+    console.log("Características seleccionadas:", selectedFeatures);
     const dataToSend = {
       ...formData,
-      address: addressData, 
-      features: selectedFeatures,
+      address: addressData,
+      features: selectedFeatures.length > 0
+        ? selectedFeatures.map(title => {
+          const feature = features.find(f => f.label === title);
+          return {
+            id: null,
+            title,
+            icon: feature ? feature.icon : "default-icon"
+          };
+        })
+        : []
     };
-  
+
+
     console.log("Datos a enviar:", JSON.stringify(dataToSend, null, 2));
-  
+
     const endpoint = "http://localhost:8080/products/create";
-  
+
     try {
       const response = await axios.post(endpoint, dataToSend, {
         headers: {
@@ -191,7 +195,6 @@ export default function PropertyForm() {
         },
       });
       console.log("Producto creado exitosamente:", response.data);
-      
 
       Swal.fire({
         icon: 'success',
@@ -199,12 +202,7 @@ export default function PropertyForm() {
         text: 'Producto creado exitosamente.',
       });
     } catch (error) {
-      if (error.response && error.response.data.error) {
-        setErrorMessage(error.response.data.error); 
-      } else {
-        setErrorMessage("Ocurrió un error al procesar la solicitud.");
-      }
-  
+      setErrorMessage(error.response?.data?.error || "Ocurrió un error al procesar la solicitud.");
 
       Swal.fire({
         icon: 'error',
@@ -213,19 +211,19 @@ export default function PropertyForm() {
       });
     }
   };
-  
-  
-  
+
+
+
 
 
   return (
     <form onSubmit={handleSubmit} className={styles.form}>
       <div className={styles.header}>
-        
+
         <h1>Crear Nueva Propiedad</h1>
       </div>
 
-      {errorMessage && <div className={styles.error}>{errorMessage}</div>} {/* Muestra el mensaje de error */}
+      {errorMessage && <div className={styles.error}>{errorMessage}</div>}
 
 
       <div className={styles.section}>
@@ -265,33 +263,33 @@ export default function PropertyForm() {
           />
         </div>
         <div className={styles.section}>
-      <h2>Categorías</h2>
-      <div className={styles.inputGroup}>
-        <label htmlFor="category">Seleccionar Categoría</label>
-        <select
-          id="category"
-          name="category"
-          value={formData.category.name}
-          onChange={(e) =>
-            setFormData((prev) => ({
-              ...prev,
-              category: {
-                ...prev.category,
-                name: e.target.value,
-              },
-            }))
-          }
-          required
-        >
-          <option value="">Seleccionar categoría</option>
-          {categories.map((category, index) => (
-            <option key={index} value={category.name}>
-              {category.name}
-            </option>
-          ))}
-        </select>
-      </div>
-    </div>
+          <h2>Categorías</h2>
+          <div className={styles.inputGroup}>
+            <label htmlFor="category">Seleccionar Categoría</label>
+            <select
+              id="category"
+              name="category"
+              value={formData.category.name}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  category: {
+                    ...prev.category,
+                    name: e.target.value,
+                  },
+                }))
+              }
+              required
+            >
+              <option value="">Seleccionar categoría</option>
+              {categories.map((category, index) => (
+                <option key={index} value={category.name}>
+                  {category.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
 
 
         <div className={styles.addressSection}>
@@ -357,7 +355,15 @@ export default function PropertyForm() {
           </div>
         </div>
 
-        <FeaturesSelector  formData={formData} setFormData={setFormData} />
+        <FeatureSelector
+          features={features}
+          setFeatures={setFeatures}
+          selectedFeatures={selectedFeatures}
+          setSelectedFeatures={setSelectedFeatures}
+        />
+
+
+
 
         {/* Nueva sección de Políticas */}
         <div className={styles.policySection}>
