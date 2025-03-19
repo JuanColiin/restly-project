@@ -186,18 +186,24 @@ public class ProductServiceImpl implements IProductService {
     @Transactional
     @Override
     public void deleteProductById(Long id) {
-        if (!productRepository.existsById(id)) {
-            throw new ProductNotFoundException("Producto no encontrado con ID: " + id);
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new ProductNotFoundException("Producto no encontrado con ID: " + id));
+
+        // Verificar si el producto tiene reservas
+        if (!product.getReserves().isEmpty()) {
+            throw new RuntimeException("No se puede eliminar el producto porque tiene reservas asociadas.");
         }
 
-        Product product = productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException("Producto no encontrado con ID: " + id));
+        // Desasociar la ciudad para evitar que Hibernate intente eliminarla
+        product.setCity(null);
 
-        product.setCategory(null);
-        productRepository.save(product);
+        // Limpiar relaciones
+        product.getFeatures().clear();
+        product.getImages().clear();
 
-
-        productRepository.deleteById(id);
+        productRepository.delete(product);
     }
+
 
     @Override
     public List<ProductDTO> searchProductsByKeyword(String keyword) {

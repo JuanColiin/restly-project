@@ -48,13 +48,14 @@ public class ProductController {
     public ResponseEntity<String> deleteProduct(@PathVariable Long id) {
         try {
             productService.deleteProductById(id);
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.noContent().build(); // 204 No Content si la eliminación es exitosa
         } catch (ProductNotFoundException ex) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Producto no encontrado");
-        } catch (Exception ex) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ocurrió un error inesperado");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Producto no encontrado.");
+        } catch (RuntimeException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
         }
     }
+
 
     @GetMapping("/category/{categoryId}")
     public ResponseEntity<List<ProductDTO>> getProductsByCategory(@PathVariable Long categoryId) {

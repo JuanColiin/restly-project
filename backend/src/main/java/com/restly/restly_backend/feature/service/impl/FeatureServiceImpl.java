@@ -75,8 +75,13 @@ public class FeatureServiceImpl implements IFeatureService {
         Feature existingFeature = featureRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Característica con ID " + id + " no encontrada."));
 
+        // Eliminar las referencias en la tabla intermedia antes de eliminar la característica
+        featureRepository.deleteByFeatureId(id);
+
+        // Ahora eliminar la característica
         featureRepository.deleteById(id);
         return "La característica con ID " + id + " ha sido eliminada correctamente.";
     }
+
 }
 
