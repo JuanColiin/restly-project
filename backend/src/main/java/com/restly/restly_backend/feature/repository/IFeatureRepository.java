@@ -16,6 +16,7 @@ public interface IFeatureRepository extends JpaRepository<Feature, Long> {
 
     @Modifying
     @Transactional
-    @Query("DELETE FROM ProductFeature pf WHERE pf.feature.id = :featureId")
-    void deleteByFeatureId(@Param("featureId") Long featureId);
+    @Query(value = "DELETE FROM product_features WHERE feature_id = :featureId", nativeQuery = true)
+    void deleteFeatureReferences(@Param("featureId") Long featureId);
+
 }
