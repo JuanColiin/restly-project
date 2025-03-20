@@ -2,13 +2,16 @@ package com.restly.restly_backend.reserves.service.impl;
 
 
 
+import com.restly.restly_backend.product.entity.Product;
+import com.restly.restly_backend.product.repository.IProductRepository;
 import com.restly.restly_backend.reserves.dto.ReserveDTO;
 import com.restly.restly_backend.reserves.entity.Reserve;
 import com.restly.restly_backend.reserves.repository.IReserveRepository;
 import com.restly.restly_backend.reserves.service.IReserveService;
-import org.modelmapper.ModelMapper;
+import com.restly.restly_backend.reserves.util.ReserveMapper;
+import com.restly.restly_backend.security.entity.User;
+import com.restly.restly_backend.security.repository.IUserRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDate;
@@ -20,78 +23,58 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ReserveServiceImpl implements IReserveService {
 
+
     private final IReserveRepository reserveRepository;
-    private final ModelMapper modelMapper;
+
+
+    private final IProductRepository productRepository;
+
+
+    private  final IUserRepository userRepository;
+
+
+    private final ReserveMapper reserveMapper;
+
+    @Override
+    public ReserveDTO createReserve(ReserveDTO reserveDTO) {
+        Optional<Product> product = productRepository.findById(reserveDTO.getProductId());
+        Optional<User> user = userRepository.findById(reserveDTO.getUserId());
+
+        if (product.isEmpty() || user.isEmpty()) {
+            throw new RuntimeException("Producto o usuario no encontrado.");
+        }
+
+        Reserve reserve = reserveMapper.toEntity(reserveDTO);
+        reserve.setProduct(product.get());
+        reserve.setUser(user.get());
+
+        reserve = reserveRepository.save(reserve);
+        return reserveMapper.toDTO(reserve);
+    }
 
     @Override
     public List<ReserveDTO> getAllReserves() {
         List<Reserve> reserves = reserveRepository.findAll();
-        return reserves.stream()
-                .map(reserve -> modelMapper.map(reserve, ReserveDTO.class))
-                .collect(Collectors.toList());
+        return reserves.stream().map(reserveMapper::toDTO).collect(Collectors.toList());
     }
 
     @Override
-    public Optional<ReserveDTO> getReserveById(Long id) {
-        return reserveRepository.findById(id)
-                .map(reserve -> modelMapper.map(reserve, ReserveDTO.class));
-    }
-
-    @Override
-    public List<ReserveDTO> getReservesByProductId(Long productId) {
+    public List<ReserveDTO> getReservesByProduct(Long productId) {
         List<Reserve> reserves = reserveRepository.findByProductId(productId);
-        return reserves.stream()
-                .map(reserve -> modelMapper.map(reserve, ReserveDTO.class))
-                .collect(Collectors.toList());
+        return reserves.stream().map(reserveMapper::toDTO).collect(Collectors.toList());
     }
 
     @Override
-    public List<ReserveDTO> getReservesByUserId(Long userId) {
+    public List<ReserveDTO> getReservesByUser(Long userId) {
         List<Reserve> reserves = reserveRepository.findByUserId(userId);
-        return reserves.stream()
-                .map(reserve -> modelMapper.map(reserve, ReserveDTO.class))
-                .collect(Collectors.toList());
+        return reserves.stream().map(reserveMapper::toDTO).collect(Collectors.toList());
     }
 
     @Override
-    public List<ReserveDTO> getReservesByDateRange(LocalDate startDate, LocalDate endDate) {
-        List<Reserve> reserves = reserveRepository.findByCheckInBetween(startDate, endDate);
-        return reserves.stream()
-                .map(reserve -> modelMapper.map(reserve, ReserveDTO.class))
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    @Transactional
-    public ReserveDTO saveReserve(ReserveDTO reserveDTO) {
-        Reserve reserve = modelMapper.map(reserveDTO, Reserve.class);
-        Reserve savedReserve = reserveRepository.save(reserve);
-        return modelMapper.map(savedReserve, ReserveDTO.class);
-    }
-
-    @Override
-    @Transactional
-    public ReserveDTO updateReserve(Long id, ReserveDTO reserveDTO) {
-        Optional<Reserve> existingReserve = reserveRepository.findById(id);
-        if (existingReserve.isEmpty()) {
-            throw new RuntimeException("Reserva no encontrada");
+    public void cancelReserve(Long id) {
+        if (!reserveRepository.existsById(id)) {
+            throw new RuntimeException("Reserva no encontrada.");
         }
-
-        Reserve reserve = existingReserve.get();
-        modelMapper.map(reserveDTO, reserve);  // Actualizar solo los campos del DTO
-        Reserve updatedReserve = reserveRepository.save(reserve);
-        return modelMapper.map(updatedReserve, ReserveDTO.class);
-    }
-
-    @Override
-    @Transactional
-    public String deleteReserveById(Long id) {
-        Optional<Reserve> existingReserve = reserveRepository.findById(id);
-        if (existingReserve.isEmpty()) {
-            throw new RuntimeException("Reserva no encontrada");
-        }
-
         reserveRepository.deleteById(id);
-        return "Reserva eliminada con éxito";
     }
 }

@@ -92,17 +92,21 @@ public class ProductController {
 
     @GetMapping("/filter")
     public ResponseEntity<List<ProductDTO>> filterProducts(
-            @RequestParam String location,
+            @RequestParam(required = false) String location,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkIn,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkOut) {
 
+        List<ProductDTO> filteredProducts;
+
         if (location == null || location.trim().isEmpty()) {
-            return ResponseEntity.badRequest().body(Collections.emptyList());
+            filteredProducts = productService.getProductsByAvailability(checkIn, checkOut);
+        } else {
+            filteredProducts = productService.getProductsByLocationAndAvailability(location, checkIn, checkOut);
         }
 
-        List<ProductDTO> filteredProducts = productService.getProductsByLocationAndAvailability(location, checkIn, checkOut);
         return ResponseEntity.ok(filteredProducts);
     }
+
 
 }
 

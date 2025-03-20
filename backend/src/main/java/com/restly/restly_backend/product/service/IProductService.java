@@ -20,6 +20,9 @@ public interface IProductService {
     List<ProductDTO> getProductsByCity(Long cityId);
     List<ProductDTO> getAvailableProducts(LocalDate checkIn, LocalDate checkOut);
 
+    List<ProductDTO> getProductsByAvailability(LocalDate checkIn, LocalDate checkOut);
+
+
 
     List<String> getSuggestions(String query);
 

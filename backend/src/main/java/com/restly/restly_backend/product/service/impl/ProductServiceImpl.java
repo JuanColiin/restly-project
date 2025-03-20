@@ -230,6 +230,15 @@ public class ProductServiceImpl implements IProductService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<ProductDTO> getProductsByAvailability(LocalDate checkIn, LocalDate checkOut) {
+        List<Product> products = productRepository.findProductsByAvailability(checkIn, checkOut);
+        return products.stream()
+                .map(product -> modelMapper.map(product, ProductDTO.class))
+                .collect(Collectors.toList());
+    }
+
+
 
 
 

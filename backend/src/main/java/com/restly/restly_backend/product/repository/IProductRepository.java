@@ -49,6 +49,12 @@ public interface IProductRepository extends JpaRepository<Product, Long> {
             @Param("checkIn") LocalDate checkIn,
             @Param("checkOut") LocalDate checkOut);
 
+    @Query("SELECT p FROM Product p WHERE NOT EXISTS ( " +
+            "SELECT 1 FROM Reserve r WHERE r.product = p " +
+            "AND r.checkIn <= :checkOut AND r.checkOut >= :checkIn)")
+    List<Product> findProductsByAvailability(@Param("checkIn") LocalDate checkIn, @Param("checkOut") LocalDate checkOut);
+
+
 
 
 

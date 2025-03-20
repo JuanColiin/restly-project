@@ -9,14 +9,9 @@ import java.util.Optional;
 
 
 public interface IReserveService {
+    ReserveDTO createReserve(ReserveDTO reserveDTO);
     List<ReserveDTO> getAllReserves();
-    Optional<ReserveDTO> getReserveById(Long id);
-    List<ReserveDTO> getReservesByProductId(Long productId);
-    List<ReserveDTO> getReservesByUserId(Long userId);
-    List<ReserveDTO> getReservesByDateRange(LocalDate startDate, LocalDate endDate);
-    ReserveDTO saveReserve(ReserveDTO reserveDTO);
-    ReserveDTO updateReserve(Long id, ReserveDTO reserveDTO);
-    String deleteReserveById(Long id);
+    List<ReserveDTO> getReservesByProduct(Long productId);
+    List<ReserveDTO> getReservesByUser(Long userId);
+    void cancelReserve(Long id);
 }
-
-
