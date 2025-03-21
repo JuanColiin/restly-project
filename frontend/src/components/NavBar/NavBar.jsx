@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { FaSearch, FaRegCalendar } from 'react-icons/fa';
+import { FaSearch, FaRegCalendar, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import PropTypes from 'prop-types';
 import './NavBar.css';
 
@@ -10,32 +10,27 @@ const NavBar = ({ setFilteredProducts }) => {
   const [checkOut, setCheckOut] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [suggestions, setSuggestions] = useState([]);
+  const [monthOffset, setMonthOffset] = useState(0); // Controla el desplazamiento del mes actual
 
   const formatDate = (date) => {
     if (!date) return '';
-    return new Date(date).toLocaleDateString('es-ES', {
-      day: 'numeric',
-      month: 'short',
-    });
+    const parsedDate = date instanceof Date ? date : new Date(date);
+    return parsedDate.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
   };
 
   const getDateRangeText = () => {
-    return checkIn && checkOut
-      ? `${formatDate(checkIn)} - ${formatDate(checkOut)}`
-      : 'Check in - Check out';
+    return checkIn && checkOut ? `${formatDate(checkIn)} - ${formatDate(checkOut)}` : 'Check in - Check out';
   };
 
   const handleDateSelect = (date) => {
-    const formattedDate = date.toISOString().split('T')[0];
-
     if (!checkIn || (checkIn && checkOut)) {
-      setCheckIn(formattedDate);
+      setCheckIn(date);
       setCheckOut(null);
     } else {
-      if (new Date(formattedDate) < new Date(checkIn)) {
-        setCheckIn(formattedDate);
+      if (date < checkIn) {
+        setCheckIn(date);
       } else {
-        setCheckOut(formattedDate);
+        setCheckOut(date);
         setShowCalendars(false);
       }
     }
@@ -58,25 +53,40 @@ const NavBar = ({ setFilteredProducts }) => {
     handleSearch();
   };
 
-  const handleSearch = () => {
-    let url = 'http://localhost:8080/products/filter';
+  const handleSearch = async () => {
+    let url = "http://localhost:8080/products/filter";
     const params = new URLSearchParams();
-
-    if (searchQuery) params.append('location', searchQuery);
-    if (checkIn && checkOut) {
-      params.append('checkIn', checkIn);
-      params.append('checkOut', checkOut);
+  
+    // Validar que al menos un parámetro sea proporcionado antes de ejecutar la búsqueda
+    if (!searchQuery && !checkIn && !checkOut) {
+      console.warn("Debe ingresar al menos un criterio de búsqueda.");
+      return;
     }
-
-    axios
-      .get(`${url}?${params.toString()}`)
-      .then((response) => setFilteredProducts(response.data))
-      .catch((error) => console.error('Error en la búsqueda:', error));
+  
+    if (searchQuery) params.append("location", searchQuery.trim());
+  
+    if (checkIn && checkOut) {
+      try {
+        params.append("checkIn", new Date(checkIn).toISOString().split("T")[0]);
+        params.append("checkOut", new Date(checkOut).toISOString().split("T")[0]);
+      } catch (error) {
+        console.error("Error al procesar las fechas:", error);
+        return;
+      }
+    }
+  
+    try {
+      const response = await axios.get(`${url}?${params.toString()}`);
+      setFilteredProducts(response.data);
+    } catch (error) {
+      console.error("Error en la búsqueda:", error);
+    }
   };
+  
 
-  const renderCalendar = (monthOffset) => {
+  const renderCalendar = (offset) => {
     const today = new Date();
-    const currentMonth = new Date(today.getFullYear(), today.getMonth() + monthOffset, 1);
+    const currentMonth = new Date(today.getFullYear(), today.getMonth() + offset, 1);
     const daysInMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0).getDate();
     const firstDay = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1).getDay();
 
@@ -89,18 +99,17 @@ const NavBar = ({ setFilteredProducts }) => {
 
     for (let day = 1; day <= daysInMonth; day++) {
       const date = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day);
-      const formattedDate = date.toISOString().split('T')[0];
 
-      const isSelected = formattedDate === checkIn || formattedDate === checkOut;
-      const isInRange = checkIn && checkOut && formattedDate > checkIn && formattedDate < checkOut;
+      const isSelected = checkIn?.toDateString() === date.toDateString() || checkOut?.toDateString() === date.toDateString();
+      const isInRange = checkIn && checkOut && date > checkIn && date < checkOut;
       const isDisabled = date < today;
 
       days.push(
         <div
-          key={formattedDate}
+          key={date.toISOString()}
           className={`calendar-day ${isSelected ? 'selected' : ''} 
-                     ${isInRange ? 'in-range' : ''} 
-                     ${isDisabled ? 'disabled' : ''}`}
+                       ${isInRange ? 'in-range' : ''} 
+                       ${isDisabled ? 'disabled' : ''}`}
           onClick={() => !isDisabled && handleDateSelect(date)}
         >
           {day}
@@ -111,7 +120,13 @@ const NavBar = ({ setFilteredProducts }) => {
     return (
       <div className="calendar">
         <div className="calendar-header">
+          <button className="nav-button" onClick={() => setMonthOffset((prev) => prev - 1)}>
+            <FaChevronLeft />
+          </button>
           <h3>{monthName} {year}</h3>
+          <button className="nav-button" onClick={() => setMonthOffset((prev) => prev + 1)}>
+            <FaChevronRight />
+          </button>
         </div>
         <div className="calendar-weekdays">
           <div>Lu</div>
@@ -159,8 +174,8 @@ const NavBar = ({ setFilteredProducts }) => {
 
           {showCalendars && (
             <div className="calendars-container">
-              {renderCalendar(0)}
-              {renderCalendar(1)}
+              {renderCalendar(monthOffset)}
+              {renderCalendar(monthOffset + 1)}
             </div>
           )}
         </div>
