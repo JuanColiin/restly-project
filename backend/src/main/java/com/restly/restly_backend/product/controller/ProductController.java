@@ -93,15 +93,23 @@ public class ProductController {
     @GetMapping("/filter")
     public ResponseEntity<List<ProductDTO>> filterProducts(
             @RequestParam(required = false) String location,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkIn,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkOut) {
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkIn,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkOut) {
 
         List<ProductDTO> filteredProducts;
 
-        if (location == null || location.trim().isEmpty()) {
-            filteredProducts = productService.getProductsByAvailability(checkIn, checkOut);
-        } else {
+        if (location != null && !location.trim().isEmpty() && checkIn != null && checkOut != null) {
+            // Filtrar por ubicación y disponibilidad
             filteredProducts = productService.getProductsByLocationAndAvailability(location, checkIn, checkOut);
+        } else if (checkIn != null && checkOut != null) {
+            // Filtrar solo por disponibilidad
+            filteredProducts = productService.getProductsByAvailability(checkIn, checkOut);
+        } else if (location != null && !location.trim().isEmpty()) {
+            // Filtrar solo por ubicación
+            filteredProducts = productService.getProductsByCityName(location);
+        } else {
+            // Si no se pasan parámetros, devolver todos los productos
+            filteredProducts = productService.getAllProducts();
         }
 
         return ResponseEntity.ok(filteredProducts);

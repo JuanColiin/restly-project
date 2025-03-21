@@ -101,22 +101,21 @@ public class ProductServiceImpl implements IProductService {
                 })
                 .collect(Collectors.toSet());
 
-        // Asegurar que la ciudad y su jerarquía existen y están bien asociadas
         City city = resolveCity(productDTO.getAddress().getCity());
 
-        // Crear la dirección y vincularla con la ciudad
+
         Address address = modelMapper.map(productDTO.getAddress(), Address.class);
         address.setCity(city);
 
-        // Mapear el producto y establecer todas las relaciones necesarias
+
         Product product = modelMapper.map(productDTO, Product.class);
         product.setCategory(category);
         product.setPolicy(policy);
         product.setFeatures(features);
         product.setAddress(address);
 
-        // Asegurar que el producto tenga la ciudad correctamente vinculada
-        product.setCity(city); // <-- CORRECCIÓN IMPORTANTE
+
+        product.setCity(city);
 
         if (productDTO.getImages() != null) {
             List<Image> images = productDTO.getImages().stream()
@@ -189,15 +188,12 @@ public class ProductServiceImpl implements IProductService {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException("Producto no encontrado con ID: " + id));
 
-        // Verificar si el producto tiene reservas
         if (!product.getReserves().isEmpty()) {
             throw new RuntimeException("No se puede eliminar el producto porque tiene reservas asociadas.");
         }
 
-        // Desasociar la ciudad para evitar que Hibernate intente eliminarla
         product.setCity(null);
 
-        // Limpiar relaciones
         product.getFeatures().clear();
         product.getImages().clear();
 
@@ -238,8 +234,13 @@ public class ProductServiceImpl implements IProductService {
                 .collect(Collectors.toList());
     }
 
-
-
+    @Override
+    public List<ProductDTO> getProductsByCityName(String cityName) {
+        List<Product> products = productRepository.findProductsByCityName(cityName.trim());
+        return products.stream()
+                .map(product -> modelMapper.map(product, ProductDTO.class))
+                .collect(Collectors.toList());
+    }
 
 
 
@@ -262,16 +263,12 @@ public class ProductServiceImpl implements IProductService {
         List<String> stateSuggestions = stateRepository.findStateNames(query.trim());
         List<String> countrySuggestions = countryRepository.findCountryNames(query.trim());
 
-        // Combinar todas las sugerencias en una lista y eliminar duplicados
         return Stream.of(citySuggestions, stateSuggestions, countrySuggestions)
                 .flatMap(Collection::stream)
-                .distinct() // Evita repetidos
-                .limit(5) // Limita a 5 resultados
+                .distinct()
+                .limit(5)
                 .collect(Collectors.toList());
     }
-
-
-
 
 
     private City resolveCity(CityDTO cityDTO) {

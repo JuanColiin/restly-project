@@ -21,11 +21,9 @@ public interface IProductService {
     List<ProductDTO> getAvailableProducts(LocalDate checkIn, LocalDate checkOut);
 
     List<ProductDTO> getProductsByAvailability(LocalDate checkIn, LocalDate checkOut);
-
-
+    List<ProductDTO> getProductsByCityName(String cityName);
 
     List<String> getSuggestions(String query);
-
     List<ProductDTO> getProductsByLocationAndAvailability(String location, LocalDate checkIn, LocalDate checkOut);
 
 }

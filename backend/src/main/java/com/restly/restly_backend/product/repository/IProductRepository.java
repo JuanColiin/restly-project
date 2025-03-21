@@ -49,14 +49,19 @@ public interface IProductRepository extends JpaRepository<Product, Long> {
             @Param("checkIn") LocalDate checkIn,
             @Param("checkOut") LocalDate checkOut);
 
+    @Query("SELECT p FROM Product p " +
+            "LEFT JOIN p.city c " +
+            "LEFT JOIN c.state s " +
+            "LEFT JOIN s.country co " +
+            "WHERE LOWER(TRIM(c.name)) LIKE LOWER(CONCAT('%', :location, '%')) " +
+            "OR LOWER(TRIM(s.name)) LIKE LOWER(CONCAT('%', :location, '%')) " +
+            "OR LOWER(TRIM(co.name)) LIKE LOWER(CONCAT('%', :location, '%'))")
+    List<Product> findProductsByCityName(@Param("location") String location);
+
+
     @Query("SELECT p FROM Product p WHERE NOT EXISTS ( " +
             "SELECT 1 FROM Reserve r WHERE r.product = p " +
             "AND r.checkIn <= :checkOut AND r.checkOut >= :checkIn)")
     List<Product> findProductsByAvailability(@Param("checkIn") LocalDate checkIn, @Param("checkOut") LocalDate checkOut);
-
-
-
-
-
 
 }
