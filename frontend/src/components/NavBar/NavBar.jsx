@@ -10,7 +10,7 @@ const NavBar = ({ setFilteredProducts }) => {
   const [checkOut, setCheckOut] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [suggestions, setSuggestions] = useState([]);
-  const [monthOffset, setMonthOffset] = useState(0); // Controla el desplazamiento del mes actual
+  const [monthOffset, setMonthOffset] = useState(0); 
 
   const formatDate = (date) => {
     if (!date) return '';

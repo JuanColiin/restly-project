@@ -54,6 +54,16 @@
     gap: 5px;
 }
 
+.calendar-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-top: 20px;
+    
+}
+
+
 
 .image-gallery {
     display: grid;
@@ -90,6 +100,18 @@
     aspect-ratio: 16/9;
 }
 
+.availability-section {
+    margin-top: 30px;
+    text-align: center;
+  }
+  
+  .availability-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #333;
+  }
+  
 
 .view-more-btn {
     align-self: flex-end;
