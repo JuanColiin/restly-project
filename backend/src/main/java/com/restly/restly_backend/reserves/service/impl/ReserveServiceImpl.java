@@ -1,7 +1,5 @@
 package com.restly.restly_backend.reserves.service.impl;
 
-
-
 import com.restly.restly_backend.product.entity.Product;
 import com.restly.restly_backend.product.repository.IProductRepository;
 import com.restly.restly_backend.reserves.dto.ReserveDTO;
@@ -18,21 +16,15 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
 public class ReserveServiceImpl implements IReserveService {
 
-
     private final IReserveRepository reserveRepository;
-
-
     private final IProductRepository productRepository;
-
-
-    private  final IUserRepository userRepository;
-
-
+    private final IUserRepository userRepository;
     private final ReserveMapper reserveMapper;
 
     @Override
@@ -76,5 +68,30 @@ public class ReserveServiceImpl implements IReserveService {
             throw new RuntimeException("Reserva no encontrada.");
         }
         reserveRepository.deleteById(id);
+    }
+
+    @Override
+    public List<LocalDate> getBookedDates(Long productId, LocalDate startDate, LocalDate endDate) {
+        List<Reserve> reserves = reserveRepository.findByProductIdAndCheckInBetween(productId, startDate, endDate);
+
+        System.out.println("Reservas encontradas para el producto " + productId + ": " + reserves.size());
+
+        return reserves.stream()
+                .flatMap(reserve -> {
+                    System.out.println("Procesando reserva: CheckIn = " + reserve.getCheckIn() + ", CheckOut = " + reserve.getCheckOut());
+                    return Stream.iterate(reserve.getCheckIn(), date -> date.plusDays(1))
+                            .limit(reserve.getCheckOut().toEpochDay() - reserve.getCheckIn().toEpochDay());
+                })
+                .collect(Collectors.toList());
+    }
+
+
+    @Override
+    public List<LocalDate> getAvailableDates(Long productId, LocalDate startDate, LocalDate endDate) {
+        List<LocalDate> bookedDates = getBookedDates(productId, startDate, endDate);
+        return Stream.iterate(startDate, date -> date.plusDays(1))
+                .limit(endDate.toEpochDay() - startDate.toEpochDay())
+                .filter(date -> !bookedDates.contains(date))
+                .collect(Collectors.toList());
     }
 }

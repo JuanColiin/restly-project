@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -40,4 +41,25 @@ public class ReserveController {
         reserveService.cancelReserve(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/product/{productId}/dates")
+    public ResponseEntity<?> getReserveDates(
+            @PathVariable Long productId,
+            @RequestParam String startDate,
+            @RequestParam String endDate) {
+        try {
+
+            LocalDate start = LocalDate.parse(startDate.trim());
+            LocalDate end = LocalDate.parse(endDate.trim());
+
+            List<LocalDate> bookedDates = reserveService.getBookedDates(productId, start, end);
+            List<LocalDate> availableDates = reserveService.getAvailableDates(productId, start, end);
+
+            return ResponseEntity.ok(new ReserveDatesResponse(availableDates, bookedDates));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("No se pudo obtener la información en este momento. Intente más tarde.");
+        }
+    }
+
+    private record ReserveDatesResponse(List<LocalDate> availableDates, List<LocalDate> bookedDates) {}
 }
