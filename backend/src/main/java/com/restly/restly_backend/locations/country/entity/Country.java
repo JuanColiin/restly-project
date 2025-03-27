@@ -1,5 +1,7 @@
 package com.restly.restly_backend.locations.country.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.restly.restly_backend.locations.state.entity.State;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -27,6 +29,7 @@ public class Country {
     private String name;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "country", orphanRemoval = true)
+    @JsonIgnore
     private Set<State> states = new HashSet<>();
 }
 

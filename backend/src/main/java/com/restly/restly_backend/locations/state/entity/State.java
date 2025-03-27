@@ -31,6 +31,7 @@ public class State {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "country_id", nullable = false)
+    @JsonIgnore
     private Country country;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "state", orphanRemoval = true)
