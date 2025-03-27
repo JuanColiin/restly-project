@@ -17,6 +17,44 @@
   width: 100%;
 }
 
+/* Agrega estas reglas al final de tu archivo CSS */
+
+/* Estado normal del corazón (no favorito) */
+.favorite-button svg {
+  color: #4b5563; /* Color gris por defecto */
+  transition: color 0.3s ease;
+}
+
+/* Estado hover del corazón (no favorito) */
+.favorite-button:hover svg {
+  color: #ff5a5f; /* Rojo al hacer hover */
+}
+
+/* Estado cuando es favorito (siempre rojo) */
+.favorite-button svg[color="error"] {
+  color: #ff5a5f !important; /* Rojo permanente */
+}
+
+/* Estado hover cuando es favorito */
+.favorite-button:hover svg[color="error"] {
+  color: #e0484d !important; /* Rojo más oscuro al hacer hover */
+}
+
+/* Estructura del botón */
+.favorite-button {
+  padding: 8px;
+  background: rgba(255, 255, 255, 0.8);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.favorite-button:hover {
+  background: white;
+  transform: scale(1.1);
+}
+
 .card-image-container {
   position: relative;
   width: 100%;

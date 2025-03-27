@@ -16,7 +16,8 @@
 
 
 .carousel-card {
-    min-width: 300px;
+    min-width: 350px;
+    max-width: 350px;
     border-radius: 16px;
     overflow: hidden;
     background-color: white;

@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect, useContext } from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
-import { IconButton, SvgIcon } from "@mui/material";
+import { IconButton, SvgIcon, Snackbar, Alert } from "@mui/material";
 import {
+  Favorite as HeartFilledIcon,
   FavoriteBorder as HeartIcon,
   LocationOn as MapPinIcon,
   Wifi as WifiIcon,
@@ -19,7 +20,8 @@ import {
   NavigateNext as NextPageIcon,
   LastPage as LastPageIcon,
 } from "@mui/icons-material";
-
+import { Tooltip } from '@mui/material';
+import AuthContext from "../../context/AuthContext";
 import "./RecomendationCard.css";
 
 const getFeatureIcon = (feature, size = 20) => {
@@ -43,29 +45,106 @@ const getFeatureIcon = (feature, size = 20) => {
 
 export const RecomendationCard = ({ products }) => {
   const [currentPage, setCurrentPage] = useState(1);
+  const [favoritesStatus, setFavoritesStatus] = useState({});
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const { user } = useContext(AuthContext);
   const productsPerPage = 10;
+
+  // Verificar estado de favoritos al cargar o cambiar productos
+  useEffect(() => {
+    const checkFavorites = async () => {
+      if (!user?.token) {
+        // Si no hay usuario, marcamos todos como no favoritos
+        const initialStatus = {};
+        currentProducts.forEach(product => {
+          initialStatus[product.id] = false;
+        });
+        setFavoritesStatus(initialStatus);
+        return;
+      }
+
+      const status = {};
+      for (const product of currentProducts) {
+        try {
+          const response = await fetch(`http://localhost:8080/favorites/${product.id}`, {
+            headers: {
+              Authorization: `Bearer ${user.token}`,
+            },
+          });
+          status[product.id] = response.ok ? await response.json() : false;
+        } catch (error) {
+          console.error(`Error checking favorite status for product ${product.id}:`, error);
+          status[product.id] = false;
+        }
+      }
+      setFavoritesStatus(status);
+    };
+
+    checkFavorites();
+  }, [currentPage, user]); // Dependencias actualizadas
 
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
   const currentProducts = products.slice(indexOfFirstProduct, indexOfLastProduct);
   const totalPages = Math.ceil(products.length / productsPerPage);
 
-  const handleNextPage = () => {
-    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
-  };
-
-  const handlePrevPage = () => {
-    if (currentPage > 1) setCurrentPage(currentPage - 1);
-  };
-
+  const handleNextPage = () => currentPage < totalPages && setCurrentPage(currentPage + 1);
+  const handlePrevPage = () => currentPage > 1 && setCurrentPage(currentPage - 1);
   const handleFirstPage = () => setCurrentPage(1);
   const handleLastPage = () => setCurrentPage(totalPages);
+
+  const toggleFavorite = async (productId) => {
+    if (!user) {
+      setSnackbarMessage("Debes iniciar sesión para agregar a favoritos");
+      setSnackbarOpen(true);
+      return;
+    }
+
+    const isCurrentlyFavorite = favoritesStatus[productId] || false;
+
+    try {
+      const response = await fetch(
+        `http://localhost:8080/favorites/${productId}`,
+        {
+          method: isCurrentlyFavorite ? "DELETE" : "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${user.token}`,
+          },
+        }
+      );
+
+      if (response.ok) {
+        setFavoritesStatus(prev => ({
+          ...prev,
+          [productId]: !isCurrentlyFavorite
+        }));
+        setSnackbarMessage(
+          isCurrentlyFavorite
+            ? "Eliminado de favoritos"
+            : "Agregado a favoritos"
+        );
+        setSnackbarOpen(true);
+      } else {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+    } catch (error) {
+      console.error("Error toggling favorite:", error);
+      setSnackbarMessage(
+        `Error al ${isCurrentlyFavorite ? "eliminar" : "agregar"} favorito`
+      );
+      setSnackbarOpen(true);
+    }
+  };
+
+  const handleCloseSnackbar = () => setSnackbarOpen(false);
 
   return (
     <>
       <div className="cards-container">
-        {currentProducts.map((product, index) => (
-          <div className="card" key={index}>
+        {currentProducts.map((product) => (
+          <div className="card" key={product.id}>
             <div className="card-image-container">
               <img
                 src={product.images?.[0]?.imageUrl || 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3'}
@@ -79,9 +158,22 @@ export const RecomendationCard = ({ products }) => {
 
             <div className="card-content">
               <div className="title-content">
-                <IconButton className="favorite-button">
-                  <HeartIcon />
-                </IconButton>
+                <Tooltip
+                  title={favoritesStatus[product.id] ? "Eliminar de favoritos" : "Agregar a favoritos"}
+                  arrow
+                  placement="top"
+                >
+                  <IconButton
+                    className="favorite-button"
+                    onClick={() => toggleFavorite(product.id)}
+                  >
+                    {favoritesStatus[product.id] ? (
+                      <HeartFilledIcon style={{ color: '#ff5a5f' }} />
+                    ) : (
+                      <HeartIcon />
+                    )}
+                  </IconButton>
+                </Tooltip>
                 <h3 className="card-title">{product.title}</h3>
               </div>
 
@@ -112,6 +204,7 @@ export const RecomendationCard = ({ products }) => {
         ))}
       </div>
 
+      {/* Paginación */}
       <div className="pagination">
         <IconButton onClick={handleFirstPage} disabled={currentPage === 1}>
           <FirstPageIcon />
@@ -127,6 +220,22 @@ export const RecomendationCard = ({ products }) => {
           <LastPageIcon />
         </IconButton>
       </div>
+
+      {/* Notificación */}
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={4000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity="success"
+          sx={{ width: '100%' }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </>
   );
 };
