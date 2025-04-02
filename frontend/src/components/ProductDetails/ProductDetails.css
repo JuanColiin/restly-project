@@ -419,3 +419,36 @@ body.modal-open {
         font-size: 24px;
     }
 }
+@media (max-width: 600px) {
+    .product-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        flex-wrap: nowrap;
+    }
+
+    .product-title h2 {
+        font-size: 1rem;
+        flex-grow: 1;
+        margin-right: 10px;
+    }
+
+    .product-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .favorite-btn,
+    .back-btn {
+        width: 30px;
+        height: 30px;
+    }
+
+    .favorite-btn svg,
+    .back-btn svg {
+        width: 24px;
+        height: 24px;
+    }
+}

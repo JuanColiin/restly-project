@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
-import { IconButton, SvgIcon, Snackbar, Alert } from "@mui/material";
+import { IconButton, SvgIcon, Snackbar, Alert, Tooltip } from "@mui/material";
 import {
   Favorite as HeartFilledIcon,
   FavoriteBorder as HeartIcon,
@@ -20,7 +20,6 @@ import {
   NavigateNext as NextPageIcon,
   LastPage as LastPageIcon,
 } from "@mui/icons-material";
-import { Tooltip } from '@mui/material';
 import AuthContext from "../../context/AuthContext";
 import "./RecomendationCard.css";
 
@@ -51,48 +50,41 @@ export const RecomendationCard = ({ products }) => {
   const { user } = useContext(AuthContext);
   const productsPerPage = 10;
 
-  // Verificar estado de favoritos al cargar o cambiar productos
-  useEffect(() => {
-    const checkFavorites = async () => {
-      if (!user?.token) {
-        // Si no hay usuario, marcamos todos como no favoritos
-        const initialStatus = {};
-        currentProducts.forEach(product => {
-          initialStatus[product.id] = false;
-        });
-        setFavoritesStatus(initialStatus);
-        return;
-      }
-
-      const status = {};
-      for (const product of currentProducts) {
-        try {
-          const response = await fetch(`http://localhost:8080/favorites/${product.id}`, {
-            headers: {
-              Authorization: `Bearer ${user.token}`,
-            },
-          });
-          status[product.id] = response.ok ? await response.json() : false;
-        } catch (error) {
-          console.error(`Error checking favorite status for product ${product.id}:`, error);
-          status[product.id] = false;
-        }
-      }
-      setFavoritesStatus(status);
-    };
-
-    checkFavorites();
-  }, [currentPage, user]); // Dependencias actualizadas
-
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
   const currentProducts = products.slice(indexOfFirstProduct, indexOfLastProduct);
   const totalPages = Math.ceil(products.length / productsPerPage);
 
-  const handleNextPage = () => currentPage < totalPages && setCurrentPage(currentPage + 1);
-  const handlePrevPage = () => currentPage > 1 && setCurrentPage(currentPage - 1);
-  const handleFirstPage = () => setCurrentPage(1);
-  const handleLastPage = () => setCurrentPage(totalPages);
+  useEffect(() => {
+    const fetchFavorites = async () => {
+      if (!user?.token) {
+        setFavoritesStatus({});
+        return;
+      }
+
+      try {
+        const response = await fetch("http://localhost:8080/favorites", {
+          headers: { Authorization: `Bearer ${user.token}` },
+        });
+
+        if (response.ok) {
+          const favoriteProducts = await response.json();
+          const favoriteIds = new Set(favoriteProducts.map((product) => product.id));
+          const updatedFavorites = {};
+
+          currentProducts.forEach((product) => {
+            updatedFavorites[product.id] = favoriteIds.has(product.id);
+          });
+
+          setFavoritesStatus(updatedFavorites);
+        }
+      } catch (error) {
+        console.error("Error fetching favorites:", error);
+      }
+    };
+
+    fetchFavorites();
+  }, [currentPage, user, products]);
 
   const toggleFavorite = async (productId) => {
     if (!user) {
@@ -116,14 +108,12 @@ export const RecomendationCard = ({ products }) => {
       );
 
       if (response.ok) {
-        setFavoritesStatus(prev => ({
+        setFavoritesStatus((prev) => ({
           ...prev,
-          [productId]: !isCurrentlyFavorite
+          [productId]: !isCurrentlyFavorite,
         }));
         setSnackbarMessage(
-          isCurrentlyFavorite
-            ? "Eliminado de favoritos"
-            : "Agregado a favoritos"
+          isCurrentlyFavorite ? "Eliminado de favoritos" : "Agregado a favoritos"
         );
         setSnackbarOpen(true);
       } else {
@@ -131,9 +121,7 @@ export const RecomendationCard = ({ products }) => {
       }
     } catch (error) {
       console.error("Error toggling favorite:", error);
-      setSnackbarMessage(
-        `Error al ${isCurrentlyFavorite ? "eliminar" : "agregar"} favorito`
-      );
+      setSnackbarMessage(`Error al ${isCurrentlyFavorite ? "eliminar" : "agregar"} favorito`);
       setSnackbarOpen(true);
     }
   };
@@ -206,17 +194,17 @@ export const RecomendationCard = ({ products }) => {
 
       {/* Paginación */}
       <div className="pagination">
-        <IconButton onClick={handleFirstPage} disabled={currentPage === 1}>
+        <IconButton onClick={() => setCurrentPage(1)} disabled={currentPage === 1}>
           <FirstPageIcon />
         </IconButton>
-        <IconButton onClick={handlePrevPage} disabled={currentPage === 1}>
+        <IconButton onClick={() => setCurrentPage(currentPage - 1)} disabled={currentPage === 1}>
           <PrevPageIcon />
         </IconButton>
         <span>Página {currentPage} de {totalPages}</span>
-        <IconButton onClick={handleNextPage} disabled={currentPage === totalPages}>
+        <IconButton onClick={() => setCurrentPage(currentPage + 1)} disabled={currentPage === totalPages}>
           <NextPageIcon />
         </IconButton>
-        <IconButton onClick={handleLastPage} disabled={currentPage === totalPages}>
+        <IconButton onClick={() => setCurrentPage(totalPages)} disabled={currentPage === totalPages}>
           <LastPageIcon />
         </IconButton>
       </div>

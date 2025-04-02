@@ -14,6 +14,7 @@ import UserProfile from './components/UserProfile/UserProfile';
 import FeatureForm from './components/Forms/FeatureForm/FeatureForm';
 import FeaturesList from './components/FeaturesList/FeaturesList';
 import UserList from './components/UserList/UserList';
+import FavoritesList from './components/FavoritesList/FavoritesList';
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
             <Route path="/Createfeature" element={<FeatureForm/>} />
             <Route path="FeatureList" element={<FeaturesList/>} />
             <Route path="UserList" element={<UserList/>} />
+            <Route path="FavoritesList" element={<FavoritesList/>} />
           </Routes>
         </main>
         <Footer />

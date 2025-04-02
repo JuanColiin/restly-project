@@ -87,6 +87,7 @@ const Header = () => {
                 <div className="profile-email">{user?.email}</div>
                 <Link to="/profile" className="profile-option" onClick={handleProfileClick}>Perfil</Link>
                 <Link to="#" className="profile-option" onClick={handleLogout}>Cerrar sesión</Link>
+                <Link to="/FavoritesList" className="profile-option">Mis favoritos</Link>
               </div>
             )}
           </div>
