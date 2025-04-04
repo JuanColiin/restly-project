@@ -39,6 +39,49 @@
     color: #333;
 }
 
+
+.product-policies-section {
+    width: 100%;
+    margin-top: 20px;
+    box-sizing: border-box;
+    border-radius: 8px;
+}
+
+.title-policy-section {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: left;
+    margin-bottom: 20px;
+    color: #333;
+    text-decoration: underline;
+}
+
+.product-policies-container {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.policy-block {
+    flex: 1 1 30%;
+    min-width: 250px;
+}
+
+.product-policies-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #444;
+    text-decoration: underline;
+}
+
+.product-policies {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: #666;
+}
+
 .product-category {
     font-size: 1.2rem;
     color: #ff5a5f;

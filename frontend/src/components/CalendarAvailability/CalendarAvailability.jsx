@@ -7,6 +7,9 @@ import AuthContext from "../../context/AuthContext";
 import "./CalendarAvailability.css";
 
 const CalendarAvailability = ({ productId }) => {
+  // Convertir productId a número si viene como string
+  const numericProductId = Number(productId);
+  
   const { user } = useContext(AuthContext);
   const [bookedDates, setBookedDates] = useState([]);
   const [monthOffset, setMonthOffset] = useState(0);
@@ -24,7 +27,7 @@ const CalendarAvailability = ({ productId }) => {
     setError(null);
     try {
       const response = await axios.get(
-        `http://localhost:8080/reserves/product/${productId}/dates`,
+        `http://localhost:8080/reserves/product/${numericProductId}/dates`,
         {
           params: {
             startDate: today.toISOString().split("T")[0],
@@ -187,7 +190,10 @@ const CalendarAvailability = ({ productId }) => {
 };
 
 CalendarAvailability.propTypes = {
-  productId: PropTypes.number.isRequired,
+  productId: PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.string
+  ]).isRequired,
 };
 
 export default CalendarAvailability;

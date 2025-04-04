@@ -46,6 +46,7 @@ const getFeatureIconAndName = (feature) => {
 
 const ProductDetails = () => {
   const { id } = useParams();
+  const productId = Number(id); // Convertir a número aquí
   const navigate = useNavigate();
   const [product, setProduct] = useState(null);
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -66,7 +67,7 @@ const ProductDetails = () => {
         setIsLoading(true);
         setError(null);
 
-        const productResponse = await fetch(`http://localhost:8080/products/${id}`, {
+        const productResponse = await fetch(`http://localhost:8080/products/${productId}`, {
           signal: controller.signal,
         });
         if (!productResponse.ok) throw new Error("Error al obtener los datos del producto.");
@@ -74,7 +75,7 @@ const ProductDetails = () => {
         setProduct(productData);
 
         if (user?.token) {
-          const favResponse = await fetch(`http://localhost:8080/favorites/${id}`, {
+          const favResponse = await fetch(`http://localhost:8080/favorites/${productId}`, {
             headers: {
               Authorization: `Bearer ${user.token}`,
             },
@@ -97,7 +98,7 @@ const ProductDetails = () => {
 
     fetchData();
     return () => controller.abort();
-  }, [id, user]);
+  }, [productId, user]);
 
   useEffect(() => {
     Modal.setAppElement("#root");
@@ -131,7 +132,7 @@ const ProductDetails = () => {
     }
 
     try {
-      const endpoint = `http://localhost:8080/favorites/${id}`;
+      const endpoint = `http://localhost:8080/favorites/${productId}`;
       const method = isFavorite ? "DELETE" : "POST";
 
       const response = await fetch(endpoint, {
@@ -229,7 +230,7 @@ const ProductDetails = () => {
       </p>
 
       {isMobile ? (
-        <ImageCarousel productId={id} />
+        <ImageCarousel productId={productId} />
       ) : (
         product.images?.length > 0 && (
           <div className="image-gallery">
@@ -264,6 +265,8 @@ const ProductDetails = () => {
         <p className="product-description">{product.description}</p>
       </div>
 
+
+
       <div className="features-section">
         <h3 className="features-title">Características</h3>
         <ul className="features-list">
@@ -278,9 +281,30 @@ const ProductDetails = () => {
         </ul>
       </div>
 
+      <div className="product-policies-section">
+  <h2 className="title-policy-section">Políticas del lugar</h2>
+  <div className="product-policies-container">
+    <div className="policy-block">
+      <h3 className="product-policies-title">Reglas</h3>
+      <p className="product-policies">{product.policy.rules}</p>
+    </div>
+    <div className="policy-block">
+      <h3 className="product-policies-title">Política de seguridad</h3>
+      <p className="product-policies">{product.policy.security}</p>
+    </div>
+    <div className="policy-block">
+      <h3 className="product-policies-title">Política de cancelación</h3>
+      <p className="product-policies">{product.policy.cancellation}</p>
+    </div>
+  </div>
+</div>
+
+
+
+
       <div className="availability-section">
         <h3 className="availability-title">Fechas Disponibles</h3>
-        <CalendarAvailability productId={id} />
+        <CalendarAvailability productId={productId} />
       </div>
 
       <Modal
