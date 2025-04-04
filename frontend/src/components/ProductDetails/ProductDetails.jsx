@@ -24,6 +24,10 @@ import {
 import { Tooltip, IconButton, Snackbar, Alert } from "@mui/material";
 import CalendarAvailability from "../CalendarAvailability/CalendarAvailability";
 import AuthContext from "../../context/AuthContext";
+import ShareModal from './ShareModal';
+import ShareIcon from '@mui/icons-material/Share';
+
+
 
 const getFeatureIconAndName = (feature) => {
   if (!feature?.title) return { icon: null, name: "Desconocido" };
@@ -59,6 +63,10 @@ const ProductDetails = () => {
   const closeButtonRef = useRef(null);
   const [isMobile, setIsMobile] = useState(window.matchMedia("(max-width: 768px)").matches);
   const { user } = useContext(AuthContext);
+
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const handleOpenShareModal = () => setIsShareModalOpen(true);
+  const handleCloseShareModal = () => setIsShareModalOpen(false);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -201,11 +209,25 @@ const ProductDetails = () => {
     );
   }
 
+
+
+
   return (
     <div className="product-details-container">
       <div className="product-header">
         <h2 className="product-title">{product.title}</h2>
         <div className="product-actions">
+          <Tooltip title="Compartir producto">
+            <ShareIcon
+              style={{ cursor: 'pointer', fontSize: 28, color: '#555' }}
+              onClick={handleOpenShareModal}
+            />
+
+            {isShareModalOpen && (
+              <ShareModal product={product} onClose={handleCloseShareModal} />
+            )}
+          </Tooltip>
+
           <Tooltip title={isFavorite ? "Eliminar de favoritos" : "Agregar a favoritos"}>
             <IconButton
               onClick={toggleFavorite}
@@ -282,22 +304,22 @@ const ProductDetails = () => {
       </div>
 
       <div className="product-policies-section">
-  <h2 className="title-policy-section">Políticas del lugar</h2>
-  <div className="product-policies-container">
-    <div className="policy-block">
-      <h3 className="product-policies-title">Reglas</h3>
-      <p className="product-policies">{product.policy.rules}</p>
-    </div>
-    <div className="policy-block">
-      <h3 className="product-policies-title">Política de seguridad</h3>
-      <p className="product-policies">{product.policy.security}</p>
-    </div>
-    <div className="policy-block">
-      <h3 className="product-policies-title">Política de cancelación</h3>
-      <p className="product-policies">{product.policy.cancellation}</p>
-    </div>
-  </div>
-</div>
+        <h2 className="title-policy-section">Políticas del lugar</h2>
+        <div className="product-policies-container">
+          <div className="policy-block">
+            <h3 className="product-policies-title">Reglas</h3>
+            <p className="product-policies">{product.policy.rules}</p>
+          </div>
+          <div className="policy-block">
+            <h3 className="product-policies-title">Política de seguridad</h3>
+            <p className="product-policies">{product.policy.security}</p>
+          </div>
+          <div className="policy-block">
+            <h3 className="product-policies-title">Política de cancelación</h3>
+            <p className="product-policies">{product.policy.cancellation}</p>
+          </div>
+        </div>
+      </div>
 
 
 
