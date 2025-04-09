@@ -13,4 +13,6 @@ public interface IReserveService {
     void cancelReserve(Long id);
     List<LocalDate> getBookedDates(Long productId, LocalDate startDate, LocalDate endDate);
     List<LocalDate> getAvailableDates(Long productId, LocalDate startDate, LocalDate endDate);
+    boolean hasUserFinishedReservation(String userEmail, Long productId);
+
 }

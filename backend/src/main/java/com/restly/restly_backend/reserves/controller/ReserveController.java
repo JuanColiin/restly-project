@@ -2,7 +2,10 @@ package com.restly.restly_backend.reserves.controller;
 
 import com.restly.restly_backend.reserves.dto.ReserveDTO;
 import com.restly.restly_backend.reserves.service.IReserveService;
+import com.restly.restly_backend.security.config.JwtService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,7 +14,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/reserves")
+@RequiredArgsConstructor
 public class ReserveController {
+
+    private final JwtService jwtService;
 
     @Autowired
     private IReserveService reserveService;
@@ -60,6 +66,22 @@ public class ReserveController {
             return ResponseEntity.status(500).body("No se pudo obtener la información en este momento. Intente más tarde.");
         }
     }
+
+    @GetMapping("/has-finished")
+    public ResponseEntity<Boolean> hasFinishedReservation(
+            @RequestParam Long productId,
+            @RequestHeader("Authorization") String token
+    ) {
+        try {
+            String jwt = token.replace("Bearer ", "");
+            String userEmail = jwtService.extractUsername(jwt);
+            boolean hasFinished = reserveService.hasUserFinishedReservation(userEmail, productId);
+            return ResponseEntity.ok(hasFinished);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+    }
+
 
     private record ReserveDatesResponse(List<LocalDate> availableDates, List<LocalDate> bookedDates) {}
 }

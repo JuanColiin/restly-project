@@ -5,6 +5,7 @@ import com.restly.restly_backend.feature.dto.FeatureDTO;
 import com.restly.restly_backend.image.dto.ImageDTO;
 import com.restly.restly_backend.locations.address.dto.AddressDTO;
 import com.restly.restly_backend.policies.dto.PolicyDTO;
+import com.restly.restly_backend.review.dto.ReviewDTO;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -23,8 +24,7 @@ public class ProductDTO {
     private AddressDTO address;
     private String description;
     private String shortDescription;
-    private Integer stars;
-    private String review;
+    private List<ReviewDTO> reviews;
     private CategoryDTO category;
     private PolicyDTO policy;
     private Set<FeatureDTO> features = new HashSet<>();

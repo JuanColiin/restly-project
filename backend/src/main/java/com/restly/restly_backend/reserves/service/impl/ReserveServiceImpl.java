@@ -94,4 +94,17 @@ public class ReserveServiceImpl implements IReserveService {
                 .filter(date -> !bookedDates.contains(date))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public boolean hasUserFinishedReservation(String userEmail, Long productId) {
+        User user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+
+        return reserveRepository.findByUserAndProduct(user, product).stream()
+                .anyMatch(reserve -> reserve.getCheckOut().isBefore(LocalDate.now()));
+    }
+
 }

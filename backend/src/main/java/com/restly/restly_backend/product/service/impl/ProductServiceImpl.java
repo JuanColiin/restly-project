@@ -24,6 +24,7 @@ import com.restly.restly_backend.product.exception.ProductAlreadyExistsException
 import com.restly.restly_backend.product.exception.ProductNotFoundException;
 import com.restly.restly_backend.product.repository.IProductRepository;
 import com.restly.restly_backend.product.service.IProductService;
+import com.restly.restly_backend.review.repository.IReviewRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -40,8 +41,6 @@ public class ProductServiceImpl implements IProductService {
 
     private final IProductRepository productRepository;
     private final ICategoryService categoryService;
-    private final ICityService cityService;
-    private final IStateService stateService;
     private final ModelMapper modelMapper;
     private final IStateRepository stateRepository;
     private final ICountryRepository countryRepository;
@@ -52,7 +51,9 @@ public class ProductServiceImpl implements IProductService {
     @Override
     public List<ProductDTO> getAllProducts() {
         return productRepository.findAll().stream()
-                .map(product -> modelMapper.map(product, ProductDTO.class))
+                .map(product -> {
+                    return modelMapper.map(product, ProductDTO.class);
+                })
                 .collect(Collectors.toList());
     }
 
@@ -144,7 +145,6 @@ public class ProductServiceImpl implements IProductService {
 
         existingProduct.setTitle(productDTO.getTitle());
         existingProduct.setDescription(productDTO.getDescription());
-        existingProduct.setStars(productDTO.getStars());
 
         Category category = categoryService.getCategory(productDTO.getCategory().getName());
         existingProduct.setCategory(category);
@@ -255,7 +255,7 @@ public class ProductServiceImpl implements IProductService {
     @Override
     public List<String> getSuggestions(String query) {
         if (query == null || query.trim().length() < 2) {
-            return Collections.emptyList(); // Evita consultas vacías o muy cortas
+            return Collections.emptyList();
         }
 
         //List<String> productSuggestions = productRepository.findProductTitles(query.trim());

@@ -10,6 +10,7 @@ import com.restly.restly_backend.image.entity.Image;
 import com.restly.restly_backend.locations.city.entity.City;
 import com.restly.restly_backend.policies.entity.Policy;
 import com.restly.restly_backend.reserves.entity.Reserve;
+import com.restly.restly_backend.review.entity.Review;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -44,8 +45,8 @@ public class Product {
     @Column(name = "short_description", nullable = false, columnDefinition = "TEXT")
     private String shortDescription;
 
-    @Column(name = "stars")
-    private Integer stars;
+    @Column(name = "rating")
+    private Double rating;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "city_id")
@@ -54,6 +55,10 @@ public class Product {
     @ManyToOne(fetch = FetchType.EAGER, optional = false, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "category_id")
     private Category category;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<Review> reviews = new ArrayList<>();
+
 
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)

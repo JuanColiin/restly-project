@@ -15,5 +15,4 @@ public class ReserveDTO {
     private LocalDate checkOut;
     private Long productId;
     private Long userId;
-
 }
