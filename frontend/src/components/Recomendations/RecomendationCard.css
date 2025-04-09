@@ -5,6 +5,30 @@
   padding: 1.6rem;
 }
 
+.stars-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.stars-container {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+.rating-number {
+  font-size: 0.9rem;
+  background-color: #00c98c;
+  border-radius: 5px;
+  padding: 3px;
+  color: #4b5563;
+  margin-left: 4px;
+  font-weight: 500;
+}
+
+
+
 .card {
   display: grid;
   grid-template-columns: repeat(2, 1fr);

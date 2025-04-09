@@ -19,7 +19,9 @@ import {
   NavigateBefore as PrevPageIcon,
   NavigateNext as NextPageIcon,
   LastPage as LastPageIcon,
+  Star as StarIcon,
 } from "@mui/icons-material";
+import axios from "axios";
 import AuthContext from "../../context/AuthContext";
 import "./RecomendationCard.css";
 
@@ -47,6 +49,7 @@ export const RecomendationCard = ({ products }) => {
   const [favoritesStatus, setFavoritesStatus] = useState({});
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [averageRatings, setAverageRatings] = useState({});
   const { user } = useContext(AuthContext);
   const productsPerPage = 10;
 
@@ -85,6 +88,25 @@ export const RecomendationCard = ({ products }) => {
 
     fetchFavorites();
   }, [currentPage, user, products]);
+
+  useEffect(() => {
+    const fetchAverages = async () => {
+      const newRatings = {};
+
+      await Promise.all(currentProducts.map(async (product) => {
+        try {
+          const res = await axios.get(`http://localhost:8080/reviews/product/${product.id}/average`);
+          newRatings[product.id] = res.data;
+        } catch (err) {
+          console.error(`Error al obtener promedio de producto ${product.id}`, err);
+        }
+      }));
+
+      setAverageRatings(newRatings);
+    };
+
+    fetchAverages();
+  }, [currentProducts]);
 
   const toggleFavorite = async (productId) => {
     if (!user) {
@@ -145,24 +167,39 @@ export const RecomendationCard = ({ products }) => {
             </div>
 
             <div className="card-content">
-              <div className="title-content">
-                <Tooltip
-                  title={favoritesStatus[product.id] ? "Eliminar de favoritos" : "Agregar a favoritos"}
-                  arrow
-                  placement="top"
-                >
-                  <IconButton
-                    className="favorite-button"
-                    onClick={() => toggleFavorite(product.id)}
+              <div className="title-content stars-row">
+                <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                  <Tooltip
+                    title={favoritesStatus[product.id] ? "Eliminar de favoritos" : "Agregar a favoritos"}
+                    arrow
+                    placement="top"
                   >
-                    {favoritesStatus[product.id] ? (
-                      <HeartFilledIcon style={{ color: '#ff5a5f' }} />
-                    ) : (
-                      <HeartIcon />
-                    )}
-                  </IconButton>
-                </Tooltip>
-                <h3 className="card-title">{product.title}</h3>
+                    <IconButton
+                      className="favorite-button"
+                      onClick={() => toggleFavorite(product.id)}
+                    >
+                      {favoritesStatus[product.id] ? (
+                        <HeartFilledIcon style={{ color: '#ff5a5f' }} />
+                      ) : (
+                        <HeartIcon />
+                      )}
+                    </IconButton>
+                  </Tooltip>
+                  <h3 className="card-title">{product.title}</h3>
+                </div>
+
+                {averageRatings[product.id] > 0 && (
+                  <div className="stars-container">
+                    {Array.from({ length: 5 }, (_, i) => (
+                      <StarIcon
+                        key={i}
+                        fontSize="small"
+                        style={{ color: i < Math.round(averageRatings[product.id]) ? "#FFC107" : "#E0E0E0" }}
+                      />
+                    ))}
+                    <span className="rating-number">{averageRatings[product.id].toFixed(1)}</span>
+                  </div>
+                )}
               </div>
 
               <div className="address">

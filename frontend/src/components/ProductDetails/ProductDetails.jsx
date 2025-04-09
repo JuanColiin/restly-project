@@ -26,6 +26,7 @@ import CalendarAvailability from "../CalendarAvailability/CalendarAvailability";
 import AuthContext from "../../context/AuthContext";
 import ShareModal from './ShareModal';
 import ShareIcon from '@mui/icons-material/Share';
+import ProductReviews from "../ProductReviews/ProductReviews";
 
 
 
@@ -361,7 +362,11 @@ const ProductDetails = () => {
           {snackbarMessage}
         </Alert>
       </Snackbar>
+
+
+      <ProductReviews  productId={product.id} />
     </div>
+    
   );
 };
 
