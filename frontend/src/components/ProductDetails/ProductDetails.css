@@ -84,7 +84,7 @@
 
 .product-category {
     font-size: 1.2rem;
-    color: #ff5a5f;
+    color: #00c98c;
     font-weight: 600;
     margin-bottom: 5px;
 }
@@ -172,6 +172,31 @@
     width: 100%;
 }
 
+.ver-fotos-btn {
+    margin-top: 16px;
+    background-color: #00c98c;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    font-size: 16px;
+    font-weight: 500;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .ver-fotos-btn:hover {
+    background-color: #00c98c;
+  }
+  
+  .ver-fotos-btn i {
+    font-size: 18px;
+  }
+  
 
 .main-image {
     width: 100%;
@@ -216,7 +241,7 @@
     align-self: flex-end;
     margin-top: 10px;
     padding: 10px 18px;
-    background-color: #ff5a5f;
+    background-color: #00c98c;
     color: white;
     border: none;
     border-radius: 5px;
@@ -244,7 +269,7 @@
 
 .modal-content {
     background: white;
-    padding: 30px;
+    padding: 43px;
     border-radius: 10px;
     z-index: 1001;
     width: 90%;
@@ -369,21 +394,18 @@ body.modal-open {
     align-items: center;
     gap: 10px;
     font-size: 1rem;
-    background: #f8f8f8;
     padding: 10px;
     border-radius: 8px;
     transition: background 0.3s ease;
 }
 
-.feature-item:hover,
-.feature-item:focus {
-    background: #f0f0f0;
-}
 
-.feature-item svg {
+
+.feature-icon svg {
     width: 24px;
     height: 24px;
-    color: #ff5a5f;
+    color: #00c98c;
+    flex-shrink: 0;
 }
 
 

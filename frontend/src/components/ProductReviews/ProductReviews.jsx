@@ -23,12 +23,18 @@ const ProductReviews = ({ productId }) => {
 
   const fetchAverage = async () => {
     try {
-      const res = await axios.get(`http://localhost:8080/reviews/product/${productId}/average`);
-      setAverageRating(res.data);
+      const res = await axios.get(`http://localhost:8080/reviews/products/average-ratings`, {
+        params: {
+          productIds: [productId],
+        },
+      });
+
+      setAverageRating(res.data[productId] || 0.0);
     } catch (err) {
       console.error("Error al obtener promedio", err);
     }
   };
+
 
   const checkIfUserCanReview = async () => {
     try {

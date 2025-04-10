@@ -6,44 +6,26 @@ import {
   Favorite as HeartFilledIcon,
   FavoriteBorder as HeartIcon,
   LocationOn as MapPinIcon,
-  Wifi as WifiIcon,
-  Pool as PoolIcon,
-  AcUnit as AirConditioningIcon,
-  LocalParking as ParkingIcon,
-  FitnessCenter as GymIcon,
-  Pets as PetsIcon,
-  Restaurant as BreakfastIcon,
-  AirportShuttle as ShuttleIcon,
-  Accessible as WheelchairIcon,
   FirstPage as FirstPageIcon,
   NavigateBefore as PrevPageIcon,
   NavigateNext as NextPageIcon,
   LastPage as LastPageIcon,
   Star as StarIcon,
 } from "@mui/icons-material";
+import * as MuiIcons from "@mui/icons-material";
 import axios from "axios";
 import AuthContext from "../../context/AuthContext";
 import "./RecomendationCard.css";
 
 const getFeatureIcon = (feature, size = 20) => {
-  const icons = {
-    wifi: WifiIcon,
-    pool: PoolIcon,
-    airconditioning: AirConditioningIcon,
-    parking: ParkingIcon,
-    gym: GymIcon,
-    petsallowed: PetsIcon,
-    breakfastincluded: BreakfastIcon,
-    airportshuttle: ShuttleIcon,
-    wheelchairaccessible: WheelchairIcon,
-  };
+  if (!feature?.icon) return null;
 
-  const normalizedFeature = feature.trim().toLowerCase().replace(/\s+/g, "");
-  const IconComponent = icons[normalizedFeature];
+  const IconComponent = MuiIcons[feature.icon];
 
-  return IconComponent ? <SvgIcon component={IconComponent} fontSize="small" style={{ fontSize: size }} /> : null;
+  return IconComponent ? (
+    <SvgIcon component={IconComponent} style={{ fontSize: size, color: "#00c98c" }} />
+  ) : null;
 };
-
 export const RecomendationCard = ({ products }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [favoritesStatus, setFavoritesStatus] = useState({});
@@ -212,11 +194,12 @@ export const RecomendationCard = ({ products }) => {
               <p className="description">{product.shortDescription}</p>
 
               <div className="features">
-                {product.features?.map((feature, index) => (
-                  <div key={index} className="feature">
-                    {getFeatureIcon(feature.title)}
-                  </div>
-                ))}
+              {product.features?.map((feature, index) => (
+  <div key={index} className="feature" title={feature.title}>
+    {getFeatureIcon(feature)}
+  </div>
+))}
+
               </div>
 
               <div className="button-container">

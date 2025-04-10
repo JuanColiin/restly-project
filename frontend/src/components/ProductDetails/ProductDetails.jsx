@@ -7,15 +7,6 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import {
-  Wifi,
-  Pool,
-  AcUnit,
-  LocalParking,
-  FitnessCenter,
-  Pets,
-  Restaurant,
-  AirportShuttle,
-  Accessible,
   Place,
   ArrowBack,
   Close,
@@ -23,31 +14,12 @@ import {
 } from "@mui/icons-material";
 import { Tooltip, IconButton, Snackbar, Alert } from "@mui/material";
 import CalendarAvailability from "../CalendarAvailability/CalendarAvailability";
+import * as MuiIcons from "@mui/icons-material";
 import AuthContext from "../../context/AuthContext";
 import ShareModal from './ShareModal';
 import ShareIcon from '@mui/icons-material/Share';
 import ProductReviews from "../ProductReviews/ProductReviews";
 
-
-
-const getFeatureIconAndName = (feature) => {
-  if (!feature?.title) return { icon: null, name: "Desconocido" };
-
-  const featuresMap = {
-    wifi: { icon: <Wifi />, name: "Wi-Fi" },
-    pool: { icon: <Pool />, name: "Piscina" },
-    airconditioning: { icon: <AcUnit />, name: "Aire acondicionado" },
-    parking: { icon: <LocalParking />, name: "Parqueadero" },
-    gym: { icon: <FitnessCenter />, name: "Gimnasio" },
-    petsallowed: { icon: <Pets />, name: "Mascotas permitidas" },
-    breakfastincluded: { icon: <Restaurant />, name: "Desayuno incluido" },
-    airportshuttle: { icon: <AirportShuttle />, name: "Transporte al aeropuerto" },
-    wheelchairaccessible: { icon: <Accessible />, name: "Accesible para sillas de ruedas" },
-  };
-
-  const normalizedFeature = feature.title.toLowerCase().replace(/\s+/g, "");
-  return featuresMap[normalizedFeature] || { icon: null, name: feature.title };
-};
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -108,6 +80,20 @@ const ProductDetails = () => {
     fetchData();
     return () => controller.abort();
   }, [productId, user]);
+
+  const getFeatureIconAndName = (feature) => {
+    if (!feature?.icon || !feature?.title) {
+      return { icon: null, name: "Desconocido" };
+    }
+
+    const IconComponent = MuiIcons[feature.icon];
+
+    return {
+      icon: IconComponent ? <IconComponent/> : null,
+      name: feature.title,
+    };
+  };
+
 
   useEffect(() => {
     Modal.setAppElement("#root");
@@ -224,10 +210,12 @@ const ProductDetails = () => {
               onClick={handleOpenShareModal}
             />
 
-            {isShareModalOpen && (
-              <ShareModal product={product} onClose={handleCloseShareModal} />
-            )}
+
           </Tooltip>
+
+          {isShareModalOpen && (
+            <ShareModal product={product} onClose={handleCloseShareModal} />
+          )}
 
           <Tooltip title={isFavorite ? "Eliminar de favoritos" : "Agregar a favoritos"}>
             <IconButton
@@ -275,9 +263,10 @@ const ProductDetails = () => {
               ))}
             </div>
             {product.images.length > 1 && (
-              <button className="view-more-btn" onClick={openModal}>
-                Ver más fotografías del lugar
-              </button>
+           <button className="ver-fotos-btn" onClick={openModal}>
+  <i className="fas fa-image"></i> Ver más fotografías del lugar
+</button>
+
             )}
           </div>
         )
@@ -289,7 +278,6 @@ const ProductDetails = () => {
       </div>
 
 
-
       <div className="features-section">
         <h3 className="features-title">Características</h3>
         <ul className="features-list">
@@ -297,12 +285,14 @@ const ProductDetails = () => {
             const { icon, name } = getFeatureIconAndName(feature);
             return (
               <li key={index} className="feature-item">
-                {icon} <span>{name}</span>
+                {icon && <span className="feature-icon">{icon}</span>}
+                <span>{name}</span>
               </li>
             );
           })}
         </ul>
       </div>
+
 
       <div className="product-policies-section">
         <h2 className="title-policy-section">Políticas del lugar</h2>
@@ -364,9 +354,9 @@ const ProductDetails = () => {
       </Snackbar>
 
 
-      <ProductReviews  productId={product.id} />
+      <ProductReviews productId={product.id} />
     </div>
-    
+
   );
 };
 

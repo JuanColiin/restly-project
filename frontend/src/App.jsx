@@ -15,6 +15,7 @@ import FeatureForm from './components/Forms/FeatureForm/FeatureForm';
 import FeaturesList from './components/FeaturesList/FeaturesList';
 import UserList from './components/UserList/UserList';
 import FavoritesList from './components/FavoritesList/FavoritesList';
+import UpdateProduct from './components/Forms/UpdateProduct/UpdateProduct';
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
             <Route path="FeatureList" element={<FeaturesList/>} />
             <Route path="UserList" element={<UserList/>} />
             <Route path="FavoritesList" element={<FavoritesList/>} />
+            <Route path="/edit/:id" element={<UpdateProduct />} />
           </Routes>
         </main>
         <Footer />
