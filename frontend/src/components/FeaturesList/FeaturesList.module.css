@@ -2,15 +2,15 @@
   max-width: 900px;
   margin: 100px auto 15px;
   padding: 20px;
-  background: #fff;
+  background: #FFFAFB;
   border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgba(19, 21, 21, 0.1);
 }
 
 h2 {
   text-align: center;
   margin-bottom: 20px;
-  color: #333;
+  color: #2B2C28;
 }
 
 /* Tabla */
@@ -22,15 +22,16 @@ h2 {
 .table th, .table td {
   padding: 12px;
   text-align: left;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #339989;
 }
 
 .table th {
-  background-color: #f4f4f4;
+  background-color: #00c98c;
+  color: #131515;
 }
 
 .table tbody tr:hover {
-  background-color: #f9f9f9;
+  background-color: #E6FAF6;
 }
 
 /* Botones */
@@ -43,22 +44,22 @@ h2 {
 }
 
 .editButton {
-  background: #4caf50;
-  color: white;
+  background: #339989;
+  color: #FFFAFB;
 }
 
 .editButton:hover {
-  background: #388e3c;
+  background: #2B2C28;
 }
 
 .deleteButton {
-  background: #f44336;
+  background: #DC3545;
   color: white;
   margin-left: 6px;
 }
 
 .deleteButton:hover {
-  background: #d32f2f;
+  background: #A71D2A;
 }
 
 /* Modal */
@@ -70,10 +71,10 @@ h2 {
   width: 90%;
   max-width: 500px;
   max-height: 80vh;
-  background: white;
+  background: #FFFAFB;
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 10px rgba(19, 21, 21, 0.2);
   overflow-y: auto;
 }
 
@@ -83,7 +84,7 @@ h2 {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(19, 21, 21, 0.4);
 }
 
 /* Contenido del modal */
@@ -91,14 +92,17 @@ h2 {
   display: block;
   margin-top: 10px;
   font-weight: bold;
+  color: #2B2C28;
 }
 
 .modalContent input {
   width: 100%;
   padding: 8px;
   margin-top: 5px;
-  border: 1px solid #ccc;
+  border: 1px solid #339989;
   border-radius: 4px;
+  background: #FFFAFB;
+  color: #131515;
 }
 
 /* Contenedor de iconos con scroll */
@@ -109,9 +113,9 @@ h2 {
   max-height: 250px;
   overflow-y: auto;
   padding: 10px;
-  border: 1px solid #ddd;
+  border: 1px solid #339989;
   border-radius: 6px;
-  background: #fafafa;
+  background: #EAF9F6;
 }
 
 /* Opciones de iconos */
@@ -122,19 +126,20 @@ h2 {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  border: 1px solid #ddd;
+  border: 1px solid #339989;
   border-radius: 6px;
   transition: 0.3s;
-  background: white;
+  background: #FFFAFB;
+  color: #2B2C28;
 }
 
 .iconOption:hover {
-  background: #e0e0e0;
+  background: #D2F4EF;
 }
 
 .selected {
-  border: 2px solid #4caf50;
-  background: #e8f5e9;
+  border: 2px solid #339989;
+  background: #C1F2EA;
 }
 
 /* Botones dentro del modal */
@@ -145,8 +150,8 @@ h2 {
 }
 
 .saveButton {
-  background: #2196f3;
-  color: white;
+  background: #339989;
+  color: #FFFAFB;
   padding: 8px 12px;
   border: none;
   border-radius: 5px;
@@ -155,12 +160,13 @@ h2 {
 }
 
 .saveButton:hover {
-  background: #1976d2;
+  background: #2B2C28;
+  color: #FFFAFB;
 }
 
 .cancelButton {
-  background: #757575;
-  color: white;
+  background: #2B2C28;
+  color: #FFFAFB;
   padding: 8px 12px;
   border: none;
   border-radius: 5px;
@@ -169,7 +175,7 @@ h2 {
 }
 
 .cancelButton:hover {
-  background: #616161;
+  background: #131515;
 }
 
 /* Responsivo */

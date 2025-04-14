@@ -10,6 +10,7 @@ const ProductReviews = ({ productId }) => {
   const { user } = useContext(AuthContext);
   const [reviews, setReviews] = useState([]);
   const [averageRating, setAverageRating] = useState(null);
+  const [totalReviews, setTotalReviews] = useState(0);
   const [newReview, setNewReview] = useState({ rating: 0, comment: '' });
 
   const fetchReviews = async () => {
@@ -21,20 +22,24 @@ const ProductReviews = ({ productId }) => {
     }
   };
 
-  const fetchAverage = async () => {
+  const fetchAverageAndCount = async () => {
     try {
-      const res = await axios.get(`http://localhost:8080/reviews/products/average-ratings`, {
+
+      const avgRes = await axios.get(`http://localhost:8080/reviews/average-ratings`, {
         params: {
-          productIds: [productId],
+          productIds: productId, 
         },
       });
+      
 
-      setAverageRating(res.data[productId] || 0.0);
+      setAverageRating(avgRes.data[productId] || 0.0);
+
+      const countRes = await axios.get(`http://localhost:8080/reviews/product/${productId}/count`);
+      setTotalReviews(countRes.data);
     } catch (err) {
-      console.error("Error al obtener promedio", err);
+      console.error("Error al obtener promedio o total de reseñas", err);
     }
   };
-
 
   const checkIfUserCanReview = async () => {
     try {
@@ -46,7 +51,7 @@ const ProductReviews = ({ productId }) => {
           },
         }
       );
-      return res.data; // true o false
+      return res.data;
     } catch (err) {
       console.error("Error al verificar permiso para reseñar", err);
       return false;
@@ -88,7 +93,7 @@ const ProductReviews = ({ productId }) => {
 
       setNewReview({ rating: 0, comment: '' });
       await fetchReviews();
-      await fetchAverage();
+      await fetchAverageAndCount();
       Swal.fire('¡Gracias!', 'Tu reseña fue enviada con éxito', 'success');
     } catch (err) {
       Swal.fire('Error', err.response?.data?.message || 'No se pudo enviar la reseña', 'error');
@@ -103,7 +108,7 @@ const ProductReviews = ({ productId }) => {
         },
       });
       await fetchReviews();
-      await fetchAverage();
+      await fetchAverageAndCount();
       Swal.fire('Eliminada', 'Tu reseña ha sido eliminada', 'success');
     } catch {
       Swal.fire('Error', 'No se pudo eliminar la reseña', 'error');
@@ -112,7 +117,7 @@ const ProductReviews = ({ productId }) => {
 
   useEffect(() => {
     fetchReviews();
-    fetchAverage();
+    fetchAverageAndCount();
   }, [productId]);
 
   return (
@@ -127,6 +132,35 @@ const ProductReviews = ({ productId }) => {
             <FaStar key={i} color={i < Math.round(averageRating || 0) ? '#ffc107' : '#e4e5e9'} />
           ))}
         </div>
+        <p><strong>Total reseñas:</strong> {totalReviews}</p>
+      </div>
+
+ 
+
+      <div className="reviews-list">
+        {reviews.length > 0 ? (
+          reviews.map((r) => (
+            <div className="review-card" key={r.id}>
+              <div className="review-header">
+                <strong>{r.userName}</strong> —{' '}
+                <span>{new Date(r.createdAt).toLocaleDateString()}</span>
+              </div>
+              <div className="review-stars">
+                {[...Array(5)].map((_, i) => (
+                  <FaStar key={i} color={i < r.rating ? '#ffc107' : '#e4e5e9'} />
+                ))}
+              </div>
+              <p>{r.comment}</p>
+              {user?.email === r.userEmail && (
+                <button className="delete-btn" onClick={() => handleDelete(r.id)}>
+                  Eliminar
+                </button>
+              )}
+            </div>
+          ))
+        ) : (
+          <p>Aún no hay reseñas para este producto.</p>
+        )}
       </div>
 
       {user && (
@@ -151,35 +185,6 @@ const ProductReviews = ({ productId }) => {
           <button type="submit">Enviar reseña</button>
         </form>
       )}
-
-      <div className="reviews-list">
-        {reviews.length > 0 ? (
-          reviews.map((r) => (
-            <div className="review-card" key={r.id}>
-              <div className="review-header">
-                <strong>{r.userName}</strong> —{' '}
-                <span>{new Date(r.createdAt).toLocaleDateString()}</span>
-              </div>
-              <div className="review-stars">
-                {[...Array(5)].map((_, i) => (
-                  <FaStar key={i} color={i < r.rating ? '#ffc107' : '#e4e5e9'} />
-                ))}
-              </div>
-              <p>{r.comment}</p>
-              {user?.email === r.userEmail && (
-                <button
-                  className="delete-btn"
-                  onClick={() => handleDelete(r.id)}
-                >
-                  Eliminar
-                </button>
-              )}
-            </div>
-          ))
-        ) : (
-          <p>Aún no hay reseñas para este producto.</p>
-        )}
-      </div>
     </div>
   );
 };

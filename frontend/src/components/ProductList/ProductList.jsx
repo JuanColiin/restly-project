@@ -22,7 +22,7 @@ const ProductList = () => {
 
   return (
     <div className="product-list">
-      <h2>Lista de Productos</h2>
+      <h2>Lista de Propiedades</h2>
       <table>
         <thead>
           <tr>
@@ -39,7 +39,7 @@ const ProductList = () => {
               <td>{product.title}</td>
               <td>{product.category?.name}</td>
               <td className="actions">
-                <button className="delete-btn" onClick={() => handleDelete(product.id)}>Eliminar</button>
+                <button className="delete-btn-product" onClick={() => handleDelete(product.id)}>Eliminar</button>
                 <Link to={`/edit/${product.id}`}>
                   <button className="edit-btn">Actualizar</button>
                 </Link>

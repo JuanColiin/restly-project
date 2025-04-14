@@ -7,10 +7,9 @@ import AuthContext from "../../context/AuthContext";
 import "./CalendarAvailability.css";
 
 const CalendarAvailability = ({ productId }) => {
-  // Convertir productId a número si viene como string
   const numericProductId = Number(productId);
-  
   const { user } = useContext(AuthContext);
+
   const [bookedDates, setBookedDates] = useState([]);
   const [monthOffset, setMonthOffset] = useState(0);
   const [error, setError] = useState(null);
@@ -63,7 +62,7 @@ const CalendarAvailability = ({ productId }) => {
       }
     }
   };
-  
+
   const handleReserve = async () => {
     if (!user) {
       return Swal.fire("Error", "Debes iniciar sesión para reservar", "error");
@@ -71,17 +70,39 @@ const CalendarAvailability = ({ productId }) => {
     if (!checkIn || !checkOut) {
       return Swal.fire("Error", "Selecciona un rango de fechas válido", "error");
     }
-    try {
-      await axios.post("http://localhost:8080/reserves", {
-        startTime: "14:00:00",
-        checkIn: checkIn.toISOString().split("T")[0],
-        checkOut: checkOut.toISOString().split("T")[0],
-        productId,
-        userId: user.userId,
-      });
-      Swal.fire("Reserva exitosa", "Tu reserva ha sido confirmada", "success");
-    } catch {
-      Swal.fire("Error", "No se pudo completar la reserva", "error");
+
+    const checkInStr = checkIn.toLocaleDateString("es-ES");
+    const checkOutStr = checkOut.toLocaleDateString("es-ES");
+
+    const confirmResult = await Swal.fire({
+      title: "Confirmar reserva",
+      html: `
+        <p>¿Estás seguro de realizar esta reserva?</p>
+        <p><strong>Check-in:</strong> ${checkInStr}</p>
+        <p><strong>Check-out:</strong> ${checkOutStr}</p>
+      `,
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Sí, reservar",
+      cancelButtonText: "Cancelar",
+    });
+
+    if (confirmResult.isConfirmed) {
+      try {
+        await axios.post("http://localhost:8080/reserves", {
+          startTime: "14:00:00",
+          checkIn: checkIn.toISOString().split("T")[0],
+          checkOut: checkOut.toISOString().split("T")[0],
+          productId,
+          userId: user.userId,
+        });
+        Swal.fire("Reserva exitosa", "Tu reserva ha sido confirmada", "success");
+        setCheckIn(null);
+        setCheckOut(null);
+        fetchDates(); // Refrescar fechas reservadas
+      } catch {
+        Swal.fire("Error", "No se pudo completar la reserva", "error");
+      }
     }
   };
 
@@ -101,14 +122,14 @@ const CalendarAvailability = ({ productId }) => {
       currentMonth.getMonth(),
       1
     ).getDay();
-  
+
     const monthName = currentMonth.toLocaleString("es-ES", { month: "long" });
     const year = currentMonth.getFullYear();
-  
+
     const days = Array.from({ length: firstDay }, (_, i) => (
       <div key={`empty-${i}`} className="ca-calendar-day ca-empty"></div>
     ));
-  
+
     for (let day = 1; day <= daysInMonth; day++) {
       const date = new Date(
         currentMonth.getFullYear(),
@@ -116,14 +137,14 @@ const CalendarAvailability = ({ productId }) => {
         day
       );
       const isDisabled = date < today || isBooked(date);
-  
+
       const isSelected =
         (checkIn && date.toDateString() === checkIn.toDateString()) ||
         (checkOut && date.toDateString() === checkOut.toDateString());
-  
+
       const isInRange =
         checkIn && checkOut && date > checkIn && date < checkOut;
-  
+
       days.push(
         <div
           key={date.toISOString()}
@@ -176,15 +197,32 @@ const CalendarAvailability = ({ productId }) => {
       </h3>
       {loading && <p className="ca-loading">Cargando disponibilidad...</p>}
       {error && <p className="ca-error-message">{error}</p>}
+
       <div className="ca-calendars-container">
         {renderCalendar(monthOffset)}
         {renderCalendar(monthOffset + 1)}
       </div>
+
       {checkIn && checkOut && (
-        <button className="ca-reserve-btn" onClick={handleReserve}>
-          Confirmar Reserva
-        </button>
+        <div className="ca-selected-dates-summary">
+          <p>
+            <strong>Check-in:</strong>{" "}
+            {checkIn.toLocaleDateString("es-ES")}
+          </p>
+          <p>
+            <strong>Check-out:</strong>{" "}
+            {checkOut.toLocaleDateString("es-ES")}
+          </p>
+        </div>
       )}
+
+      <div className="button-container">
+        {checkIn && checkOut && (
+          <button className="ca-reserve-btn" onClick={handleReserve}>
+            Confirmar Reserva
+          </button>
+        )}
+      </div>
     </div>
   );
 };

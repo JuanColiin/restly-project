@@ -41,6 +41,19 @@ const ProductDetails = () => {
   const handleOpenShareModal = () => setIsShareModalOpen(true);
   const handleCloseShareModal = () => setIsShareModalOpen(false);
 
+
+  const [calendarModalIsOpen, setCalendarModalIsOpen] = useState(false);
+
+
+  const openCalendarModal = () => {
+    setCalendarModalIsOpen(true);
+  };
+
+  const closeCalendarModal = () => {
+    setCalendarModalIsOpen(false);
+  };
+
+
   useEffect(() => {
     const controller = new AbortController();
     const fetchData = async () => {
@@ -89,7 +102,7 @@ const ProductDetails = () => {
     const IconComponent = MuiIcons[feature.icon];
 
     return {
-      icon: IconComponent ? <IconComponent/> : null,
+      icon: IconComponent ? <IconComponent /> : null,
       name: feature.title,
     };
   };
@@ -263,11 +276,15 @@ const ProductDetails = () => {
               ))}
             </div>
             {product.images.length > 1 && (
-           <button className="ver-fotos-btn" onClick={openModal}>
-  <i className="fas fa-image"></i> Ver más fotografías del lugar
-</button>
-
+              <button className="ver-fotos-btn" onClick={openModal}>
+                <i className="fas fa-image"></i> Ver más fotografías del lugar
+              </button>
             )}
+
+            <button className="ver-fotos-btn" onClick={openCalendarModal}>
+              <i className="fas fa-calendar"></i> Ver fechas disponibles
+            </button>
+
           </div>
         )
       )}
@@ -314,11 +331,20 @@ const ProductDetails = () => {
 
 
 
+      {calendarModalIsOpen && (
+        <Modal
+          isOpen={calendarModalIsOpen}
+          onRequestClose={closeCalendarModal}
+          className="calendar-modal-content"
+          overlayClassName="calendar-modal-overlay"
+        >
+          <div className="calendar-modal-inner">
+            <button className="calendar-close-btn" onClick={closeCalendarModal}>×</button>
+            <CalendarAvailability productId={productId} />
+          </div>
+        </Modal>
+      )}
 
-      <div className="availability-section">
-        <h3 className="availability-title">Fechas Disponibles</h3>
-        <CalendarAvailability productId={productId} />
-      </div>
 
       <Modal
         isOpen={modalIsOpen}

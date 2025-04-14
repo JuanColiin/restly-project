@@ -16,6 +16,7 @@ import FeaturesList from './components/FeaturesList/FeaturesList';
 import UserList from './components/UserList/UserList';
 import FavoritesList from './components/FavoritesList/FavoritesList';
 import UpdateProduct from './components/Forms/UpdateProduct/UpdateProduct';
+import CategoryList from './components/CategoryList/CategoryList';
 
 function App() {
   return (
@@ -37,6 +38,7 @@ function App() {
             <Route path="UserList" element={<UserList/>} />
             <Route path="FavoritesList" element={<FavoritesList/>} />
             <Route path="/edit/:id" element={<UpdateProduct />} />
+            <Route path="CategoriesList" element={<CategoryList/>} />
           </Routes>
         </main>
         <Footer />

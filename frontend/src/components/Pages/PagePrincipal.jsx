@@ -6,7 +6,7 @@ import CategoryFilter from "../CategoryFilter/CategoryFilter";
 
 export const PagePrincipal = () => {
   const [products, setProducts] = useState([]);
-  const [allProducts, setAllProducts] = useState([]); // Estado para almacenar todos los productos originales
+  const [allProducts, setAllProducts] = useState([]); 
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -17,7 +17,7 @@ export const PagePrincipal = () => {
         }
         const data = await response.json();
         setProducts(data);
-        setAllProducts(data); // Guardamos todos los productos para futuras búsquedas y filtros
+        setAllProducts(data); 
       } catch (error) {
         console.error("Error al obtener productos:", error);
       }
@@ -26,10 +26,9 @@ export const PagePrincipal = () => {
     fetchProducts();
   }, []);
 
-  // Función para manejar la búsqueda desde el NavBar
   const handleSearch = (query) => {
     if (!query) {
-      setProducts(allProducts); // Si el input está vacío, restauramos todos los productos
+      setProducts(allProducts);
     } else {
       const filteredProducts = allProducts.filter((product) =>
         product.title.toLowerCase().includes(query.toLowerCase())

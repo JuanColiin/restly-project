@@ -408,6 +408,69 @@ body.modal-open {
     flex-shrink: 0;
 }
 
+/* Overlay de fondo oscuro */
+.calendar-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6); /* Fondo oscurecido */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  /* Contenedor principal de la modal */
+  .calendar-modal-content {
+    position: relative;
+    background-color: #ffffff;
+    padding: 30px 20px;
+    width: 90%;
+    max-width: 700px;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: fadeInScale 0.3s ease;
+  }
+  
+  /* Contenido interno de la modal */
+  .calendar-modal-inner {
+    position: relative;
+  }
+  
+  /* Botón para cerrar la modal */
+  .calendar-close-btn {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    font-size: 1.5rem;
+    background: transparent;
+    border: none;
+    color: #333;
+    cursor: pointer;
+    transition: color 0.2s ease;
+  }
+  
+  .calendar-close-btn:hover {
+    color: #f44336;
+  }
+  
+  /* Animación suave */
+  @keyframes fadeInScale {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  
+
 
 @media (max-width: 1024px) {
     .image-gallery {
@@ -511,4 +574,6 @@ body.modal-open {
         width: 24px;
         height: 24px;
     }
+
+    
 }

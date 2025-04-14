@@ -1,18 +1,30 @@
 import { useEffect, useState } from "react";
-import PropTypes from "prop-types"; // Importamos PropTypes
+import PropTypes from "prop-types";
 import axios from "axios";
 import "./CategoryCarousel.css";
 
 export default function CategoryCarousel({ onSelectCategory }) {
   const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     const fetchCategories = async () => {
       try {
         const response = await axios.get("http://localhost:8080/categories");
-        setCategories(response.data);
+        const data = response.data;
+
+        if (Array.isArray(data)) {
+          setCategories(data);
+        } else {
+          setCategories([]);
+          console.warn("La respuesta no es un array:", data);
+        }
       } catch (error) {
         console.error("Error fetching categories:", error);
+        setError(true);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -21,35 +33,56 @@ export default function CategoryCarousel({ onSelectCategory }) {
 
   const handleCategoryClick = async (categoryId) => {
     try {
-      const response = await axios.get(`http://localhost:8080/products/category/${categoryId}`);
-      onSelectCategory(response.data); // Actualiza los productos en RecomendationCard
+      const response = await axios.get(
+        `http://localhost:8080/products/category/${categoryId}`
+      );
+      onSelectCategory(response.data);
     } catch (error) {
-      console.error("Error fetching products by category:", error);
+      if (error.response?.status === 404) {
+        console.warn(`No se encontraron productos para la categoría ID ${categoryId}.`);
+        onSelectCategory([]); // Limpia los productos si no hay ninguno
+      } else {
+        console.error("Error fetching products by category:", error);
+      }
     }
   };
+  
 
   return (
     <>
       <h1>Buscar por tipo de alojamiento</h1>
       <div className="carousel-container">
-        {categories.map((category) => (
-          <div
-            key={category.id}
-            className="carousel-card"
-            onClick={() => handleCategoryClick(category.id)}
-          >
-            <div className="carousel-card-image">
-              <img
-                src={category.imageUrl || "/placeholder.svg"}
-                alt={category.name}
-              />
+        {loading && <p>Cargando categorías...</p>}
+
+        {!loading && error && (
+          <p style={{ color: "red" }}>No se pudieron cargar las categorías.</p>
+        )}
+
+        {!loading && !error && categories.length === 0 && (
+          <p>No hay categorías registradas aún.</p>
+        )}
+
+        {!loading &&
+          !error &&
+          categories.length > 0 &&
+          categories.map((category) => (
+            <div
+              key={category.id}
+              className="carousel-card"
+              onClick={() => handleCategoryClick(category.id)}
+            >
+              <div className="carousel-card-image">
+                <img
+                  src={category.imageUrl || "/placeholder.svg"}
+                  alt={category.name}
+                />
+              </div>
+              <div className="carousel-card-content">
+                <h3>{category.name}</h3>
+                <p>Disponibles: {category.totalProducts}</p>
+              </div>
             </div>
-            <div className="carousel-card-content">
-              <h3>{category.name}</h3>
-              <p>Disponibles: {category.totalProducts}</p>
-            </div>
-          </div>
-        ))}
+          ))}
       </div>
     </>
   );

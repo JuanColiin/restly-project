@@ -39,6 +39,7 @@ const Dropdown = () => {
           <Link to="/CreateFeature" > <button className="dropdown-item">Crear Caracteristica</button></Link>
           <Link to="/FeatureList" > <button className="dropdown-item">Administrar Caracteristicas</button></Link>
           <Link to="/UserList" > <button className="dropdown-item">Administrar Usuarios</button></Link>
+          <Link to="/CategoriesList" > <button className="dropdown-item">Administrar Categorias</button></Link>
         </div>
       )}
     </div>

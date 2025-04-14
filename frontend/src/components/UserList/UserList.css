@@ -2,52 +2,54 @@
     max-width: 900px;
     margin: 100px auto;
     padding: 20px;
-    background: #ffffff;
+    background: #FFFAFB; /* blanco rosado */
     border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 10px rgba(19, 21, 21, 0.1); /* sombra suave con base #131515 */
 }
 
 .user-list-title {
     text-align: center;
     font-size: 26px;
     font-weight: bold;
-    color: #333;
+    color: #2B2C28; /* gris oscuro */
     margin-bottom: 20px;
 }
 
 .user-list-table {
     width: 100%;
     border-collapse: collapse;
-    background: #f9f9f9;
+    background: #F0F7F6; /* leve variante clara de #7DE2D1 para contraste */
 }
 
 .user-list-th,
 .user-list-td {
     padding: 12px;
     text-align: left;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid #339989; /* línea separadora con verde petróleo */
 }
 
 .user-list-th {
-    background: #007bff;
-    color: white;
+    background: #339989; /* verde petróleo */
+    color: #FFFAFB; /* blanco rosado */
     font-weight: bold;
 }
 
 .user-list-tr:hover {
-    background: #f1f1f1;
+    background: #D2F4EF; /* suave verde menta claro al pasar el mouse */
 }
 
 .user-list-select {
     padding: 6px;
-    border: 1px solid #ccc;
+    border: 1px solid #339989;
     border-radius: 5px;
     cursor: pointer;
+    background-color: #FFFAFB;
+    color: #2B2C28;
 }
 
 .user-list-save-btn {
-    background: #28a745;
-    color: white;
+    background: #7DE2D1; /* verde menta */
+    color: #131515;
     border: none;
     padding: 8px 12px;
     border-radius: 5px;
@@ -57,7 +59,8 @@
 }
 
 .user-list-save-btn:hover {
-    background: #218838;
+    background: #339989; /* verde petróleo al pasar mouse */
+    color: #FFFAFB;
 }
 
 .user-list-loading,
@@ -68,5 +71,5 @@
 }
 
 .user-list-error {
-    color: red;
+    color: #dc3545; /* dejamos el rojo como indicador de error */
 }

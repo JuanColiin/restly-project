@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { IconButton, SvgIcon, Snackbar, Alert, Tooltip } from "@mui/material";
@@ -71,24 +71,31 @@ export const RecomendationCard = ({ products }) => {
     fetchFavorites();
   }, [currentPage, user, products]);
 
+  const fetchedIdsRef = useRef (new Set());
+
   useEffect(() => {
+    const productIds = currentProducts
+      .map(product => product.id)
+      .filter(id => !fetchedIdsRef.current.has(id));
+  
+    if (productIds.length === 0) return;
+  
     const fetchAverages = async () => {
-      const newRatings = {};
-
-      await Promise.all(currentProducts.map(async (product) => {
-        try {
-          const res = await axios.get(`http://localhost:8080/reviews/product/${product.id}/average`);
-          newRatings[product.id] = res.data;
-        } catch (err) {
-          console.error(`Error al obtener promedio de producto ${product.id}`, err);
-        }
-      }));
-
-      setAverageRatings(newRatings);
+      try {
+        const res = await axios.get(
+          `http://localhost:8080/reviews/average-ratings?productIds=${productIds.join(",")}`
+        );
+        setAverageRatings(prev => ({ ...prev, ...res.data }));
+  
+        productIds.forEach(id => fetchedIdsRef.current.add(id));
+      } catch (err) {
+        console.error("Error al obtener promedios", err);
+      }
     };
-
+  
     fetchAverages();
   }, [currentProducts]);
+  
 
   const toggleFavorite = async (productId) => {
     if (!user) {
