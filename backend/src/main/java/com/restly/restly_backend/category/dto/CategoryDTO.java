@@ -8,8 +8,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class CategoryDTO {
-    @NotNull(message = "El nombre de la categoría es obligatorio.")
+
     private Long id;
+    @NotNull(message = "El nombre de la categoría es obligatorio.")
     private String name;
     private String description;
     private String imageUrl;

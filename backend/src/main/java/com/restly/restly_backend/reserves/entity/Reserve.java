@@ -34,10 +34,12 @@ public class Reserve {
     @Column(name = "check_out", nullable = false)
     private LocalDate checkOut;
 
-    @JsonManagedReference("product-reserves") // Referencia específica para Product
     @ManyToOne(optional = false)
     @JoinColumn(name = "product_id", nullable = false)
+    @org.hibernate.annotations.OnDelete(action = org.hibernate.annotations.OnDeleteAction.CASCADE)
+    @JsonManagedReference("product-reserves")
     private Product product;
+
 
     @JsonManagedReference("user-reserves") // Referencia específica para User
     @ManyToOne(optional = false)

@@ -29,6 +29,8 @@ public class Favorite {
 
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
+    @org.hibernate.annotations.OnDelete(action = org.hibernate.annotations.OnDeleteAction.CASCADE)
     @JsonBackReference
     private Product product;
+
 }

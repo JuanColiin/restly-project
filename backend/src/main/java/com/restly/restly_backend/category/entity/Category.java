@@ -35,12 +35,13 @@ public class Category {
     @Column(name = "image_url")
     private String imageUrl;
 
+    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
-    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     private List<Product> products = new ArrayList<>();
 
+
     @Version
-    private Long version; // Control de concurrencia optimista
+    private Long version;
 }
 
 

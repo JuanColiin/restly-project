@@ -15,11 +15,13 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.nio.file.AccessDeniedException;
+import java.util.HashMap;
 import java.util.List;
 
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -84,15 +86,21 @@ public class ReviewServiceImpl implements IReviewService {
 
     @Override
     public Double getAverageRatingByProductId(Long productId) {
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
-
-        return reviewRepository.findByProduct(product).stream()
-                .filter(review -> review.getRating() != null) // Evita NPE
-                .mapToInt(Review::getRating)
-                .average()
-                .orElse(0.0);
+        return reviewRepository.calculateAverageRatingByProductId(productId);
     }
+
+    @Override
+    public Map<Long, Double> getAverageRatingsForProducts(List<Long> productIds) {
+        Map<Long, Double> result = new HashMap<>();
+        productIds.forEach(id -> {
+            result.put(id, reviewRepository.calculateAverageRatingByProductId(id));
+        });
+        return result;
+    }
+
+
+
+
 
 
     @Override

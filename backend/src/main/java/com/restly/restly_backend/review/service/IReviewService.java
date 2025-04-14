@@ -3,6 +3,7 @@ package com.restly.restly_backend.review.service;
 import com.restly.restly_backend.review.dto.ReviewDTO;
 
 import java.util.List;
+import java.util.Map;
 
 public interface IReviewService {
 
@@ -17,6 +18,8 @@ public interface IReviewService {
     List<ReviewDTO> getReviewsByUserId(Long userId);
 
     void deleteReviewByIdAndUser(Long reviewId, String userEmail);
+
+    Map<Long, Double> getAverageRatingsForProducts(List<Long> productIds);
 
 
 }

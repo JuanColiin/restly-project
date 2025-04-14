@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @RestController
 @RequestMapping("/reviews")
@@ -18,6 +19,8 @@ import java.util.Map;
 public class ReviewController {
 
     private final IReviewService reviewService;
+
+    private final Map<Long, Double> ratingCache = new ConcurrentHashMap<>();
 
     // 1. Crear una nueva reseña
     @PostMapping
@@ -27,6 +30,7 @@ public class ReviewController {
     ) {
         String email = userDetails.getUsername();
         ReviewDTO createdReview = reviewService.createReview(reviewDTO, email);
+        ratingCache.remove(reviewDTO.getProductId());
         return ResponseEntity.ok(createdReview);
     }
 
@@ -38,12 +42,19 @@ public class ReviewController {
     }
 
     // 3. Obtener el promedio de rating de un producto
+    // Modificar el método getAverageRating
     @GetMapping("/product/{productId}/average")
     public ResponseEntity<Double> getAverageRating(@PathVariable Long productId) {
+        // Verificar cache primero
+        if (ratingCache.containsKey(productId)) {
+            return ResponseEntity.ok(ratingCache.get(productId));
+        }
+
         Double average = reviewService.getAverageRatingByProductId(productId);
+        // Guardar en cache
+        ratingCache.put(productId, average);
         return ResponseEntity.ok(average);
     }
-
     // 4. Obtener el total de reseñas de un producto
     @GetMapping("/product/{productId}/count")
     public ResponseEntity<Long> getTotalReviews(@PathVariable Long productId) {
@@ -72,6 +83,11 @@ public class ReviewController {
         return ResponseEntity.ok(response);
     }
 
-
-
+    @GetMapping("/average-ratings")
+    public ResponseEntity<Map<Long, Double>> getAverageRatingsForProducts(
+            @RequestParam List<Long> productIds
+    ) {
+        Map<Long, Double> averages = reviewService.getAverageRatingsForProducts(productIds);
+        return ResponseEntity.ok(averages);
+    }
 }

@@ -61,22 +61,32 @@ public class CategoryServiceImpl implements ICategoryService {
     @Override
     @Transactional
     public CategoryDTO updateCategory(Long id, CategoryDTO categoryDTO) {
-        Category category = categoryRepository.findById(id)
+        Category existingCategory = categoryRepository.findById(id)
                 .orElseThrow(() -> new CategoryNotFoundException("Categoría con ID " + id + " no encontrada."));
-        modelMapper.map(categoryDTO, category);
-        Category updatedCategory = categoryRepository.save(category);
-        return modelMapper.map(updatedCategory, CategoryDTO.class);
+
+        existingCategory.setName(categoryDTO.getName());
+        existingCategory.setDescription(categoryDTO.getDescription());
+        existingCategory.setImageUrl(categoryDTO.getImageUrl());
+
+        Category updatedCategory = categoryRepository.save(existingCategory);
+
+        CategoryDTO updatedDTO = modelMapper.map(updatedCategory, CategoryDTO.class);
+        updatedDTO.setTotalProducts((long) updatedCategory.getProducts().size());
+
+        return updatedDTO;
     }
+
 
     @Override
     @Transactional
     public String deleteCategoryById(Long id) {
-        if (!categoryRepository.existsById(id)) {
-            throw new CategoryNotFoundException("Categoría con ID " + id + " no encontrada.");
-        }
-        categoryRepository.deleteById(id);
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new CategoryNotFoundException("Categoría con ID " + id + " no encontrada."));
+
+        categoryRepository.delete(category);
         return "Categoría eliminada correctamente.";
     }
+
 
     @Override
     public Category getCategory(String categoryName) {
