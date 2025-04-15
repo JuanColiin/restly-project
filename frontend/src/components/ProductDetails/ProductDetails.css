@@ -47,6 +47,13 @@
     border-radius: 8px;
 }
 
+.product-policies-section {
+    width: 100%;
+    margin-top: 20px;
+    box-sizing: border-box;
+    border-radius: 8px;
+}
+
 .title-policy-section {
     font-size: 1.5rem;
     font-weight: bold;
@@ -58,14 +65,18 @@
 
 .product-policies-container {
     display: flex;
-    justify-content: space-between;
     flex-wrap: wrap;
     gap: 20px;
+    justify-content: flex-start; /* Cambiado de space-between para mejor control */
 }
 
 .policy-block {
-    flex: 1 1 30%;
+    flex: 1 1 calc(33.333% - 20px); /* Ajuste para 3 columnas con gap */
     min-width: 250px;
+    max-width: 100%; /* Asegura que no exceda el ancho disponible */
+    box-sizing: border-box;
+    overflow-wrap: break-word; /* Rompe palabras largas */
+    word-break: break-word; /* Alternativa para navegadores más antiguos */
 }
 
 .product-policies-title {
@@ -80,6 +91,9 @@
     font-size: 0.95rem;
     line-height: 1.5;
     color: #666;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    white-space: pre-line; /* Mantiene saltos de línea del contenido original */
 }
 
 .product-category {

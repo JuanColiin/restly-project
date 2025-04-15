@@ -20,10 +20,9 @@ import ShareModal from './ShareModal';
 import ShareIcon from '@mui/icons-material/Share';
 import ProductReviews from "../ProductReviews/ProductReviews";
 
-
 const ProductDetails = () => {
   const { id } = useParams();
-  const productId = Number(id); // Convertir a número aquí
+  const productId = Number(id);
   const navigate = useNavigate();
   const [product, setProduct] = useState(null);
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -41,18 +40,9 @@ const ProductDetails = () => {
   const handleOpenShareModal = () => setIsShareModalOpen(true);
   const handleCloseShareModal = () => setIsShareModalOpen(false);
 
-
   const [calendarModalIsOpen, setCalendarModalIsOpen] = useState(false);
-
-
-  const openCalendarModal = () => {
-    setCalendarModalIsOpen(true);
-  };
-
-  const closeCalendarModal = () => {
-    setCalendarModalIsOpen(false);
-  };
-
+  const openCalendarModal = () => setCalendarModalIsOpen(true);
+  const closeCalendarModal = () => setCalendarModalIsOpen(false);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -100,17 +90,14 @@ const ProductDetails = () => {
     }
 
     const IconComponent = MuiIcons[feature.icon];
-
     return {
       icon: IconComponent ? <IconComponent /> : null,
       name: feature.title,
     };
   };
 
-
   useEffect(() => {
     Modal.setAppElement("#root");
-
     const handleResize = () => setIsMobile(window.matchMedia("(max-width: 768px)").matches);
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
@@ -209,9 +196,6 @@ const ProductDetails = () => {
     );
   }
 
-
-
-
   return (
     <div className="product-details-container">
       <div className="product-header">
@@ -222,8 +206,6 @@ const ProductDetails = () => {
               style={{ cursor: 'pointer', fontSize: 28, color: '#555' }}
               onClick={handleOpenShareModal}
             />
-
-
           </Tooltip>
 
           {isShareModalOpen && (
@@ -254,7 +236,7 @@ const ProductDetails = () => {
       </p>
 
       {isMobile ? (
-        <ImageCarousel productId={productId} />
+        <ImageCarousel productId={productId.toString()} images={product.images || []} />
       ) : (
         product.images?.length > 0 && (
           <div className="image-gallery">
@@ -284,7 +266,6 @@ const ProductDetails = () => {
             <button className="ver-fotos-btn" onClick={openCalendarModal}>
               <i className="fas fa-calendar"></i> Ver fechas disponibles
             </button>
-
           </div>
         )
       )}
@@ -293,7 +274,6 @@ const ProductDetails = () => {
         <h3 className="product-description-title">Descripción</h3>
         <p className="product-description">{product.description}</p>
       </div>
-
 
       <div className="features-section">
         <h3 className="features-title">Características</h3>
@@ -309,7 +289,6 @@ const ProductDetails = () => {
           })}
         </ul>
       </div>
-
 
       <div className="product-policies-section">
         <h2 className="title-policy-section">Políticas del lugar</h2>
@@ -329,8 +308,6 @@ const ProductDetails = () => {
         </div>
       </div>
 
-
-
       {calendarModalIsOpen && (
         <Modal
           isOpen={calendarModalIsOpen}
@@ -344,7 +321,6 @@ const ProductDetails = () => {
           </div>
         </Modal>
       )}
-
 
       <Modal
         isOpen={modalIsOpen}
@@ -379,10 +355,8 @@ const ProductDetails = () => {
         </Alert>
       </Snackbar>
 
-
       <ProductReviews productId={product.id} />
     </div>
-
   );
 };
 

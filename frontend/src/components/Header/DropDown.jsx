@@ -36,10 +36,10 @@ const Dropdown = () => {
           <Link to="/CreateProduct" > <button className="dropdown-item">Crear propiedad</button></Link>
           <Link to="/ProductList" > <button className="dropdown-item">Administrar Propiedades</button></Link>
           <Link to="/Categories" > <button className="dropdown-item">Crear categoría</button></Link>
+          <Link to="/CategoriesList" > <button className="dropdown-item">Administrar Categorias</button></Link>
           <Link to="/CreateFeature" > <button className="dropdown-item">Crear Caracteristica</button></Link>
           <Link to="/FeatureList" > <button className="dropdown-item">Administrar Caracteristicas</button></Link>
           <Link to="/UserList" > <button className="dropdown-item">Administrar Usuarios</button></Link>
-          <Link to="/CategoriesList" > <button className="dropdown-item">Administrar Categorias</button></Link>
         </div>
       )}
     </div>

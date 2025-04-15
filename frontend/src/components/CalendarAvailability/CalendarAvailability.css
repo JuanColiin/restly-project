@@ -6,13 +6,13 @@
     flex-wrap: wrap; 
 }
 
-/* Icono del calendario */
+
 .ca-calendar-icon {
     color: #00c98c;
     margin-right: 8px;
 }
 
-/* Mensajes de carga y error */
+
 .ca-loading {
     color: #339989;
     font-size: 16px;
@@ -25,7 +25,7 @@
 }
 
 .ca-error-message button {
-    background: #00c98c;
+    background: #00c95c;
     color: white;
     border: none;
     padding: 5px 10px;
@@ -39,7 +39,7 @@
 }
 
 .ca-calendar {
-    background: #fcfdff;
+    background: #ffffff;
     padding: 15px;
     border-radius: 8px;
     margin-top: 10px;
@@ -54,7 +54,6 @@
     margin-bottom: 10px;
 }
 
-/* Botón de navegación */
 .ca-nav-button {
     background: none;
     border: none;
@@ -103,6 +102,29 @@
     box-shadow: 0px 0px 8px rgba(255, 0, 0, 0.7);
 }
 
+.ca-button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.popup-style {
+    text-align: center;
+  }
+  
+  .title-style {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #2b2c28;  
+  }
+  
+  .content-style {
+    font-size: 1em;
+    color: #339989;  
+  }
+  
+
 /* Fechas deshabilitadas */
 .ca-calendar-day.ca-disabled {
     background: #4747470f; 
@@ -115,6 +137,10 @@
     border-radius: 5px;
 }
 
+.ca-reserve-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
 
 .ca-calendar-day.ca-selected {
     background: #00c98c;
@@ -129,18 +155,18 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-  }
-  
-  .confirm-reservation-box {
+}
+
+.confirm-reservation-box {
     margin-top: 1.5rem;
     padding: 1rem;
     border-top: 2px solid #ccc;
     text-align: center;
     width: 100%;
-  }
-  
-  .confirm-btn {
-    background-color: #0066ff;
+}
+
+.confirm-btn {
+    background-color: #00c98c;
     color: white;
     border: none;
     padding: 0.6rem 1.2rem;
@@ -149,14 +175,13 @@
     cursor: pointer;
     margin-top: 0.5rem;
     transition: background-color 0.3s ease;
-  }
-  
-  .confirm-btn:hover {
-    background-color: #004bb5;
-  }
-  
+}
 
-  .ca-selected-dates-summary {
+.confirm-btn:hover {
+    background-color: #339989;
+}
+
+.ca-selected-dates-summary {
     margin: 20px 0;
     background-color: #f0f8ff;
     padding: 15px;
@@ -164,13 +189,12 @@
     text-align: center;
     color: #333;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  .ca-selected-dates-summary p {
+}
+
+.ca-selected-dates-summary p {
     margin: 5px 0;
     font-size: 16px;
-  }
-  
+}
 
 
 .ca-calendar-day.ca-range {
@@ -181,7 +205,6 @@
     border: 2px solid #00c98c;
     box-shadow: 0px 0px 8px rgba(0, 201, 140, 0.6);
 }
-
 
 .ca-calendar-day.ca-range:hover {
     background: rgba(0, 201, 140, 0.5);
@@ -195,7 +218,6 @@
     align-items: center;
     margin-top: 10px;
 }
-
 
 .ca-reserve-btn {
     margin-top: 15px;
@@ -211,7 +233,6 @@
 .ca-reserve-btn:hover {
     background: #339989;
 }
-
 
 .ca-empty {
     visibility: hidden;

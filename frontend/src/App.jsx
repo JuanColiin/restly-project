@@ -20,7 +20,7 @@ import CategoryList from './components/CategoryList/CategoryList';
 
 function App() {
   return (
-    <AuthProvider>  {/* Envuelve todo con el AuthProvider */}
+    <AuthProvider>
       <div className="app-container">
         <Header />
         <main className="main-content">

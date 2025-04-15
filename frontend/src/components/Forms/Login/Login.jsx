@@ -27,7 +27,6 @@ export default function Login() {
     try {
       const response = await axios.post('http://localhost:8080/auth/login', formData);
 
-
       const userData = {
         token: response.data.token,
         firstname: response.data.firstname,
@@ -36,11 +35,12 @@ export default function Login() {
         userId: response.data.userId
       };
 
-   
       login(userData);
 
-
-      navigate('/');
+      // Redirección después de login
+      const redirectPath = sessionStorage.getItem('redirectAfterLogin') || '/';
+      sessionStorage.removeItem('redirectAfterLogin');
+      navigate(redirectPath);
     } catch (err) {
       console.error('Error en el login:', err);
       setError('Correo electrónico o contraseña incorrectos');
@@ -88,4 +88,3 @@ export default function Login() {
     </div>
   );
 }
-
