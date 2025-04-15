@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import './Login.css';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -11,8 +11,18 @@ export default function Login() {
   });
 
   const [error, setError] = useState(null);
+  const [showReservationMessage, setShowReservationMessage] = useState(false);
   const navigate = useNavigate();
-  const { login } = useContext(AuthContext); 
+  const { login } = useContext(AuthContext);
+
+  useEffect(() => {
+    const fromRedirect = sessionStorage.getItem('redirectAfterLogin');
+    if (fromRedirect?.includes('/details/')) {
+      setShowReservationMessage(true);
+      sessionStorage.removeItem('redirectAfterLogin'); 
+    }
+  }, []);
+  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -31,13 +41,12 @@ export default function Login() {
         token: response.data.token,
         firstname: response.data.firstname,
         email: response.data.email,
-        role: response.data.role, 
+        role: response.data.role,
         userId: response.data.userId
       };
 
       login(userData);
 
-      // Redirección después de login
       const redirectPath = sessionStorage.getItem('redirectAfterLogin') || '/';
       sessionStorage.removeItem('redirectAfterLogin');
       navigate(redirectPath);
@@ -50,6 +59,13 @@ export default function Login() {
   return (
     <div className="login-container">
       <h1 className='titleForm'>Iniciar Sesión</h1>
+
+      {showReservationMessage && (
+        <p className="reservation-warning">
+          Debes iniciar sesión para poder realizar una reserva. Si aún no tenés cuenta, <Link to="/singup">registrate aquí</Link>.
+        </p>
+      )}
+
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label htmlFor="email">Correo electrónico</label>
