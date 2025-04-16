@@ -111,7 +111,7 @@ const CategoryList = () => {
                 <td>{cat.description}</td>
                 <td><img src={cat.imageUrl} alt={cat.name} width="60" /></td>
                 <td>{cat.totalProducts}</td>
-                <td className="action-buttons">
+                <td >
                   <button className="edit-btn" onClick={() => handleEditClick(cat)}>Editar</button>
                   <button className="delete-btn" onClick={() => deleteCategory(cat.id, cat.name)}>Eliminar</button>
                 </td>

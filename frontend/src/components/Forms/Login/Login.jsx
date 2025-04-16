@@ -52,8 +52,15 @@ export default function Login() {
       navigate(redirectPath);
     } catch (err) {
       console.error('Error en el login:', err);
-      setError('Correo electrónico o contraseña incorrectos');
-    }
+    
+      const backendMessage = err?.response?.data?.error;
+    
+      if (backendMessage && backendMessage.includes("User not found")) {
+        setError("El correo electrónico no está registrado. Por favor registrate.");
+      } else {
+        setError("Correo electrónico o contraseña incorrectos");
+      }
+    }      
   };
 
   return (

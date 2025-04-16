@@ -124,10 +124,11 @@
   
   .delete-btn:hover {
     background-color: #BB2D3B;
+    color: white;
     transform: translateY(-1px);
   }
   
-  /* Estilos para el modal optimizados */
+
   .modal-overlay {
     position: fixed;
     top: 0;
