@@ -41,6 +41,15 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, ex.getStatusCode());
     }
 
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<Object> handleGeneralException(RuntimeException ex) {
+        if (ex.getMessage().contains("fechas seleccionadas")) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", "Las fechas seleccionadas ya están reservadas."));
+        }
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "Ocurrió un error inesperado"));
+    }
+
+
 
 
 }

@@ -36,6 +36,18 @@ public class ReserveServiceImpl implements IReserveService {
             throw new RuntimeException("Producto o usuario no encontrado.");
         }
 
+        List<Reserve> existingReserves = reserveRepository.findByProductId(reserveDTO.getProductId());
+        LocalDate newCheckIn = reserveDTO.getCheckIn();
+        LocalDate newCheckOut = reserveDTO.getCheckOut();
+
+        boolean overlap = existingReserves.stream().anyMatch(reserve ->
+                !newCheckOut.isBefore(reserve.getCheckIn()) && !newCheckIn.isAfter(reserve.getCheckOut())
+        );
+
+        if (overlap) {
+            throw new RuntimeException("Las fechas seleccionadas ya están reservadas.");
+        }
+
         Reserve reserve = reserveMapper.toEntity(reserveDTO);
         reserve.setProduct(product.get());
         reserve.setUser(user.get());

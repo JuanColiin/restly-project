@@ -34,7 +34,7 @@ public class UserController {
     @PutMapping("/update-role/{userId}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> updateUserRole(@PathVariable Long userId, @RequestBody Map<String, String> request) {
-        Role newRole = Role.valueOf(request.get("role")); // Convertimos String a Enum
+        Role newRole = Role.valueOf(request.get("role"));
         userService.updateUserRole(userId, newRole);
         return ResponseEntity.ok("Rol actualizado a " + newRole);
     }

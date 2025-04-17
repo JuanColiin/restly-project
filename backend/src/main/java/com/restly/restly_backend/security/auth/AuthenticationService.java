@@ -53,6 +53,11 @@ public class AuthenticationService {
 
 
     public AuthenticationResponse login(AuthenticationRequest request) {
+        // 🔐 Verificamos si el correo está registrado antes de autenticar
+        var user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+
+        // Ahora autenticamos solo si existe
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),
@@ -60,20 +65,17 @@ public class AuthenticationService {
                 )
         );
 
-        var user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
         var jwt = jwtService.generateToken(user);
 
-        // Si el username debe ser el correo electrónico:
         return AuthenticationResponse.builder()
                 .token(jwt)
                 .message("Login successful")
                 .userId(user.getId())
                 .firstname(user.getFirstname())
-                .username(user.getUsername()) // Aquí username es el correo
+                .username(user.getUsername())
                 .email(user.getEmail())
                 .role(user.getRole().name())
                 .build();
     }
+
 }
