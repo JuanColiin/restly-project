@@ -237,3 +237,90 @@
 .ca-empty {
     visibility: hidden;
 }
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(43, 44, 40, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+  
+  .modal-box {
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 0 15px rgba(0, 201, 140, 0.4);
+    color: #2b2c28;
+    text-align: center;
+  }
+  
+  .modal-product-details img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 10px;
+  }
+  
+  .modal-product-details h3 {
+    margin-top: 10px;
+    font-size: 20px;
+    color: #00c98c;
+  }
+  
+  .modal-location {
+    font-size: 14px;
+    color: #555;
+  }
+  
+  .modal-description {
+    font-size: 14px;
+    color: #444;
+    margin-bottom: 15px;
+  }
+  
+  .modal-user-info p {
+    margin: 6px 0;
+  }
+  
+  .modal-buttons {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-around;
+  }
+  
+  .confirm-btn, .cancel-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 16px;
+  }
+  
+  .confirm-btn {
+    background-color: #00c98c;
+    color: white;
+  }
+  
+  .confirm-btn:hover {
+    background-color: #339989;
+  }
+  
+  .cancel-btn {
+    background-color: #ccc;
+    color: #2b2c28;
+  }
+  
+  .cancel-btn:hover {
+    background-color: #999;
+  }
+  

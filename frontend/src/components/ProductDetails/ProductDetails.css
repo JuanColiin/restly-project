@@ -67,16 +67,16 @@
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
-    justify-content: flex-start; /* Cambiado de space-between para mejor control */
+    justify-content: flex-start; 
 }
 
 .policy-block {
-    flex: 1 1 calc(33.333% - 20px); /* Ajuste para 3 columnas con gap */
+    flex: 1 1 calc(33.333% - 20px); 
     min-width: 250px;
-    max-width: 100%; /* Asegura que no exceda el ancho disponible */
+    max-width: 100%; 
     box-sizing: border-box;
-    overflow-wrap: break-word; /* Rompe palabras largas */
-    word-break: break-word; /* Alternativa para navegadores más antiguos */
+    overflow-wrap: break-word; 
+    word-break: break-word; 
 }
 
 .product-policies-title {
@@ -93,8 +93,10 @@
     color: #666;
     overflow-wrap: break-word;
     word-break: break-word;
-    white-space: pre-line; /* Mantiene saltos de línea del contenido original */
+    white-space: pre-line; 
+
 }
+
 
 .product-category {
     font-size: 1.2rem;
