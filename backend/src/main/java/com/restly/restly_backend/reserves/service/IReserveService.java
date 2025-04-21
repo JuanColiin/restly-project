@@ -15,4 +15,7 @@ public interface IReserveService {
     List<LocalDate> getAvailableDates(Long productId, LocalDate startDate, LocalDate endDate);
     boolean hasUserFinishedReservation(String userEmail, Long productId);
 
+    ReserveDTO extendReserve(Long reserveId, LocalDate newCheckOut);
+
+
 }

@@ -9,8 +9,8 @@ import com.restly.restly_backend.reserves.service.IReserveService;
 import com.restly.restly_backend.reserves.util.ReserveMapper;
 import com.restly.restly_backend.security.entity.User;
 import com.restly.restly_backend.security.repository.IUserRepository;
-import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -40,8 +40,9 @@ public class ReserveServiceImpl implements IReserveService {
         LocalDate newCheckIn = reserveDTO.getCheckIn();
         LocalDate newCheckOut = reserveDTO.getCheckOut();
 
+        // ✅ Nueva lógica que permite check-in el mismo día del check-out anterior
         boolean overlap = existingReserves.stream().anyMatch(reserve ->
-                !newCheckOut.isBefore(reserve.getCheckIn()) && !newCheckIn.isAfter(reserve.getCheckOut())
+                newCheckIn.isBefore(reserve.getCheckOut()) && newCheckOut.isAfter(reserve.getCheckIn())
         );
 
         if (overlap) {
@@ -86,17 +87,13 @@ public class ReserveServiceImpl implements IReserveService {
     public List<LocalDate> getBookedDates(Long productId, LocalDate startDate, LocalDate endDate) {
         List<Reserve> reserves = reserveRepository.findByProductIdAndCheckInBetween(productId, startDate, endDate);
 
-        System.out.println("Reservas encontradas para el producto " + productId + ": " + reserves.size());
-
         return reserves.stream()
-                .flatMap(reserve -> {
-                    System.out.println("Procesando reserva: CheckIn = " + reserve.getCheckIn() + ", CheckOut = " + reserve.getCheckOut());
-                    return Stream.iterate(reserve.getCheckIn(), date -> date.plusDays(1))
-                            .limit(reserve.getCheckOut().toEpochDay() - reserve.getCheckIn().toEpochDay());
-                })
+                .flatMap(reserve ->
+                        Stream.iterate(reserve.getCheckIn(), date -> date.plusDays(1))
+                                .limit(reserve.getCheckOut().toEpochDay() - reserve.getCheckIn().toEpochDay() + 1)
+                )
                 .collect(Collectors.toList());
     }
-
 
     @Override
     public List<LocalDate> getAvailableDates(Long productId, LocalDate startDate, LocalDate endDate) {
@@ -119,4 +116,33 @@ public class ReserveServiceImpl implements IReserveService {
                 .anyMatch(reserve -> reserve.getCheckOut().isBefore(LocalDate.now()));
     }
 
+    @Override
+    public ReserveDTO extendReserve(Long reserveId, LocalDate newCheckOut) {
+        Reserve reserve = reserveRepository.findById(reserveId)
+                .orElseThrow(() -> new RuntimeException("Reserva no encontrada"));
+
+        if (newCheckOut.isBefore(LocalDate.now())) {
+            throw new RuntimeException("La nueva fecha no puede ser anterior al día actual");
+        }
+
+        if (!newCheckOut.isAfter(reserve.getCheckOut())) {
+            throw new RuntimeException("La nueva fecha debe ser posterior a " + reserve.getCheckOut());
+        }
+
+        // Validación mejorada: evita conflictos, pero permite extender si no se solapa
+        List<Reserve> conflicts = reserveRepository.findByProductId(reserve.getProduct().getId()).stream()
+                .filter(r -> !r.getId().equals(reserveId)) // excluirse a sí misma
+                .filter(r ->
+                        reserve.getCheckOut().isBefore(r.getCheckOut()) &&
+                                newCheckOut.isAfter(r.getCheckIn())
+                )
+                .collect(Collectors.toList());
+
+        if (!conflicts.isEmpty()) {
+            throw new RuntimeException("Existen reservas conflictivas en las fechas seleccionadas");
+        }
+
+        reserve.setCheckOut(newCheckOut);
+        return reserveMapper.toDTO(reserveRepository.save(reserve));
+    }
 }
