@@ -17,6 +17,7 @@ import UserList from './components/UserList/UserList';
 import FavoritesList from './components/FavoritesList/FavoritesList';
 import UpdateProduct from './components/Forms/UpdateProduct/UpdateProduct';
 import CategoryList from './components/CategoryList/CategoryList';
+import MyReserves from './components/MyReserves/MyReserves';
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
             <Route path="FavoritesList" element={<FavoritesList/>} />
             <Route path="/edit/:id" element={<UpdateProduct />} />
             <Route path="CategoriesList" element={<CategoryList/>} />
+            <Route path="MyReserves" element={<MyReserves/>} />
           </Routes>
         </main>
         <Footer />

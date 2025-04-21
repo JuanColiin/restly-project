@@ -88,6 +88,8 @@ const Header = () => {
                 <Link to="/profile" className="profile-option" onClick={handleProfileClick}>Perfil</Link>
                 <Link to="#" className="profile-option" onClick={handleLogout}>Cerrar sesión</Link>
                 <Link to="/FavoritesList" className="profile-option">Mis favoritos</Link>
+                <Link to="/MyReserves" className="profile-option">Mis Reservas</Link>
+                
               </div>
             )}
           </div>
