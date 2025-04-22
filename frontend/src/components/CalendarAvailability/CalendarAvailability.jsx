@@ -23,9 +23,6 @@ const CalendarAvailability = ({ productId }) => {
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  const sixMonthsLater = new Date();
-  sixMonthsLater.setMonth(today.getMonth() + 6);
-  sixMonthsLater.setHours(0, 0, 0, 0);
 
   const calculateNights = (start, end) => {
     return Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
@@ -38,20 +35,22 @@ const CalendarAvailability = ({ productId }) => {
       const response = await axios.get(
         `http://localhost:8080/reserves/product/${numericProductId}`
       );
-      
-      const ranges = response.data.map(reserve => ({
-        checkIn: new Date(reserve.checkIn),
-        checkOut: new Date(reserve.checkOut)
-      }));
 
-      ranges.forEach(range => {
-        range.checkIn.setHours(0, 0, 0, 0);
-        range.checkOut.setHours(0, 0, 0, 0);
+      const ranges = response.data.map(reserve => {
+        const [y1, m1, d1] = reserve.checkIn.split("-");
+        const [y2, m2, d2] = reserve.checkOut.split("-");
+
+        const checkIn = new Date(Number(y1), Number(m1) - 1, Number(d1));
+        const checkOut = new Date(Number(y2), Number(m2) - 1, Number(d2));
+
+        checkIn.setHours(0, 0, 0, 0);
+        checkOut.setHours(0, 0, 0, 0);
+
+        return { checkIn, checkOut };
       });
 
       setBookedRanges(ranges);
-    } catch (err) {
-      console.error("Error fetching dates:", err);
+    } catch {
       setError("No se pudo obtener la información. Intente más tarde.");
     } finally {
       setLoading(false);
@@ -62,8 +61,8 @@ const CalendarAvailability = ({ productId }) => {
     try {
       const res = await axios.get(`http://localhost:8080/products/${numericProductId}`);
       setProduct(res.data);
-    } catch (error) {
-      console.error("Error al obtener el producto:", error);
+    } catch {
+      setError("Error al obtener los detalles del producto");
     }
   };
 
@@ -75,17 +74,20 @@ const CalendarAvailability = ({ productId }) => {
   }, [productId]);
 
   const isBooked = (date) => {
-    const isInBookedRange = bookedRanges.some(range => {
+    const format = (d) => d.toISOString().split("T")[0];
+    const day = format(date);
 
-      return date >= range.checkIn && date <= range.checkOut;
+    const isInBookedRange = bookedRanges.some(range => {
+      const start = format(range.checkIn);
+      const end = format(range.checkOut);
+      return day >= start && day < end;
     });
-  
-    const isInCurrentSelection = checkIn && checkOut && 
-                                 date >= checkIn && date <= checkOut; 
-  
+
+    const isInCurrentSelection = checkIn && checkOut &&
+      day >= format(checkIn) && day < format(checkOut);
+
     return isInBookedRange || isInCurrentSelection;
   };
-  
 
   const handleDateSelection = (date) => {
     const normalizedDate = new Date(date);
@@ -133,7 +135,7 @@ const CalendarAvailability = ({ productId }) => {
     }
 
     const conflict = bookedRanges.some(range => {
-      return (checkIn < range.checkOut && checkOut > range.checkIn);
+      return checkIn < range.checkOut && checkOut > range.checkIn;
     });
 
     if (conflict) {
@@ -169,8 +171,7 @@ const CalendarAvailability = ({ productId }) => {
       setCheckIn(null);
       setCheckOut(null);
       await fetchDates();
-    } catch (err) {
-      console.error("Reservation error:", err);
+    } catch {
       Swal.fire({
         title: "Error",
         text: "No se pudo completar la reserva",

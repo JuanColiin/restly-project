@@ -68,9 +68,22 @@ const MyReserves = () => {
     fetchData();
   }, [user]);
 
+  // Función para formatear fechas correctamente, considerando la zona horaria
+  const formatDate = (dateString) => {
+    if (!dateString) return 'Fecha no disponible';
+    
+    const date = new Date(dateString);
+    // Ajustamos la fecha sumando el offset de la zona horaria para obtener la fecha correcta
+    const offset = date.getTimezoneOffset() * 60000;
+    const adjustedDate = new Date(date.getTime() + offset);
+    
+    return adjustedDate.toLocaleDateString('es-ES');
+  };
+
   const handleExtendReserve = (reserveId, currentCheckOut) => {
     setExtendingReserveId(reserveId);
-    const minDate = new Date(currentCheckOut);
+    const currentDate = new Date(currentCheckOut);
+    const minDate = new Date(currentDate);
     minDate.setDate(minDate.getDate() + 1);
     setNewCheckOut(minDate);
   };
@@ -86,10 +99,14 @@ const MyReserves = () => {
       setExtensionError('Selecciona una fecha válida');
       return;
     }
-  
+
+    // Calculamos la última noche (día anterior al check-out)
+    const lastNight = new Date(newCheckOut);
+    lastNight.setDate(lastNight.getDate() - 1);
+
     const result = await Swal.fire({
       title: '¿Estás seguro?',
-      text: `¿Deseas extender la reserva hasta el ${newCheckOut.toLocaleDateString()}?`,
+      text: `¿Deseas extender la reserva hasta el check-out del ${formatDate(newCheckOut.toISOString())} (última noche: ${formatDate(lastNight.toISOString())})?`,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#00c98c',
@@ -97,57 +114,52 @@ const MyReserves = () => {
       confirmButtonText: 'Sí, extender',
       cancelButtonText: 'Cancelar',
     });
-  
-    if (!result.isConfirmed) {
-      return;
-    }
-  
+
+    if (!result.isConfirmed) return;
+
     setIsExtending(true);
     setExtensionError(null);
-    
+
     try {
-      const adjustedDate = new Date(newCheckOut);
-      adjustedDate.setDate(adjustedDate.getDate() - 1);
-      
-      const formattedDate = adjustedDate.toISOString().split('T')[0];
-      
+      // Formateamos la fecha sin ajustar la zona horaria para el envío al backend
+      const formattedDate = newCheckOut.toISOString().split('T')[0];
+
       const response = await axios.put(
         `http://localhost:8080/reserves/${extendingReserveId}/extend`,
         null,
         {
-          params: {
-            newCheckOut: formattedDate
-          },
-          headers: {
-            Authorization: `Bearer ${user.token}`
-          }
+          params: { newCheckOut: formattedDate },
+          headers: { Authorization: `Bearer ${user.token}` },
         }
       );
 
       const updatedCheckOut = response.data.checkOut || formattedDate;
-      
-      setReserves(reserves.map(reserve => 
-        reserve.id === extendingReserveId 
-          ? { ...reserve, checkOut: updatedCheckOut } 
+
+      setReserves(reserves.map(reserve =>
+        reserve.id === extendingReserveId
+          ? { ...reserve, checkOut: updatedCheckOut }
           : reserve
       ));
+
+      const lastNightUpdated = new Date(updatedCheckOut);
+      lastNightUpdated.setDate(lastNightUpdated.getDate() - 1);
 
       Swal.fire({
         icon: 'success',
         title: '¡Extensión exitosa!',
-        text: `Reserva extendida hasta el ${new Date(updatedCheckOut).toLocaleDateString()}`,
+        text: `Reserva extendida hasta el check-out del ${formatDate(updatedCheckOut)} (última noche: ${formatDate(lastNightUpdated.toISOString())})`,
         confirmButtonColor: '#00c98c',
       });
 
-      setExtensionSuccess(`Reserva extendida hasta el ${new Date(updatedCheckOut).toLocaleDateString()}`);
+      setExtensionSuccess(`Reserva extendida hasta el check-out del ${formatDate(updatedCheckOut)}`);
       setTimeout(() => setExtensionSuccess(null), 5000);
       setExtendingReserveId(null);
       setNewCheckOut(null);
     } catch (err) {
       console.error('Error extending reservation:', err);
-      const errorMessage = err.response?.data?.error || 
-                         err.response?.data?.message || 
-                         'Error al extender la reserva';
+      const errorMessage = err.response?.data?.error ||
+        err.response?.data?.message ||
+        'Error al extender la reserva';
 
       Swal.fire({
         icon: 'error',
@@ -271,8 +283,8 @@ const MyReserves = () => {
               <div key={reserve.id} className="reserve-card">
                 <div className="reserve-product-info">
                   <h3>{product.title || 'Producto sin título'}</h3>
-                  <p><strong>Check-in:</strong> {new Date(reserve.checkIn).toLocaleDateString()}</p>
-                  <p><strong>Check-out:</strong> {currentCheckOut.toLocaleDateString()}</p>
+                  <p><strong>Check-in:</strong> {formatDate(reserve.checkIn)}</p>
+                  <p><strong>Check-out:</strong> {formatDate(reserve.checkOut)}</p>
                   <p><strong>Hora de inicio:</strong> {reserve.startTime || 'No especificada'}</p>
                   <p><strong>Ubicación:</strong> {formatLocation(product)}</p>
                   <p><strong>Dirección:</strong> {formatAddress(product.address)}</p>
@@ -302,7 +314,7 @@ const MyReserves = () => {
                       <div className="calendar-container">
                         <h3>Extender reserva hasta:</h3>
                         <p className="info-text">
-                          Selecciona el día de tu última noche. El check-out será en la mañana del día siguiente.
+                          Selecciona el día del check-out. La última noche será el día anterior.
                         </p>
                         <div className="ca-calendars-container">
                           {renderCalendar(currentCheckOut)}
@@ -311,8 +323,8 @@ const MyReserves = () => {
                           <div className="ca-selected-dates-summary">
                             {newCheckOut && (
                               <>
-                                <p><strong>Última noche:</strong> {newCheckOut.toLocaleDateString()}</p>
-                                <p><strong>Check-out:</strong> {new Date(newCheckOut.getTime() + 86400000).toLocaleDateString()}</p>
+                                <p><strong>Última noche:</strong> {formatDate(new Date(newCheckOut.getTime() - 86400000).toISOString())}</p>
+                                <p><strong>Check-out:</strong> {formatDate(newCheckOut.toISOString())}</p>
                               </>
                             )}
                           </div>
