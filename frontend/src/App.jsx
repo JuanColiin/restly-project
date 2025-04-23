@@ -18,6 +18,7 @@ import FavoritesList from './components/FavoritesList/FavoritesList';
 import UpdateProduct from './components/Forms/UpdateProduct/UpdateProduct';
 import CategoryList from './components/CategoryList/CategoryList';
 import MyReserves from './components/MyReserves/MyReserves';
+import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
   return (
@@ -26,21 +27,55 @@ function App() {
         <Header />
         <main className="main-content">
           <Routes>
-            <Route path="/" element={<PagePrincipal/>} />
+            <Route path="/" element={<PagePrincipal />} />
             <Route path="/login" element={<Login />} />
             <Route path="/singup" element={<SignUp />} />
-            <Route path="/CreateProduct" element={<PropertyForm/>} />
-            <Route path="/ProductList" element={<ProductList/>} />
-            <Route path="/details/:id" element={<ProductDetails/>} />
-            <Route path="/categories" element={<CategoryForm/>} />
-            <Route path="/profile" element={<UserProfile/>} />
-            <Route path="/Createfeature" element={<FeatureForm/>} />
-            <Route path="FeatureList" element={<FeaturesList/>} />
-            <Route path="UserList" element={<UserList/>} />
-            <Route path="FavoritesList" element={<FavoritesList/>} />
-            <Route path="/edit/:id" element={<UpdateProduct />} />
-            <Route path="CategoriesList" element={<CategoryList/>} />
-            <Route path="MyReserves" element={<MyReserves/>} />
+            <Route path="/details/:id" element={<ProductDetails />} />
+            <Route path="/profile" element={<UserProfile />} />
+            <Route path="/FavoritesList" element={<FavoritesList />} />
+            <Route path="/MyReserves" element={<MyReserves />} />
+
+            {/* Rutas protegidas solo para ADMIN */}
+            <Route path="/CreateProduct" element={
+              <ProtectedRoute requiredRole="ADMIN">
+                <PropertyForm />
+              </ProtectedRoute>
+            } />
+            <Route path="/ProductList" element={
+              <ProtectedRoute requiredRole="ADMIN">
+                <ProductList />
+              </ProtectedRoute>
+            } />
+            <Route path="/categories" element={
+              <ProtectedRoute requiredRole="ADMIN">
+                <CategoryForm />
+              </ProtectedRoute>
+            } />
+            <Route path="/Createfeature" element={
+              <ProtectedRoute requiredRole="ADMIN">
+                <FeatureForm />
+              </ProtectedRoute>
+            } />
+            <Route path="/FeatureList" element={
+              <ProtectedRoute requiredRole="ADMIN">
+                <FeaturesList />
+              </ProtectedRoute>
+            } />
+            <Route path="/UserList" element={
+              <ProtectedRoute requiredRole="ADMIN">
+                <UserList />
+              </ProtectedRoute>
+            } />
+            <Route path="/CategoriesList" element={
+              <ProtectedRoute requiredRole="ADMIN">
+                <CategoryList />
+              </ProtectedRoute>
+            } />
+            <Route path="/edit/:id" element={
+              <ProtectedRoute requiredRole="ADMIN">
+                <UpdateProduct />
+              </ProtectedRoute>
+            } />
           </Routes>
         </main>
         <Footer />

@@ -7,13 +7,12 @@ import Dropdown from "./DropDown";
 const Header = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isDesktop, setIsDesktop] = useState(window.innerWidth > 768); // Detectar si es escritorio
+  const [isDesktop, setIsDesktop] = useState(window.innerWidth > 768);
   const menuRef = useRef(null);
   const profileRef = useRef(null);
   const navigate = useNavigate();
   const { user, logout } = useContext(AuthContext);
 
-  // Función para actualizar la variable isDesktop en base al tamaño de la pantalla
   const updateScreenSize = () => {
     setIsDesktop(window.innerWidth > 768);
   };
@@ -63,15 +62,23 @@ const Header = () => {
     navigate("/profile");
   };
 
-  // Función para evitar que se cierre el dropdown al hacer clic en las opciones dentro de él
   const preventDropdownClose = (event) => {
-    event.stopPropagation(); // Evita que el evento se propague y cierre el dropdown
+    event.stopPropagation();
   };
 
   return (
     <header className="header">
       <div className="header-left">
-        <Link to="/" className="logo">Restly</Link>
+        <Link
+          to="/"
+          className="logo"
+          onClick={(e) => {
+            e.preventDefault();
+            window.location.href = "/";
+          }}
+        >
+          Restly
+        </Link>
         <span className="slogan">Comodidad en cada destino</span>
       </div>
 
@@ -79,7 +86,6 @@ const Header = () => {
         {user ? (
           <>
             <div className="user-info">
-              {/* Dropdown solo aparece en versión de escritorio y si el rol es ADMIN */}
               {isDesktop && user.role === "ADMIN" && (
                 <div className="admin-dropdown">
                   <Dropdown />
@@ -90,37 +96,47 @@ const Header = () => {
               </div>
               {isDropdownOpen && (
                 <div className="profile-dropdown show" ref={profileRef}>
-                  <button className="close-profile" onClick={closeDropdown}>×</button>
+                  <button className="close-profile" onClick={closeDropdown}>
+                    ×
+                  </button>
                   <div className="profile-avatar">
                     {getInitials(user?.firstname, user?.email)}
                   </div>
-                  <div className="profile-welcome">Bienvenido, {user?.firstname || user?.email}</div>
+                  <div className="profile-welcome">
+                    Bienvenido, {user?.firstname || user?.email}
+                  </div>
                   <div className="profile-email">{user?.email}</div>
                   <Link
                     to="/profile"
                     className="profile-option"
-                    onClick={(e) => { handleProfileClick(e); preventDropdownClose(e); }}
+                    onClick={(e) => {
+                      handleProfileClick(e);
+                      preventDropdownClose(e);
+                    }}
                   >
                     Perfil
                   </Link>
                   <Link
                     to="/FavoritesList"
                     className="profile-option"
-                    onClick={preventDropdownClose} // Evitar que se cierre el dropdown
+                    onClick={preventDropdownClose}
                   >
                     Mis favoritos
                   </Link>
                   <Link
                     to="/MyReserves"
                     className="profile-option"
-                    onClick={preventDropdownClose} // Evitar que se cierre el dropdown
+                    onClick={preventDropdownClose}
                   >
                     Mis Reservas
                   </Link>
                   <Link
                     to="#"
                     className="profile-option"
-                    onClick={(e) => { handleLogout(e); preventDropdownClose(e); }}
+                    onClick={(e) => {
+                      handleLogout(e);
+                      preventDropdownClose(e);
+                    }}
                   >
                     Cerrar sesión
                   </Link>
@@ -130,8 +146,12 @@ const Header = () => {
           </>
         ) : (
           <>
-            <Link to="/singup"><button className="btn">Crear cuenta</button></Link>
-            <Link to="/login"><button className="btn">Iniciar sesión</button></Link>
+            <Link to="/singup">
+              <button className="btn">Crear cuenta</button>
+            </Link>
+            <Link to="/login">
+              <button className="btn">Iniciar sesión</button>
+            </Link>
           </>
         )}
       </div>
@@ -147,8 +167,12 @@ const Header = () => {
       {isMobileMenuOpen && (
         <div className="mobile-menu" ref={menuRef}>
           <ul>
-            <Link to="/singup" onClick={closeMenu}><li>Crear cuenta</li></Link>
-            <Link to="/login" onClick={closeMenu}><li>Iniciar sesión</li></Link>
+            <Link to="/singup" onClick={closeMenu}>
+              <li>Crear cuenta</li>
+            </Link>
+            <Link to="/login" onClick={closeMenu}>
+              <li>Iniciar sesión</li>
+            </Link>
           </ul>
         </div>
       )}
@@ -160,36 +184,46 @@ const Header = () => {
           </div>
           {isDropdownOpen && (
             <div className="profile-dropdown show" ref={profileRef}>
-              <button className="close-profile" onClick={closeDropdown}>×</button>
+              <button className="close-profile" onClick={closeDropdown}>
+                ×
+              </button>
               <div className="profile-avatar">
                 {getInitials(user?.firstname, user?.email)}
               </div>
-              <div className="profile-welcome">Bienvenido, {user?.firstname || user?.email}</div>
+              <div className="profile-welcome">
+                Bienvenido, {user?.firstname || user?.email}
+              </div>
               <Link
                 to="/profile"
                 className="profile-option"
-                onClick={(e) => { handleProfileClick(e); preventDropdownClose(e); }}
+                onClick={(e) => {
+                  handleProfileClick(e);
+                  preventDropdownClose(e);
+                }}
               >
                 Perfil
               </Link>
               <Link
                 to="/FavoritesList"
                 className="profile-option"
-                onClick={preventDropdownClose} // Evitar que se cierre el dropdown
+                onClick={preventDropdownClose}
               >
                 Mis favoritos
               </Link>
               <Link
                 to="/MyReserves"
                 className="profile-option"
-                onClick={preventDropdownClose} // Evitar que se cierre el dropdown
+                onClick={preventDropdownClose}
               >
                 Mis Reservas
               </Link>
               <Link
                 to="#"
                 className="profile-option"
-                onClick={(e) => { handleLogout(e); preventDropdownClose(e); }}
+                onClick={(e) => {
+                  handleLogout(e);
+                  preventDropdownClose(e);
+                }}
               >
                 Cerrar sesión
               </Link>
