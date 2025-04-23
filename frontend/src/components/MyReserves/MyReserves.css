@@ -1,478 +1,579 @@
-
-
 .my-reserves-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-  }
-  
-  .reserves-list {
-    display: grid;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
 
-    max-width: 100%;
-    gap: 20px;
-    margin-top: 20px;
-  }
-  
-  .reserve-card {
-    background: #fff;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    position: relative;
-  }
-  
-  .reserve-product-info h3 {
-    color: #00c98c;
-    margin-bottom: 15px;
-  }
-  
-  .reserve-product-info p {
-    margin: 8px 0;
-    color: #2b2c28;
-  }
-  
-  /* Estilos del calendario (copiados del otro componente) */
-  .ca-calendars-container {
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      gap: 20px; 
-      flex-wrap: wrap; 
-  }
-  
-  .ca-calendar-icon {
-      color: #00c98c;
-      margin-right: 8px;
-  }
-  
-  .ca-loading {
-      color: #339989;
-      font-size: 16px;
-  }
-  
-  .ca-error-message {
-      color: #ff0000;
-      font-size: 16px;
-      margin-top: 10px;
-  }
-  
-  .ca-error-message button {
-      background: #00c95c;
-      color: white;
-      border: none;
-      padding: 5px 10px;
-      cursor: pointer;
-      border-radius: 5px;
-      margin-top: 5px;
-  }
-  
-  .ca-error-message button:hover {
-      background: #339989;
-  }
-  
-  .ca-calendar {
-      background: #ffffff;
-      padding: 15px;
-      border-radius: 8px;
-      margin-top: 10px;
-  }
-  
-  .ca-calendar-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-weight: bold;
-      margin-bottom: 10px;
-  }
-  
-  .ca-nav-button {
-      background: none;
-      border: none;
-      font-size: 18px;
-      cursor: pointer;
-      color: #2b2c28;
-  }
-  
-  .ca-calendar-weekdays {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      font-weight: bold;
-      margin-bottom: 5px;
-      color: #2b2c28;
-  }
-  
-  .ca-calendar-days {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 5px;
-  }
-  
-  .ca-calendar-day {
-      width: 35px;
-      height: 35px;
-      line-height: 35px;
-      text-align: center;
-      border-radius: 50%;
-      font-size: 14px;
-      cursor: pointer;
-      transition: background 0.3s ease-in-out, color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-      background: #e0f7ec;
-      color: #2b2c28;
-  }
-  
-  .ca-calendar-day.ca-booked {
-      background: #ff0000;
-      color: white;
-      pointer-events: none;
-      font-weight: bold;
-      border: 2px solid #d60000;
-      box-shadow: 0px 0px 8px rgba(255, 0, 0, 0.7);
-  }
-  
-  .ca-button-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-top: 10px;
-  }
-  
-  .popup-style {
-      text-align: center;
-  }
-  
-  .title-style {
-      font-size: 1.5em;
-      font-weight: bold;
-      color: #2b2c28;  
-  }
-  
-  .content-style {
-      font-size: 1em;
-      color: #339989;  
-  }
-  
-  /* Fechas deshabilitadas */
-  .ca-calendar-day.ca-disabled {
-      background: #4747470f; 
-      color: gray;
-      pointer-events: none;
-  }
-  
-  .ca-range-selected {
-      background-color: rgba(0, 201, 141, 0.401); 
-      border-radius: 5px;
-  }
-  
-  .ca-reserve-btn:disabled {
-      background-color: #ccc;
-      cursor: not-allowed;
-  }
-  
-  .ca-calendar-day.ca-selected {
-      background: #00c98c;
-      color: white;
-      font-weight: bold;
-      border: 2px solid #339989;
-      box-shadow: 0px 0px 10px rgba(51, 153, 137, 0.9);
-      border-radius: 50%;
-  }
-  
-  .calendar-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-  }
-  
-  .confirm-reservation-box {
-      margin-top: 1.5rem;
-      padding: 1rem;
-      border-top: 2px solid #ccc;
-      text-align: center;
-      width: 100%;
-  }
-  
-  .confirm-btn {
-      background-color: #00c98c;
-      color: white;
-      border: none;
-      padding: 0.6rem 1.2rem;
-      font-size: 1rem;
-      border-radius: 8px;
-      cursor: pointer;
-      margin-top: 0.5rem;
-      transition: background-color 0.3s ease;
-  }
-  
-  .confirm-btn:hover {
-      background-color: #339989;
-  }
-  
-  .ca-selected-dates-summary {
-      margin: 20px 0;
-      background-color: #f0f8ff;
-      padding: 15px;
-      border-radius: 10px;
-      text-align: center;
-      color: #333;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  .ca-selected-dates-summary p {
-      margin: 5px 0;
-      font-size: 16px;
-  }
-  
-  .ca-calendar-day.ca-range {
-      background: rgba(0, 201, 140, 0.3);
-      color: #2b2c28;
-      font-weight: bold;
-      border-radius: 10px;
-      border: 2px solid #00c98c;
-      box-shadow: 0px 0px 8px rgba(0, 201, 140, 0.6);
-  }
-  
-  .ca-calendar-day.ca-range:hover {
-      background: rgba(0, 201, 140, 0.5);
-      border: 2px solid #339989;
-      box-shadow: 0px 0px 12px rgba(51, 153, 137, 0.8);
-  }
-  
-  .button-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-top: 10px;
-  }
-  
-  .ca-reserve-btn {
-      margin-top: 15px;
-      background: #00c98c;
-      color: white;
-      border: none;
-      padding: 10px 15px;
-      cursor: pointer;
-      border-radius: 5px;
-      font-size: 16px;
-  }
-  
-  .ca-reserve-btn:hover {
-      background: #339989;
-  }
-  
-  .ca-empty {
-      visibility: hidden;
-  }
+.reserves-list {
+  display: grid;
+  max-width: 100%;
+  gap: 20px;
+  margin-top: 20px;
+}
 
-  .product-image-container {
-    margin: 15px 0;
-    border-radius: 8px;
-    overflow: hidden;
-    max-width: 300px;
-  }
-  
-  .product-thumbnail {
-    width: 100%;
-    height: auto;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  }
-  
-  .modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(43, 44, 40, 0.6);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-  }
-  
-  .modal-box {
-      background-color: #fff;
-      padding: 2rem;
-      border-radius: 12px;
-      width: 90%;
-      max-width: 500px;
-      box-shadow: 0 0 15px rgba(0, 201, 140, 0.4);
-      color: #2b2c28;
-      text-align: center;
-  }
-  
-  .modal-product-details img {
-      width: 100%;
-      height: 180px;
-      object-fit: cover;
-      border-radius: 8px;
-      margin-bottom: 10px;
-  }
-  
-  .modal-product-details h3 {
-      margin-top: 10px;
-      font-size: 20px;
-      color: #00c98c;
-  }
-  
-  .modal-location {
-      font-size: 14px;
-      color: #555;
-  }
-  
-  .modal-description {
-      font-size: 14px;
-      color: #444;
-      margin-bottom: 15px;
-  }
-  
-  .modal-user-info p {
-      margin: 6px 0;
-  }
-  
-  .modal-buttons {
-      margin-top: 20px;
-      display: flex;
-      justify-content: space-around;
-  }
-  
-  .confirm-btn, .cancel-btn {
-      padding: 10px 20px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: bold;
-      font-size: 16px;
-  }
-  
-  .confirm-btn {
-      background-color: #00c98c;
-      color: white;
-  }
-  
-  .confirm-btn:hover {
-      background-color: #339989;
-  }
-  
-  .cancel-btn {
-      background-color: #ccc;
-      color: #2b2c28;
-  }
-  
-  .cancel-btn:hover {
-      background-color: #999;
-  }
-/* Agrega esto al final de MyReserves.css */
+.reserve-card {
+  background: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
 
+.reserve-product-info h3 {
+  color: #00c98c;
+  margin-bottom: 15px;
+}
+
+.reserve-product-info p {
+  margin: 8px 0;
+  color: #2b2c28;
+}
+
+/* Estilos del calendario */
+.ca-calendars-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.ca-calendar-icon {
+  color: #00c98c;
+  margin-right: 8px;
+}
+
+.ca-loading {
+  color: #339989;
+  font-size: 16px;
+}
+
+.ca-error-message {
+  color: #ff0000;
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+.ca-error-message button {
+  background: #00c95c;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-top: 5px;
+}
+
+.ca-error-message button:hover {
+  background: #339989;
+}
+
+.ca-calendar {
+  background: #ffffff;
+  padding: 15px;
+  border-radius: 8px;
+  margin-top: 10px;
+}
+
+.ca-calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.ca-nav-button {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: #2b2c28;
+}
+
+.ca-calendar-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #2b2c28;
+}
+
+.ca-calendar-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+}
+
+.ca-calendar-day {
+  width: 35px;
+  height: 35px;
+  line-height: 35px;
+  text-align: center;
+  border-radius: 50%;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.3s ease-in-out, color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  background: #e0f7ec;
+  color: #2b2c28;
+}
+
+.ca-calendar-day.ca-booked {
+  background: #ff0000;
+  color: white;
+  pointer-events: none;
+  font-weight: bold;
+  border: 2px solid #d60000;
+  box-shadow: 0px 0px 8px rgba(255, 0, 0, 0.7);
+}
+
+.ca-button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.popup-style {
+  text-align: center;
+}
+
+.title-style {
+  font-size: 1.5em;
+  font-weight: bold;
+  color: #2b2c28;
+}
+
+.content-style {
+  font-size: 1em;
+  color: #339989;
+}
+
+/* Fechas deshabilitadas */
+.ca-calendar-day.ca-disabled {
+  background: #4747470f;
+  color: gray;
+  pointer-events: none;
+}
+
+.ca-range-selected {
+  background-color: rgba(0, 201, 141, 0.401);
+  border-radius: 5px;
+}
+
+.ca-reserve-btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.ca-calendar-day.ca-selected {
+  background: #00c98c;
+  color: white;
+  font-weight: bold;
+  border: 2px solid #339989;
+  box-shadow: 0px 0px 10px rgba(51, 153, 137, 0.9);
+  border-radius: 50%;
+}
+
+.calendar-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.confirm-reservation-box {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  border-top: 2px solid #ccc;
+  text-align: center;
+  width: 100%;
+}
+
+.ca-selected-dates-summary {
+  margin: 20px 0;
+  background-color: #f0f8ff;
+  padding: 15px;
+  border-radius: 10px;
+  text-align: center;
+  color: #333;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.ca-selected-dates-summary p {
+  margin: 5px 0;
+  font-size: 16px;
+}
+
+.ca-calendar-day.ca-range {
+  background: rgba(0, 201, 140, 0.3);
+  color: #2b2c28;
+  font-weight: bold;
+  border-radius: 10px;
+  border: 2px solid #00c98c;
+  box-shadow: 0px 0px 8px rgba(0, 201, 140, 0.6);
+}
+
+.ca-calendar-day.ca-range:hover {
+  background: rgba(0, 201, 140, 0.5);
+  border: 2px solid #339989;
+  box-shadow: 0px 0px 12px rgba(51, 153, 137, 0.8);
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.ca-reserve-btn {
+  margin-top: 15px;
+  background: #00c98c;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.ca-reserve-btn:hover {
+  background: #339989;
+}
+
+.ca-empty {
+  visibility: hidden;
+}
+
+.product-image-container {
+  margin: 15px 0;
+  border-radius: 8px;
+  overflow: hidden;
+  max-width: 300px;
+}
+
+.product-thumbnail {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(43, 44, 40, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-box {
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 0 15px rgba(0, 201, 140, 0.4);
+  color: #2b2c28;
+  text-align: center;
+}
+
+.modal-product-details img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.modal-product-details h3 {
+  margin-top: 10px;
+  font-size: 20px;
+  color: #00c98c;
+}
+
+.modal-location {
+  font-size: 14px;
+  color: #555;
+}
+
+.modal-description {
+  font-size: 14px;
+  color: #444;
+  margin-bottom: 15px;
+}
+
+.modal-user-info p {
+  margin: 6px 0;
+}
+
+.modal-buttons {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+
+
+.confirm-btn {
+  padding: 10px 24px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 16px;
+  min-width: 150px;
+  transition: all 0.3s ease;
+}
+
+.confirm-btn {
+  background-color: #00c98c;
+  color: white;
+}
+
+.confirm-btn:hover {
+  background-color: #339989;
+}
+
+.cancel-btn {
+  background-color: #f0f0f0;
+  color: #2b2c28;
+  border: 1px solid #ccc;
+}
+
+.cancel-btn:hover {
+  background-color: #e0e0e0;
+}
+
+/* Tabla de reservas */
 .reserves-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.reserves-table th, .reserves-table td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.reserves-table th {
+  background-color: #00c98c;
+  color: white;
+  font-weight: 600;
+}
+
+.reserve-item:hover {
+  background-color: #f5f5f5;
+}
+
+.product-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.product-title {
+  font-weight: 500;
+  color: #2b2c28;
+}
+
+.product-thumbnail {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid #e0e0e0;
+}
+
+.alert {
+  padding: 10px 15px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.alert-success {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.alert-error {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+.alert button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  color: inherit;
+}
+
+/* Estilos responsivos */
+@media (max-width: 768px) {
+  .reserves-table {
+    display: block;
+    border: none;
+    background: transparent;
+    box-shadow: none;
+  }
+  
+  .reserves-table thead {
+    display: none;
+  }
+  
+  .reserves-table tbody {
+    display: block;
     width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .reserves-table tr {
+    display: block;
+    background: #fff;
+    margin-bottom: 12px;
     border-radius: 8px;
-    overflow: hidden;
+    padding: 0;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    border: 1px solid #f0f0f0;
   }
   
-  .reserves-table th, .reserves-table td {
-    padding: 12px 15px;
-    text-align: left;
-    border-bottom: 1px solid #e0e0e0;
-  }
-  
-  .reserves-table th {
-    background-color: #00c98c;
-    color: white;
-    font-weight: 600;
-  }
-  
-  .reserve-item:hover {
-    background-color: #f5f5f5;
-  }
-  
-  .product-info {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-  }
-  
-  .product-title {
-    font-weight: 500;
-    color: #2b2c28;
-  }
-  
-  .product-thumbnail {
-    width: 60px;
-    height: 60px;
-    object-fit: cover;
-    border-radius: 4px;
-    border: 1px solid #e0e0e0;
-  }
-  
-  .alert {
-    padding: 10px 15px;
-    border-radius: 4px;
-    margin-bottom: 20px;
+  .reserves-table td {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    text-align: right;
+    padding: 12px 16px;
+    border-bottom: 1px solid #f5f5f5;
   }
   
-  .alert-success {
-    background-color: #d4edda;
-    color: #155724;
-    border: 1px solid #c3e6cb;
+  .reserves-table td::before {
+    content: attr(data-label);
+    color: #2b2c28;
+    font-weight: normal;
+    opacity: 0.8;
+    font-size: 0.9em;
+    min-width: 80px;
+    margin-right: auto;
+    padding-right: 10px;
+    text-align: left;
   }
   
-  .alert-error {
-    background-color: #f8d7da;
-    color: #721c24;
-    border: 1px solid #f5c6cb;
+  .reserves-table td:last-child {
+    border-bottom: none;
   }
   
-  .alert button {
-    background: none;
+  .product-info {
+    justify-content: space-between;
+    width: 100%;
+  }
+  
+  .product-title {
+    font-size: 1em;
+  }
+  
+  .product-thumbnail {
+    width: 50px;
+    height: 50px;
     border: none;
-    cursor: pointer;
-    font-weight: bold;
-    color: inherit;
+    box-shadow: none;
   }
   
   .ca-reserve-btn {
-    padding: 8px 12px;
+    width: 100%;
+    background: #f0f0f0;
+    color: #00c98c;
+    border: 1px solid #00c98c;
+    font-weight: 500;
+  }
+  
+  .modal-box {
+    width: 95%;
+    padding: 20px;
+  }
+  
+  .ca-calendar {
+    width: 100%;
+    padding: 10px;
+    background: #fff;
+    border: 1px solid #f0f0f0;
+    box-shadow: none;
+  }
+  
+  .ca-calendar-header h3 {
+    font-size: 1em;
+  }
+  
+  .ca-selected-dates-summary {
+    padding: 10px;
     font-size: 14px;
-    background: #00c98c;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background 0.3s;
+    background: #f9f9f9;
+    box-shadow: none;
+    border: 1px solid #eee;
   }
   
-  .ca-reserve-btn:hover {
-    background: #00a878;
+  .modal-buttons {
+    flex-direction: column;
+    gap: 10px;
   }
   
-  .ca-reserve-btn:disabled {
-    background: #cccccc;
-    cursor: not-allowed;
+  .confirm-btn, .cancel-btn {
+    width: 100%;
+    min-width: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .reserves-table td {
+    padding: 10px 12px;
+    flex-direction: column;
+    align-items: flex-end;
+    text-align: right;
   }
   
-  /* Estilos responsivos */
-  @media (max-width: 768px) {
-    .reserves-table {
-      display: block;
-      overflow-x: auto;
-    }
-    
-    .product-info {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 5px;
-    }
-    
-    .product-thumbnail {
-      width: 40px;
-      height: 40px;
-    }
+  .reserves-table td::before {
+    margin-right: 0;
+    margin-bottom: 5px;
+    width: 100%;
+    text-align: right;
   }
+  
+  .product-info {
+    flex-direction: column;
+    align-items: flex-end;
+  }
+  
+  .product-thumbnail {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .modal-box {
+    padding: 16px;
+  }
+  
+  .ca-calendar-day {
+    width: 28px;
+    height: 28px;
+    line-height: 28px;
+  }
+  
+  .ca-calendar-weekdays div {
+    font-size: 12px;
+  }
+}

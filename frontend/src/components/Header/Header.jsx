@@ -7,10 +7,23 @@ import Dropdown from "./DropDown";
 const Header = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(window.innerWidth > 768); // Detectar si es escritorio
   const menuRef = useRef(null);
   const profileRef = useRef(null);
   const navigate = useNavigate();
   const { user, logout } = useContext(AuthContext);
+
+  // Función para actualizar la variable isDesktop en base al tamaño de la pantalla
+  const updateScreenSize = () => {
+    setIsDesktop(window.innerWidth > 768);
+  };
+
+  useEffect(() => {
+    window.addEventListener("resize", updateScreenSize);
+    return () => {
+      window.removeEventListener("resize", updateScreenSize);
+    };
+  }, []);
 
   const toggleDropdown = () => {
     setIsDropdownOpen((prev) => !prev);
@@ -24,24 +37,9 @@ const Header = () => {
     setIsMobileMenuOpen(false);
   };
 
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (
-        menuRef.current &&
-        !menuRef.current.contains(event.target) &&
-        profileRef.current &&
-        !profileRef.current.contains(event.target)
-      ) {
-        setIsMobileMenuOpen(false);
-        setIsDropdownOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
+  const closeDropdown = () => {
+    setIsDropdownOpen(false);
+  };
 
   const getInitials = (name, email) => {
     if (name) {
@@ -54,15 +52,20 @@ const Header = () => {
   };
 
   const handleLogout = (event) => {
-    event.preventDefault(); 
+    event.preventDefault();
     logout();
-    setIsDropdownOpen(false);
+    closeDropdown();
   };
 
   const handleProfileClick = (event) => {
-    event.preventDefault(); 
-    setIsDropdownOpen(false);
+    event.preventDefault();
+    closeDropdown();
     navigate("/profile");
+  };
+
+  // Función para evitar que se cierre el dropdown al hacer clic en las opciones dentro de él
+  const preventDropdownClose = (event) => {
+    event.stopPropagation(); // Evita que el evento se propague y cierre el dropdown
   };
 
   return (
@@ -71,31 +74,62 @@ const Header = () => {
         <Link to="/" className="logo">Restly</Link>
         <span className="slogan">Comodidad en cada destino</span>
       </div>
+
       <div className="header-right">
         {user ? (
-          <div className="user-info">
-            <div className="avatar" onClick={toggleDropdown}>
-              {getInitials(user?.firstname, user?.email)}
-            </div>
-            {isDropdownOpen && (
-              <div className="profile-dropdown show" ref={profileRef}>
-                <button className="close-profile" onClick={toggleDropdown}>×</button>
-                <div className="profile-avatar">
-                  {getInitials(user?.firstname, user?.email)}
+          <>
+            <div className="user-info">
+              {/* Dropdown solo aparece en versión de escritorio y si el rol es ADMIN */}
+              {isDesktop && user.role === "ADMIN" && (
+                <div className="admin-dropdown">
+                  <Dropdown />
                 </div>
-                <div className="profile-welcome">Bienvenido, {user?.firstname || user?.email}</div>
-                <div className="profile-email">{user?.email}</div>
-                <Link to="/profile" className="profile-option" onClick={handleProfileClick}>Perfil</Link>
-                <Link to="#" className="profile-option" onClick={handleLogout}>Cerrar sesión</Link>
-                <Link to="/FavoritesList" className="profile-option">Mis favoritos</Link>
-                <Link to="/MyReserves" className="profile-option">Mis Reservas</Link>
-                
+              )}
+              <div className="avatar" onClick={toggleDropdown}>
+                {getInitials(user?.firstname, user?.email)}
               </div>
-            )}
-          </div>
+              {isDropdownOpen && (
+                <div className="profile-dropdown show" ref={profileRef}>
+                  <button className="close-profile" onClick={closeDropdown}>×</button>
+                  <div className="profile-avatar">
+                    {getInitials(user?.firstname, user?.email)}
+                  </div>
+                  <div className="profile-welcome">Bienvenido, {user?.firstname || user?.email}</div>
+                  <div className="profile-email">{user?.email}</div>
+                  <Link
+                    to="/profile"
+                    className="profile-option"
+                    onClick={(e) => { handleProfileClick(e); preventDropdownClose(e); }}
+                  >
+                    Perfil
+                  </Link>
+                  <Link
+                    to="/FavoritesList"
+                    className="profile-option"
+                    onClick={preventDropdownClose} // Evitar que se cierre el dropdown
+                  >
+                    Mis favoritos
+                  </Link>
+                  <Link
+                    to="/MyReserves"
+                    className="profile-option"
+                    onClick={preventDropdownClose} // Evitar que se cierre el dropdown
+                  >
+                    Mis Reservas
+                  </Link>
+                  <Link
+                    to="#"
+                    className="profile-option"
+                    onClick={(e) => { handleLogout(e); preventDropdownClose(e); }}
+                  >
+                    Cerrar sesión
+                  </Link>
+                </div>
+              )}
+            </div>
+          </>
         ) : (
           <>
-            <Dropdown />
             <Link to="/singup"><button className="btn">Crear cuenta</button></Link>
             <Link to="/login"><button className="btn">Iniciar sesión</button></Link>
           </>
@@ -120,19 +154,45 @@ const Header = () => {
       )}
 
       {user && (
-        <div className="mobile-avatar" onClick={toggleDropdown}>
-          <div className="avatar">
+        <div className="mobile-avatar">
+          <div className="avatar" onClick={toggleDropdown}>
             {getInitials(user?.firstname, user?.email)}
           </div>
           {isDropdownOpen && (
             <div className="profile-dropdown show" ref={profileRef}>
-              <button className="close-profile" onClick={toggleDropdown}>×</button>
+              <button className="close-profile" onClick={closeDropdown}>×</button>
               <div className="profile-avatar">
                 {getInitials(user?.firstname, user?.email)}
               </div>
               <div className="profile-welcome">Bienvenido, {user?.firstname || user?.email}</div>
-              <Link to="/profile" className="profile-option" onClick={handleProfileClick}>Perfil</Link>
-              <Link to="#" className="profile-option" onClick={handleLogout}>Cerrar sesión</Link>
+              <Link
+                to="/profile"
+                className="profile-option"
+                onClick={(e) => { handleProfileClick(e); preventDropdownClose(e); }}
+              >
+                Perfil
+              </Link>
+              <Link
+                to="/FavoritesList"
+                className="profile-option"
+                onClick={preventDropdownClose} // Evitar que se cierre el dropdown
+              >
+                Mis favoritos
+              </Link>
+              <Link
+                to="/MyReserves"
+                className="profile-option"
+                onClick={preventDropdownClose} // Evitar que se cierre el dropdown
+              >
+                Mis Reservas
+              </Link>
+              <Link
+                to="#"
+                className="profile-option"
+                onClick={(e) => { handleLogout(e); preventDropdownClose(e); }}
+              >
+                Cerrar sesión
+              </Link>
             </div>
           )}
         </div>

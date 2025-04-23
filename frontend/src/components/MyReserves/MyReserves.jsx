@@ -270,40 +270,40 @@ const MyReserves = () => {
               </tr>
             </thead>
             <tbody>
-              {reserves.map(reserve => {
-                const product = products[reserve.productId] || {};
-                const currentCheckOut = new Date(reserve.checkOut);
+  {reserves.map(reserve => {
+    const product = products[reserve.productId] || {};
+    const currentCheckOut = new Date(reserve.checkOut);
 
-                return (
-                  <tr key={reserve.id} className="reserve-item">
-                    <td>
-                      <div className="product-info">
-                        {product.images?.[0]?.imageUrl && (
-                          <img 
-                            src={product.images[0].imageUrl} 
-                            alt={product.title || 'Imagen del producto'} 
-                            className="product-thumbnail"
-                          />
-                        )}
-                        <div className="product-title">{product.title || 'Producto sin título'}</div>
-                      </div>
-                    </td>
-                    <td>{new Date(reserve.checkIn).toLocaleDateString()}</td>
-                    <td>{currentCheckOut.toLocaleDateString()}</td>
-                    <td>{formatLocation(product)}</td>
-                    <td>
-                      <button 
-                        className="ca-reserve-btn"
-                        onClick={() => handleExtendReserve(reserve.id, reserve.checkOut)}
-                        disabled={isExtending}
-                      >
-                        {isExtending && extendingReserveId === reserve.id ? 'Procesando...' : 'Extender'}
-                      </button>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
+    return (
+      <tr key={reserve.id} className="reserve-item">
+        <td data-label="Producto">
+          <div className="product-info">
+            {product.images?.[0]?.imageUrl && (
+              <img 
+                src={product.images[0].imageUrl} 
+                alt={product.title || 'Imagen del producto'} 
+                className="product-thumbnail"
+              />
+            )}
+            <div className="product-title">{product.title || 'Producto sin título'}</div>
+          </div>
+        </td>
+        <td data-label="Check-in">{new Date(reserve.checkIn).toLocaleDateString()}</td>
+        <td data-label="Check-out">{currentCheckOut.toLocaleDateString()}</td>
+        <td data-label="Ubicación">{formatLocation(product)}</td>
+        <td data-label="Acciones">
+          <button 
+            className="ca-reserve-btn"
+            onClick={() => handleExtendReserve(reserve.id, reserve.checkOut)}
+            disabled={isExtending}
+          >
+            {isExtending && extendingReserveId === reserve.id ? 'Procesando...' : 'Extender'}
+          </button>
+        </td>
+      </tr>
+    );
+  })}
+</tbody>
           </table>
 
           {extendingReserveId && (
@@ -328,7 +328,7 @@ const MyReserves = () => {
                     </div>
                     <div className="modal-buttons">
                       <button 
-                        className="cancel-btn" 
+                        className="confirm-btn" 
                         onClick={cancelExtension}
                         disabled={isExtending}
                       >

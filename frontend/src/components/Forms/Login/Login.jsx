@@ -3,6 +3,8 @@ import './Login.css';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import AuthContext from '../../../context/AuthContext';
+// Si usás react-icons:
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 export default function Login() {
   const [formData, setFormData] = useState({
@@ -10,6 +12,7 @@ export default function Login() {
     password: ''
   });
 
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState(null);
   const [showReservationMessage, setShowReservationMessage] = useState(false);
   const navigate = useNavigate();
@@ -19,10 +22,9 @@ export default function Login() {
     const fromRedirect = sessionStorage.getItem('redirectAfterLogin');
     if (fromRedirect?.includes('/details/')) {
       setShowReservationMessage(true);
-      sessionStorage.removeItem('redirectAfterLogin'); 
+      sessionStorage.removeItem('redirectAfterLogin');
     }
   }, []);
-  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -52,15 +54,13 @@ export default function Login() {
       navigate(redirectPath);
     } catch (err) {
       console.error('Error en el login:', err);
-    
       const backendMessage = err?.response?.data?.error;
-    
       if (backendMessage && backendMessage.includes("User not found")) {
         setError("El correo electrónico no está registrado. Por favor registrate.");
       } else {
         setError("Correo electrónico o contraseña incorrectos");
       }
-    }      
+    }
   };
 
   return (
@@ -86,16 +86,24 @@ export default function Login() {
           />
         </div>
 
-        <div className="form-group">
+        <div className="form-group password-wrapper">
           <label htmlFor="password">Contraseña</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-          />
+          <div className="password-input-container">
+            <input
+              type={showPassword ? 'text' : 'password'}
+              id="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+            />
+            <span
+              className="password-toggle-icon"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
+            </span>
+          </div>
         </div>
 
         <button type="submit" className="submit-button">

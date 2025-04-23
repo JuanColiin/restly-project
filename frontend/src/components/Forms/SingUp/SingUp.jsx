@@ -1,8 +1,10 @@
 import { useState, useContext } from "react";
 import axios from "axios";
+import Swal from "sweetalert2";
 import "./SingUp.css";
 import { Link, useNavigate } from "react-router-dom";
 import AuthContext from "../../../context/AuthContext";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 export default function SignUp() {
   const [formData, setFormData] = useState({
@@ -13,15 +15,16 @@ export default function SignUp() {
     confirmPassword: "",
   });
 
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errors, setErrors] = useState({
     email: "",
     password: "",
     confirmPassword: "",
   });
 
-  const [serverError, setServerError] = useState(""); 
-
-  const { login } = useContext(AuthContext); 
+  const [serverError, setServerError] = useState("");
+  const { login } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const validateEmail = (email) => {
@@ -50,6 +53,10 @@ export default function SignUp() {
           value.length < 7 || value.length > 25
             ? "La contraseña debe tener entre 7 y 25 caracteres"
             : "",
+        confirmPassword:
+          formData.confirmPassword && value !== formData.confirmPassword
+            ? "Las contraseñas deben ser iguales"
+            : "",
       }));
     }
 
@@ -64,7 +71,7 @@ export default function SignUp() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setServerError(""); 
+    setServerError("");
 
     if (errors.email || errors.password || errors.confirmPassword) {
       return;
@@ -92,7 +99,18 @@ export default function SignUp() {
       };
 
       login(userData);
-      navigate("/");
+
+      // Mostrar alerta de éxito
+      Swal.fire({
+        title: "Cuenta creada",
+        text: "¡Tu cuenta ha sido creada exitosamente!",
+        icon: "success",
+        confirmButtonColor: "#00c98c",
+        confirmButtonText: "Continuar",
+      }).then(() => {
+        navigate("/");
+      });
+
     } catch (error) {
       if (error.response && error.response.status === 409) {
         setServerError("El correo electrónico ya está registrado.");
@@ -103,86 +121,113 @@ export default function SignUp() {
   };
 
   return (
-    <div className="signup-container">
-      <h1>Crear cuenta</h1>
+    <div className="signup-form-container">
+      <h1 className="form-title">Crear cuenta</h1>
       <form onSubmit={handleSubmit}>
-        <div className="name-row">
-          <div className="form-group">
-            <label htmlFor="nombre">Nombre</label>
+        {serverError && <p className="server-error-message">{serverError}</p>}
+
+        <div className="name-fields-row">
+          <div className="form-field-group">
+            <label htmlFor="nombre" className="form-label">Nombre</label>
+            <div className="form-input-wrapper">
+              <input
+                type="text"
+                id="nombre"
+                name="nombre"
+                value={formData.nombre}
+                onChange={handleChange}
+                className="form-input"
+                required
+              />
+            </div>
+          </div>
+          <div className="form-field-group">
+            <label htmlFor="apellido" className="form-label">Apellido</label>
+            <div className="form-input-wrapper">
+              <input
+                type="text"
+                id="apellido"
+                name="apellido"
+                value={formData.apellido}
+                onChange={handleChange}
+                className="form-input"
+                required
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="form-field-group">
+          <label htmlFor="email" className="form-label">Correo electrónico</label>
+          <div className="form-input-wrapper">
             <input
-              type="text"
-              id="nombre"
-              name="nombre"
-              value={formData.nombre}
+              type="email"
+              id="email"
+              name="email"
+              value={formData.email}
               onChange={handleChange}
+              className={`form-input ${errors.email ? "has-error" : ""}`}
               required
             />
           </div>
-          <div className="form-group">
-            <label htmlFor="apellido">Apellido</label>
+          {errors.email && <span className="form-error-message">{errors.email}</span>}
+        </div>
+
+        <div className="form-field-group">
+          <label htmlFor="password" className="form-label">Contraseña</label>
+          <div className="form-input-wrapper">
             <input
-              type="text"
-              id="apellido"
-              name="apellido"
-              value={formData.apellido}
+              type={showPassword ? "text" : "password"}
+              id="password"
+              name="password"
+              value={formData.password}
               onChange={handleChange}
+              className={`form-input ${errors.password ? "has-error" : ""}`}
               required
             />
+            <button
+              type="button"
+              className="password-toggle-btn"
+              onClick={() => setShowPassword(!showPassword)}
+              aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+            >
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
+            </button>
           </div>
+          {errors.password && <span className="form-error-message">{errors.password}</span>}
         </div>
 
-        <div className="form-group">
-          <label htmlFor="email">Correo electrónico</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            className={errors.email ? "error" : ""}
-            required
-          />
-          {errors.email && <span className="error-message">{errors.email}</span>}
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="password">Contraseña</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            className={errors.password ? "error" : ""}
-            required
-          />
-          {errors.password && <span className="error-message">{errors.password}</span>}
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="confirmPassword">Confirmar contraseña</label>
-          <input
-            type="password"
-            id="confirmPassword"
-            name="confirmPassword"
-            value={formData.confirmPassword}
-            onChange={handleChange}
-            className={errors.confirmPassword ? "error" : ""}
-            required
-          />
+        <div className="form-field-group">
+          <label htmlFor="confirmPassword" className="form-label">Confirmar contraseña</label>
+          <div className="form-input-wrapper">
+            <input
+              type={showConfirmPassword ? "text" : "password"}
+              id="confirmPassword"
+              name="confirmPassword"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              className={`form-input ${errors.confirmPassword ? "has-error" : ""}`}
+              required
+            />
+            <button
+              type="button"
+              className="password-toggle-btn"
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              aria-label={showConfirmPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+            >
+              {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+            </button>
+          </div>
           {errors.confirmPassword && (
-            <span className="error-message">{errors.confirmPassword}</span>
+            <span className="form-error-message">{errors.confirmPassword}</span>
           )}
         </div>
 
-        {/* Mensaje de error del backend */}
-        {serverError && <p className="error-message">{serverError}</p>}
-
-        <button type="submit" className="submit-button">
+        <button type="submit" className="submit-form-btn">
           Crear cuenta
         </button>
 
-        <p className="login-link">
+        <p className="login-redirect">
           ¿Ya tienes una cuenta? <Link to="/login">Iniciar sesión</Link>
         </p>
       </form>
