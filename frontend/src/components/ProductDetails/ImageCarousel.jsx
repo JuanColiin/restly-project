@@ -7,24 +7,27 @@ import "slick-carousel/slick/slick-theme.css";
 import "./ImageCarousel.css";
 
 const CustomPrevArrow = ({ onClick }) => (
-    <button className="custom-arrow prev-arrow" onClick={onClick}>
-        <FiChevronLeft />
-    </button>
+    <div className="custom-arrow-container">
+        <button className="custom-arrow prev-arrow" onClick={onClick}>
+            <FiChevronLeft />
+        </button>
+    </div>
 );
 
 const CustomNextArrow = ({ onClick }) => (
-    <button className="custom-arrow next-arrow" onClick={onClick}>
-        <FiChevronRight />
-    </button>
+    <div className="custom-arrow-container">
+        <button className="custom-arrow next-arrow" onClick={onClick}>
+            <FiChevronRight />
+        </button>
+    </div>
 );
 
-// 🔹 Validación de PropTypes para las flechas
 CustomPrevArrow.propTypes = {
-    onClick: PropTypes.func.isRequired,
+    onClick: PropTypes.func,
 };
 
 CustomNextArrow.propTypes = {
-    onClick: PropTypes.func.isRequired,
+    onClick: PropTypes.func,
 };
 
 const ImageCarousel = ({ productId }) => {
@@ -58,7 +61,7 @@ const ImageCarousel = ({ productId }) => {
             {
                 breakpoint: 768,
                 settings: {
-                    arrows: true, 
+                    arrows: true,
                     slidesToShow: 1,
                     slidesToScroll: 1,
                 },
