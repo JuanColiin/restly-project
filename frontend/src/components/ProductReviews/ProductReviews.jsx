@@ -24,14 +24,9 @@ const ProductReviews = ({ productId }) => {
 
   const fetchAverageAndCount = async () => {
     try {
-
       const avgRes = await axios.get(`http://localhost:8080/reviews/average-ratings`, {
-        params: {
-          productIds: productId, 
-        },
+        params: { productIds: productId }
       });
-      
-
       setAverageRating(avgRes.data[productId] || 0.0);
 
       const countRes = await axios.get(`http://localhost:8080/reviews/product/${productId}/count`);
@@ -42,14 +37,11 @@ const ProductReviews = ({ productId }) => {
   };
 
   const checkIfUserCanReview = async () => {
+    if (!user?.token) return false;
     try {
       const res = await axios.get(
         `http://localhost:8080/reserves/has-finished?productId=${productId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${user.token}`,
-          },
-        }
+        { headers: { Authorization: `Bearer ${user.token}` } }
       );
       return res.data;
     } catch (err) {
@@ -67,28 +59,22 @@ const ProductReviews = ({ productId }) => {
     }
 
     const canReview = await checkIfUserCanReview();
-
     if (!canReview) {
       Swal.fire({
         title: 'No puedes dejar una reseña',
         text: 'Solo puedes valorar un producto después de finalizar una reserva.',
-        icon: 'info',
-        confirmButtonText: 'Entendido',
+        icon: 'info'
       });
       return;
     }
 
     try {
-      const reviewData = {
+      await axios.post('http://localhost:8080/reviews', {
         productId,
         rating: newReview.rating,
-        comment: newReview.comment,
-      };
-
-      await axios.post('http://localhost:8080/reviews', reviewData, {
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-        },
+        comment: newReview.comment
+      }, {
+        headers: { Authorization: `Bearer ${user.token}` }
       });
 
       setNewReview({ rating: 0, comment: '' });
@@ -103,9 +89,7 @@ const ProductReviews = ({ productId }) => {
   const handleDelete = async (reviewId) => {
     try {
       await axios.delete(`http://localhost:8080/reviews/${reviewId}`, {
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-        },
+        headers: { Authorization: `Bearer ${user.token}` }
       });
       await fetchReviews();
       await fetchAverageAndCount();
@@ -125,47 +109,64 @@ const ProductReviews = ({ productId }) => {
       <h2>Valoraciones</h2>
 
       <div className="average-rating">
-        <strong>Promedio:</strong>{' '}
-        {averageRating !== null ? `${averageRating.toFixed(1)} / 5` : 'Cargando...'}
-        <div className="stars">
-          {[...Array(5)].map((_, i) => (
-            <FaStar key={i} color={i < Math.round(averageRating || 0) ? '#ffc107' : '#e4e5e9'} />
-          ))}
+        <div className="rating-display">
+          <strong>{averageRating !== null ? averageRating.toFixed(1) : '--'}</strong>
+          <div className="stars">
+            {[...Array(5)].map((_, i) => (
+              <FaStar 
+                key={i} 
+                color={i < Math.round(averageRating || 0) ? '#ffc107' : '#e4e5e9'} 
+                size={14}
+              />
+            ))}
+          </div>
         </div>
-        <p><strong>Total reseñas:</strong> {totalReviews}</p>
+        <p>{totalReviews} {totalReviews === 1 ? 'reseña' : 'reseñas'}</p>
       </div>
-
- 
 
       <div className="reviews-list">
         {reviews.length > 0 ? (
           reviews.map((r) => (
             <div className="review-card" key={r.id}>
               <div className="review-header">
-                <strong>{r.userName}</strong> —{' '}
-                <span>{new Date(r.createdAt).toLocaleDateString()}</span>
+                <div>
+                  <span className="review-user">{r.userName}</span>
+             
+                </div>
+
+         
+                <div className="review-stars">
+
+                <span className="review-date">
+                    {new Date(r.createdAt).toLocaleDateString('es-ES', {
+                      day: 'numeric',
+                      month: 'short',
+                      year: 'numeric'
+                    })}
+                  </span>
+                  {[...Array(5)].map((_, i) => (
+                    <FaStar key={i} color={i < r.rating ? '#ffc107' : '#e4e5e9'} size={12} />
+                  ))}
+                </div>
               </div>
-              <div className="review-stars">
-                {[...Array(5)].map((_, i) => (
-                  <FaStar key={i} color={i < r.rating ? '#ffc107' : '#e4e5e9'} />
-                ))}
-              </div>
-              <p>{r.comment}</p>
+              <p className="review-content">{r.comment}</p>
               {user?.email === r.userEmail && (
-                <button className="delete-btn" onClick={() => handleDelete(r.id)}>
-                  Eliminar
-                </button>
+                <div className="review-actions">
+                  <button className="delete-btn-r" onClick={() => handleDelete(r.id)}>
+                    Eliminar reseña
+                  </button>
+                </div>
               )}
             </div>
           ))
         ) : (
-          <p>Aún no hay reseñas para este producto.</p>
+          <p className="no-reviews">Aún no hay reseñas para este producto.</p>
         )}
       </div>
 
       {user && (
         <form className="review-form" onSubmit={handleSubmit}>
-          <label htmlFor="rating">Tu puntuación:</label>
+          <label>Tu valoración</label>
           <div className="star-input">
             {[1, 2, 3, 4, 5].map((star) => (
               <FaStar
@@ -173,11 +174,12 @@ const ProductReviews = ({ productId }) => {
                 color={star <= newReview.rating ? '#ffc107' : '#e4e5e9'}
                 onClick={() => setNewReview({ ...newReview, rating: star })}
                 style={{ cursor: 'pointer' }}
+                size={16}
               />
             ))}
           </div>
           <textarea
-            placeholder="Escribe un comentario..."
+            placeholder="Comparte tu experiencia con este producto..."
             value={newReview.comment}
             onChange={(e) => setNewReview({ ...newReview, comment: e.target.value })}
             required

@@ -1,6 +1,7 @@
 .my-reserves-container {
+
   max-width: 1200px;
-  margin: 0 auto;
+  margin: 80px auto;
   padding: 20px;
 }
 
@@ -66,6 +67,139 @@
 
 .ca-error-message button:hover {
   background: #339989;
+}
+
+/* Estilos adicionales */
+.reserves-header {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.reserves-subtitle {
+  color: #666;
+  margin-top: 0.5rem;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 2rem;
+  background: #f9f9f9;
+  border-radius: 8px;
+  margin-top: 2rem;
+}
+
+.empty-icon {
+  font-size: 3rem;
+  color: #00c98c;
+  margin-bottom: 1rem;
+}
+
+.empty-state h3 {
+  color: #2b2c28;
+  margin-bottom: 0.5rem;
+}
+
+.empty-state p {
+  color: #666;
+}
+
+.header-with-icon {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.status-badge {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.status-finalizada {
+  background-color: #f0f0f0;
+  color: #666;
+}
+
+.status-en\ curso {
+  background-color: #e6f7ff;
+  color: #0066cc;
+}
+
+.status-próxima {
+  background-color: #e6f7ec;
+  color: #00a861;
+}
+
+.product-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.product-category {
+  font-size: 0.8rem;
+  color: #666;
+  margin-top: 4px;
+}
+
+.date-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.date-label {
+  font-weight: 500;
+  color: #555;
+}
+
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+}
+
+.error-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+}
+
+.error-icon {
+  margin-bottom: 1rem;
+  color: #ff0000;
+  font-size: 2rem;
+}
+
+.ca-error-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.ca-error-message button {
+  margin-top: 1rem;
+}
+
+@media (max-width: 768px) {
+  .status-badge {
+    font-size: 0.7rem;
+    padding: 3px 6px;
+  }
+  
+  .header-with-icon {
+    flex-direction: column;
+    gap: 2px;
+  }
+  
+  .header-with-icon svg {
+    display: none;
+  }
 }
 
 .ca-calendar {
@@ -227,7 +361,7 @@
 }
 
 .ca-reserve-btn {
-  margin-top: 15px;
+  margin-top: 0px;
   background: #00c98c;
   color: white;
   border: none;
@@ -345,6 +479,13 @@
   background-color: #f0f0f0;
   color: #2b2c28;
   border: 1px solid #ccc;
+  padding: 10px 24px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 16px;
+  min-width: 150px;
 }
 
 .cancel-btn:hover {

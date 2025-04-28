@@ -182,7 +182,7 @@ export const RecomendationCard = ({ products }) => {
                     {Array.from({ length: 5 }, (_, i) => (
                       <StarIcon
                         key={i}
-                        fontSize="small"
+                        fontSize="0.5px"
                         style={{ color: i < Math.round(averageRatings[product.id]) ? "#FFC107" : "#E0E0E0" }}
                       />
                     ))}

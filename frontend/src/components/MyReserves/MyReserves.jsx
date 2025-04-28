@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import 'react-datepicker/dist/react-datepicker.css';
 import axios from 'axios';
 import { useAuth } from '../../context/AuthContext';
 import './MyReserves.css';
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { FaChevronLeft, FaChevronRight, FaCalendarAlt, FaMapMarkerAlt, FaInfoCircle } from "react-icons/fa";
 import Swal from 'sweetalert2';
 
 const MyReserves = () => {
@@ -24,6 +24,13 @@ const MyReserves = () => {
     const [year, month, day] = dateStr.split('-').map(Number);
     return new Date(year, month - 1, day);
   };
+
+  // Ordenar reservas por fecha de check-out descendente
+  const sortedReserves = useMemo(() => {
+    return [...reserves].sort((a, b) => {
+      return parseDate(b.checkOut) - parseDate(a.checkOut);
+    });
+  }, [reserves]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -148,8 +155,8 @@ const MyReserves = () => {
     } catch (err) {
       console.error('Error extending reservation:', err);
       const errorMessage = err.response?.data?.error ||
-                           err.response?.data?.message ||
-                           'Error al extender la reserva';
+                         err.response?.data?.message ||
+                         'Error al extender la reserva';
 
       Swal.fire({
         icon: 'error',
@@ -171,6 +178,16 @@ const MyReserves = () => {
     const state = product.address.city.state?.name || '';
     const country = product.address.city.state?.country?.name || '';
     return `${city}${state ? `, ${state}` : ''}${country ? `, ${country}` : ''}`;
+  };
+
+  const getReservationStatus = (checkOut) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const checkOutDate = parseDate(checkOut);
+    
+    if (checkOutDate < today) return 'finalizada';
+    if (checkOutDate.toDateString() === today.toDateString()) return 'en curso';
+    return 'próxima';
   };
 
   const renderCalendar = () => {
@@ -196,6 +213,7 @@ const MyReserves = () => {
           key={date.toISOString()}
           className={`ca-calendar-day ${isSelected ? "ca-selected" : ""} ${isDisabled ? "ca-disabled" : ""}`}
           onClick={() => !isDisabled && setNewCheckOut(date)}
+          aria-label={`Día ${day}${isSelected ? ', seleccionado' : ''}${isDisabled ? ', no disponible' : ''}`}
         >
           {day}
         </div>
@@ -208,6 +226,7 @@ const MyReserves = () => {
           <button
             className="ca-nav-button"
             onClick={() => setCalendarDate(new Date(calendarDate.setMonth(calendarDate.getMonth() - 1)))}
+            aria-label="Mes anterior"
           >
             <FaChevronLeft />
           </button>
@@ -215,6 +234,7 @@ const MyReserves = () => {
           <button
             className="ca-nav-button"
             onClick={() => setCalendarDate(new Date(calendarDate.setMonth(calendarDate.getMonth() + 1)))}
+            aria-label="Próximo mes"
           >
             <FaChevronRight />
           </button>
@@ -229,50 +249,87 @@ const MyReserves = () => {
     );
   };
 
-  if (loading) return <div className="ca-loading">Cargando reservas...</div>;
+  if (loading) return (
+    <div className="my-reserves-container">
+      <div className="loading-state">
+        <div className="ca-loading">Cargando tus reservas...</div>
+        <div className="loading-animation"></div>
+      </div>
+    </div>
+  );
+
   if (error) return (
-    <div className="ca-error-message">
-      {error}
-      <button onClick={() => window.location.reload()}>Reintentar</button>
+    <div className="my-reserves-container">
+      <div className="error-state">
+        <div className="ca-error-message">
+          <FaInfoCircle className="error-icon" />
+          <p>{error}</p>
+          <button onClick={() => window.location.reload()}>Reintentar</button>
+        </div>
+      </div>
     </div>
   );
 
   return (
     <div className="my-reserves-container">
-      <h2>Mis Reservas</h2>
+      <header className="reserves-header">
+        <h2>Mis Reservas</h2>
+        <p className="reserves-subtitle">Historial completo de tus reservas</p>
+      </header>
 
       {extensionSuccess && (
         <div className="alert alert-success">
           <p>{extensionSuccess}</p>
+          <button onClick={() => setExtensionSuccess(null)} aria-label="Cerrar notificación">
+            &times;
+          </button>
         </div>
       )}
 
       {extensionError && (
         <div className="alert alert-error">
           <p>{extensionError}</p>
-          <button onClick={() => setExtensionError(null)}>Cerrar</button>
+          <button onClick={() => setExtensionError(null)} aria-label="Cerrar notificación">
+            &times;
+          </button>
         </div>
       )}
 
-      {reserves.length === 0 ? (
-        <p>No tienes reservas actualmente</p>
+      {sortedReserves.length === 0 ? (
+        <div className="empty-state">
+          <div className="empty-icon">
+            <FaCalendarAlt />
+          </div>
+          <h3>No tienes reservas actualmente</h3>
+          <p>Cuando hagas una reserva, aparecerá aquí.</p>
+        </div>
       ) : (
         <div className="reserves-list">
-          <table className="reserves-table">
+          <table className="reserves-table" aria-label="Lista de reservas">
             <thead>
               <tr>
-                <th>Producto</th>
-                <th>Check-in</th>
-                <th>Check-out</th>
-                <th>Ubicación</th>
-                <th>Acciones</th>
+                <th scope="col">Producto</th>
+                <th scope="col">
+                  <span className="header-with-icon">
+                    <FaCalendarAlt /> Fechas
+                  </span>
+                </th>
+                <th scope="col">
+                  <span className="header-with-icon">
+                    <FaMapMarkerAlt /> Ubicación
+                  </span>
+                </th>
+                <th scope="col">Estado</th>
+                <th scope="col">Acciones</th>
               </tr>
             </thead>
             <tbody>
-              {reserves.map(reserve => {
+              {sortedReserves.map(reserve => {
                 const product = products[reserve.productId] || {};
                 const checkIn = parseDate(reserve.checkIn);
                 const checkOut = parseDate(reserve.checkOut);
+                const status = getReservationStatus(reserve.checkOut);
+                const statusClass = `status-${status}`;
 
                 return (
                   <tr key={reserve.id} className="reserve-item">
@@ -283,21 +340,52 @@ const MyReserves = () => {
                             src={product.images[0].imageUrl}
                             alt={product.title || 'Imagen del producto'}
                             className="product-thumbnail"
+                            loading="lazy"
                           />
                         )}
-                        <div className="product-title">{product.title || 'Producto sin título'}</div>
+                        <div className="product-details">
+                          <div className="product-title">{product.title || 'Producto sin título'}</div>
+                          {product.category && (
+                            <div className="product-category">{product.category.name}</div>
+                          )}
+                        </div>
                       </div>
                     </td>
-                    <td data-label="Check-in">{checkIn.toLocaleDateString()}</td>
-                    <td data-label="Check-out">{checkOut.toLocaleDateString()}</td>
-                    <td data-label="Ubicación">{formatLocation(product)}</td>
+                    <td data-label="Fechas">
+                      <div className="date-info">
+                        <div className="date-range">
+                          <span className="date-label">Check-in:</span> {checkIn.toLocaleDateString()}
+                        </div>
+                        <div className="date-range">
+                          <span className="date-label">Check-out:</span> {checkOut.toLocaleDateString()}
+                        </div>
+                      </div>
+                    </td>
+                    <td data-label="Ubicación">
+                      <div className="location-info">
+                        {formatLocation(product)}
+                      </div>
+                    </td>
+                    <td data-label="Estado">
+                      <span className={`status-badge ${statusClass}`}>
+                        {status === 'finalizada' ? 'Finalizada' : 
+                         status === 'en curso' ? 'En curso' : 'Próxima'}
+                      </span>
+                    </td>
                     <td data-label="Acciones">
                       <button
                         className="ca-reserve-btn"
                         onClick={() => handleExtendReserve(reserve.id, reserve.checkOut)}
-                        disabled={isExtending}
+                        disabled={isExtending || status === 'finalizada'}
+                        aria-label={`Extender reserva de ${product.title || 'producto'}`}
                       >
-                        {isExtending && extendingReserveId === reserve.id ? 'Procesando...' : 'Extender'}
+                        {isExtending && extendingReserveId === reserve.id ? (
+                          'Procesando...'
+                        ) : status === 'finalizada' ? (
+                          'Finalizada'
+                        ) : (
+                          'Extender'
+                        )}
                       </button>
                     </td>
                   </tr>
@@ -307,7 +395,7 @@ const MyReserves = () => {
           </table>
 
           {extendingReserveId && (
-            <div className="modal-overlay">
+            <div className="modal-overlay" role="dialog" aria-modal="true">
               <div className="modal-box">
                 <div className="calendar-container">
                   <h3>Extender reserva hasta:</h3>
@@ -327,20 +415,24 @@ const MyReserves = () => {
                       )}
                     </div>
                     <div className="modal-buttons">
+
+                    <button
+                        className="confirm-btn"
+                        onClick={confirmExtension}
+                        disabled={!newCheckOut || isExtending}
+                        aria-label="Confirmar extensión"
+                      >
+                        {isExtending ? 'Confirmando...' : 'Confirmar Extensión'}
+                      </button>
                       <button
                         className="confirm-btn"
                         onClick={cancelExtension}
                         disabled={isExtending}
+                        aria-label="Cancelar extensión"
                       >
                         Cancelar
                       </button>
-                      <button
-                        className="confirm-btn"
-                        onClick={confirmExtension}
-                        disabled={!newCheckOut || isExtending}
-                      >
-                        {isExtending ? 'Confirmando...' : 'Confirmar Extensión'}
-                      </button>
+
                     </div>
                   </div>
                 </div>

@@ -20,6 +20,9 @@ import ShareModal from './ShareModal';
 import ShareIcon from '@mui/icons-material/Share';
 import ProductReviews from "../ProductReviews/ProductReviews";
 
+import ProductMap from "../ProductMap/ProductMap";
+
+
 const ProductDetails = () => {
   const { id } = useParams();
   const productId = Number(id);
@@ -229,7 +232,7 @@ const ProductDetails = () => {
         </div>
       </div>
 
-      <p className="product-category">{product.category?.name}</p>
+      <p className="product-category-pd">{product.category?.name}</p>
       <p className="product-address">
         <Place /> {product.address?.street} {product.address?.number}, {product.address?.city?.name},{" "}
         {product.address?.city?.state?.country?.name}
@@ -355,7 +358,13 @@ const ProductDetails = () => {
         </Alert>
       </Snackbar>
 
+      <h3 className="product-description-title">Ubicacion</h3>
+
+      <ProductMap address={product.address} />
+
       <ProductReviews productId={product.id} />
+
+
     </div>
   );
 };

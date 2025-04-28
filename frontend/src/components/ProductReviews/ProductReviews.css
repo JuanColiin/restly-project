@@ -1,54 +1,71 @@
-
 .product-reviews-container {
-  padding: 1.25rem;
+  padding: 1rem;
   background: #ffffff;
-  border-radius: 8px;
-  border: 1px solid #dfe4ea;
-  box-shadow: 0 1px 3px rgba(43, 44, 40, 0.08);
+  border-radius: 6px;
+  border: 1px solid #e8e8e8;
   max-width: 100%;
-  margin: 20px auto;
+  margin: 1rem auto;
+  font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
 }
 
 .product-reviews-container h2 {
-  font-size: 1.4rem;
+  font-size: 1.3rem;
   margin: 0 0 1rem 0;
   color: #2b2c28;
   font-weight: 600;
-  position: relative;
-  padding-left: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .product-reviews-container h2::before {
   content: "★";
   color: #00c98c;
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
+  font-size: 1.2rem;
+}
+
+.average-rating {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.rating-display {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.average-rating strong {
+  font-weight: 600;
+  color: #2b2c28;
+  font-size: 0.95rem;
+}
+
+.average-rating p {
+  margin: 0;
+  color: #5e5e5e;
+  font-size: 0.85rem;
+}
+
+.stars {
+  display: flex;
+  gap: 0.15rem;
 }
 
 .rating-summary {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 0.5rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
+  font-size: 0.85rem;
 }
-
-.rating-item {
-  display: flex;
-  align-items: center;
-  gap: 0.3rem;
-  font-size: 0.9rem;
-}
-
-.rating-value {
-  font-weight: 600;
-  color: #00c98c;
-}
-
 
 .review-form {
-  margin-bottom: 1.5rem;
+  margin: 1.5rem 0;
   background: #f8f9fa;
   padding: 1rem;
   border-radius: 6px;
@@ -64,32 +81,28 @@
 
 .star-input {
   margin-bottom: 0.8rem;
+  display: flex;
+  gap: 0.4rem;
 }
-
 
 .review-form textarea {
   width: 100%;
   min-height: 80px;
   padding: 0.8rem;
   font-size: 0.9rem;
-  border: 1px solid #dfe4ea;
-  border-radius: 6px;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
   resize: vertical;
   margin-bottom: 0.8rem;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
   background: #ffffff;
+  font-family: inherit;
 }
 
 .review-form textarea:focus {
   border-color: #00c98c;
   outline: none;
   box-shadow: 0 0 0 2px rgba(0, 201, 140, 0.1);
-}
-
-
-.submit-btn-container {
-  display: flex;
-  justify-content: flex-end;
 }
 
 .review-form button {
@@ -101,14 +114,13 @@
   font-size: 0.9rem;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
+  width: 100%;
 }
 
 .review-form button:hover {
   background-color: #339989;
-  transform: translateY(-1px);
 }
-
 
 .reviews-list {
   display: grid;
@@ -117,17 +129,19 @@
 
 .review-card {
   padding: 0.8rem 0;
-  border-bottom: 1px solid #dfe4ea;
+  border-bottom: 1px solid #f0f0f0;
 }
 
 .review-card:last-child {
   border-bottom: none;
+  padding-bottom: 0;
 }
 
 .review-header {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 0.3rem;
+  align-items: center;
+  margin-bottom: 0.4rem;
 }
 
 .review-user {
@@ -139,12 +153,14 @@
 .review-date {
   color: #7a7d80;
   font-size: 0.75rem;
+  justify-content: flex-end;
+  margin-right: 0.5rem;
 }
 
 .review-stars {
-  color: #00c98c;
-  font-size: 0.9rem;
-  margin-bottom: 0.3rem;
+  display: flex;
+  gap: 0.15rem;
+  margin-bottom: 0.4rem;
 }
 
 .review-content {
@@ -154,42 +170,40 @@
   margin-bottom: 0.5rem;
 }
 
-
 .review-actions {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  justify-content: flex-start;
 }
 
-.delete-btn {
+.delete-btn-r{
   background: none;
   color: #e63946;
   border: none;
   padding: 0;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   cursor: pointer;
   transition: color 0.2s;
+  font-weight: 500;
 }
 
 .delete-btn:hover {
   color: #c1121f;
+  text-decoration: underline;
 }
 
+.no-reviews {
+  color: #7a7d80;
+  font-style: italic;
+  font-size: 0.9rem;
+  padding: 0.5rem 0;
+}
 
-@media screen and (max-width: 768px) {
-  .product-reviews-container {
-    padding: 1rem;
-  }
-  
-  .rating-summary {
-    grid-template-columns: 1fr;
-  }
-  
-  .review-form {
-    padding: 0.8rem;
-  }
-  
+@media screen and (min-width: 480px) {
   .review-form button {
-    width: 100%;
+    width: auto;
+  }
+  
+  .average-rating {
+    gap: 1rem;
   }
 }
