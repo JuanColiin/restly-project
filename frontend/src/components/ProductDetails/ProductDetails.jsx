@@ -22,6 +22,9 @@ import ProductReviews from "../ProductReviews/ProductReviews";
 
 import ProductMap from "../ProductMap/ProductMap";
 
+import WhatsAppButton from './WhatsAppButton';
+
+
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -365,7 +368,17 @@ const ProductDetails = () => {
       <ProductReviews productId={product.id} />
 
 
+      {product?.whatsappNumber && (
+        <WhatsAppButton
+          phoneNumber={product.whatsappNumber}
+          productName={product.title}
+        />
+      )}
+
+
     </div>
+
+
   );
 };
 
