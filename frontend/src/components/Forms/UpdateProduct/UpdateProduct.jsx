@@ -29,6 +29,7 @@ export default function UpdateProduct() {
     },
     features: [],
     images: [],
+    whatsappNumber: "", 
   });
 
   const [countries, setCountries] = useState([]);
@@ -84,6 +85,7 @@ export default function UpdateProduct() {
           policy: data.policy,
           features: data.features || [],
           images: data.images || [],
+          whatsappNumber: data.whatsappNumber || "", 
         });
         setSelectedFeatures(data.features.map(f => f.title));
       }).catch(console.error);
@@ -269,6 +271,22 @@ export default function UpdateProduct() {
           </div>
         </div>
 
+        <div className={styles.section}>
+          <h2>Contacto</h2>
+          <div className={styles.inputGroup}>
+            <label htmlFor="whatsappNumber">Número de WhatsApp</label>
+            <input
+              type="text"
+              id="whatsappNumber"
+              name="whatsappNumber"
+              value={formData.whatsappNumber}
+              onChange={handleChange}
+              placeholder="Ej: +1234567890"
+              required
+            />
+          </div>
+        </div>
+
         <FeatureSelector
           features={features}
           setFeatures={setFeatures}
@@ -320,6 +338,8 @@ export default function UpdateProduct() {
             Agregar imagen
           </button>
         </div>
+
+
 
         <div className={styles.submitButton}>
           <button type="submit">Actualizar propiedad</button>

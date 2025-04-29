@@ -26,7 +26,7 @@ export default function PropertyForm() {
       rules: "",
       security: "",
     },
-    features: [], // Cambiado de objeto a array vacío
+    features: [], 
     images: [
       { title: "", imageUrl: "" },
       { title: "", imageUrl: "" },
@@ -34,6 +34,7 @@ export default function PropertyForm() {
       { title: "", imageUrl: "" },
       { title: "", imageUrl: "" },
     ],
+    whatsappNumber: "", 
   });
 
 
@@ -262,6 +263,8 @@ export default function PropertyForm() {
             required
           />
         </div>
+
+        
         <div className={styles.section}>
           <h2>Categorías</h2>
           <div className={styles.inputGroup}>
@@ -352,6 +355,22 @@ export default function PropertyForm() {
                 ))}
               </select>
             </div>
+          </div>
+        </div>
+
+        <div className={styles.section}>
+          <h2>Contacto</h2>
+          <div className={styles.inputGroup}>
+            <label htmlFor="whatsappNumber">Número de WhatsApp</label>
+            <input
+              type="text"
+              id="whatsappNumber"
+              name="whatsappNumber"
+              value={formData.whatsappNumber}
+              onChange={handleChange}
+              placeholder="Ej: +1234567890"
+              required
+            />
           </div>
         </div>
 
@@ -448,6 +467,8 @@ export default function PropertyForm() {
             Agregar otra imagen
           </button>
         </div>
+
+
 
         <div className={styles.submitButton}>
           <button type="submit">Crear propiedad</button>
