@@ -11,12 +11,10 @@ import com.restly.restly_backend.locations.address.entity.Address;
 import com.restly.restly_backend.locations.city.dto.CityDTO;
 import com.restly.restly_backend.locations.city.entity.City;
 import com.restly.restly_backend.locations.city.repository.ICityRepository;
-import com.restly.restly_backend.locations.city.service.ICityService;
 import com.restly.restly_backend.locations.country.entity.Country;
 import com.restly.restly_backend.locations.country.repository.ICountryRepository;
 import com.restly.restly_backend.locations.state.entity.State;
 import com.restly.restly_backend.locations.state.repository.IStateRepository;
-import com.restly.restly_backend.locations.state.service.IStateService;
 import com.restly.restly_backend.policies.entity.Policy;
 import com.restly.restly_backend.product.dto.ProductDTO;
 import com.restly.restly_backend.product.entity.Product;
@@ -115,6 +113,7 @@ public class ProductServiceImpl implements IProductService {
         product.setPolicy(policy);
         product.setFeatures(features);
         product.setAddress(address);
+        product.setWhatsappNumber(productDTO.getWhatsappNumber());
 
 
         product.setCity(city);
@@ -167,20 +166,20 @@ public class ProductServiceImpl implements IProductService {
         Address address = modelMapper.map(productDTO.getAddress(), Address.class);
         address.setCity(city);
         existingProduct.setAddress(address);
+        existingProduct.setWhatsappNumber(productDTO.getWhatsappNumber());
 
-        // ✅ Eliminar completamente imágenes antiguas y romper relación
+
         List<Image> oldImages = new ArrayList<>(existingProduct.getImages());
         for (Image image : oldImages) {
-            image.setProduct(null); // rompe la relación bidireccional
+            image.setProduct(null);
         }
-        existingProduct.getImages().clear(); // elimina de la colección
+        existingProduct.getImages().clear();
 
-        // ✅ Agregar nuevas imágenes correctamente vinculadas
         if (productDTO.getImages() != null) {
             for (ImageDTO imageDTO : productDTO.getImages()) {
                 Image image = modelMapper.map(imageDTO, Image.class);
-                image.setProduct(existingProduct); // relación obligatoria
-                existingProduct.getImages().add(image); // agregar a la colección
+                image.setProduct(existingProduct);
+                existingProduct.getImages().add(image);
             }
         }
 

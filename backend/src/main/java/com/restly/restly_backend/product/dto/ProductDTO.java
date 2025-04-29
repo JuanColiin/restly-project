@@ -29,6 +29,5 @@ public class ProductDTO {
     private PolicyDTO policy;
     private Set<FeatureDTO> features = new HashSet<>();
     private List<ImageDTO> images = new ArrayList<>();
+    private String whatsappNumber;
 }
-
-

@@ -1,6 +1,5 @@
 package com.restly.restly_backend.product.entity;
 
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -62,8 +61,6 @@ public class Product {
     @JsonIgnore
     private List<Review> reviews = new ArrayList<>();
 
-
-
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "policy_id")
     private Policy policy;
@@ -80,8 +77,10 @@ public class Product {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Image> images = new ArrayList<>();
 
-    @JsonBackReference("product-reserves") // Referencia específica para reservas
+    @JsonBackReference("product-reserves")
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Reserve> reserves = new HashSet<>();
-}
 
+    @Column(name = "whatsapp_number")
+    private String whatsappNumber;
+}
