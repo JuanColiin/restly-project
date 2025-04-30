@@ -40,6 +40,7 @@ public class SecurityConfig {
                                 .requestMatchers("/favorites/**").authenticated()
                                 .requestMatchers("/reviews/product/**").permitAll()
                                 .requestMatchers("/reviews/average-ratings").permitAll()
+                                .requestMatchers("/test-email/**").permitAll()
                                 .requestMatchers(HttpMethod.PUT, "/users/update-role/**").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.GET, "/swagger-ui/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/v3/api-docs/**").permitAll()

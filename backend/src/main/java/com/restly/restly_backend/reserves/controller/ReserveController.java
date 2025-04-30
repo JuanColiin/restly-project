@@ -1,6 +1,7 @@
 package com.restly.restly_backend.reserves.controller;
 
 import com.restly.restly_backend.reserves.dto.ReserveDTO;
+import com.restly.restly_backend.reserves.service.EmailService;
 import com.restly.restly_backend.reserves.service.IReserveService;
 import com.restly.restly_backend.security.config.JwtService;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,7 @@ public class ReserveController {
 
     private final JwtService jwtService;
     private final IReserveService reserveService;
+
 
     @PostMapping
     public ResponseEntity<ReserveDTO> createReserve(@RequestBody ReserveDTO reserveDTO) {

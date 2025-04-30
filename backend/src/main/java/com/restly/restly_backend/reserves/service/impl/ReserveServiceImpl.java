@@ -5,6 +5,7 @@ import com.restly.restly_backend.product.repository.IProductRepository;
 import com.restly.restly_backend.reserves.dto.ReserveDTO;
 import com.restly.restly_backend.reserves.entity.Reserve;
 import com.restly.restly_backend.reserves.repository.IReserveRepository;
+import com.restly.restly_backend.reserves.service.EmailService;
 import com.restly.restly_backend.reserves.service.IReserveService;
 import com.restly.restly_backend.reserves.util.ReserveMapper;
 import com.restly.restly_backend.security.entity.User;
@@ -25,6 +26,7 @@ public class ReserveServiceImpl implements IReserveService {
     private final IReserveRepository reserveRepository;
     private final IProductRepository productRepository;
     private final IUserRepository userRepository;
+    private final EmailService emailService;
     private final ReserveMapper reserveMapper;
 
     @Override
@@ -40,7 +42,6 @@ public class ReserveServiceImpl implements IReserveService {
         LocalDate newCheckIn = reserveDTO.getCheckIn();
         LocalDate newCheckOut = reserveDTO.getCheckOut();
 
-        // ✅ Nueva lógica que permite check-in el mismo día del check-out anterior
         boolean overlap = existingReserves.stream().anyMatch(reserve ->
                 newCheckIn.isBefore(reserve.getCheckOut()) && newCheckOut.isAfter(reserve.getCheckIn())
         );
@@ -54,8 +55,19 @@ public class ReserveServiceImpl implements IReserveService {
         reserve.setUser(user.get());
 
         reserve = reserveRepository.save(reserve);
+
+        emailService.sendReservationEmail(
+                user.get().getEmail(),
+                user.get().getFirstname(),
+                product.get().getTitle(),
+                newCheckIn.toString(),
+                newCheckOut.toString(),
+                false // no es extensión
+        );
+
         return reserveMapper.toDTO(reserve);
     }
+
 
     @Override
     public List<ReserveDTO> getAllReserves() {
@@ -115,7 +127,6 @@ public class ReserveServiceImpl implements IReserveService {
         return reserveRepository.findByUserAndProduct(user, product).stream()
                 .anyMatch(reserve -> reserve.getCheckOut().isBefore(LocalDate.now()));
     }
-
     @Override
     public ReserveDTO extendReserve(Long reserveId, LocalDate newCheckOut) {
         Reserve reserve = reserveRepository.findById(reserveId)
@@ -129,20 +140,35 @@ public class ReserveServiceImpl implements IReserveService {
             throw new RuntimeException("La nueva fecha debe ser posterior a " + reserve.getCheckOut());
         }
 
-        // Validación mejorada: evita conflictos, pero permite extender si no se solapa
-        List<Reserve> conflicts = reserveRepository.findByProductId(reserve.getProduct().getId()).stream()
-                .filter(r -> !r.getId().equals(reserveId)) // excluirse a sí misma
+        Long productId = reserve.getProduct().getId();
+        LocalDate currentCheckOut = reserve.getCheckOut();
+
+        List<Reserve> conflicts = reserveRepository.findByProductId(productId).stream()
+                .filter(r -> !r.getId().equals(reserveId))
                 .filter(r ->
-                        reserve.getCheckOut().isBefore(r.getCheckOut()) &&
+                        currentCheckOut.isBefore(r.getCheckOut()) &&
                                 newCheckOut.isAfter(r.getCheckIn())
                 )
-                .collect(Collectors.toList());
+                .toList();
 
         if (!conflicts.isEmpty()) {
             throw new RuntimeException("Existen reservas conflictivas en las fechas seleccionadas");
         }
 
         reserve.setCheckOut(newCheckOut);
-        return reserveMapper.toDTO(reserveRepository.save(reserve));
+        reserve = reserveRepository.save(reserve);
+
+        emailService.sendReservationEmail(
+                reserve.getUser().getEmail(),
+                reserve.getUser().getFirstname(),
+                reserve.getProduct().getTitle(),
+                reserve.getCheckIn().toString(),
+                newCheckOut.toString(),
+                true
+        );
+
+        return reserveMapper.toDTO(reserve);
     }
+
+
 }
