@@ -6,6 +6,8 @@ import Swal from "sweetalert2";
 import styles from "../CreateProduct/PropertyForm.module.css";
 import FeatureSelector from "../CreateProduct/FeatureSelector";
 
+const apiUrl = import.meta.env.VITE_BACKEND_URL;
+
 export default function UpdateProduct() {
   const { id } = useParams();
 
@@ -63,13 +65,13 @@ export default function UpdateProduct() {
   }, []);
 
   useEffect(() => {
-    axios.get("http://localhost:8080/categories")
+    axios.get(`${apiUrl}/categories`)
       .then((res) => setCategories(res.data))
       .catch(console.error);
   }, []);
 
   useEffect(() => {
-    axios.get(`http://localhost:8080/products/${id}`)
+    axios.get(`${apiUrl}/products/${id}`)
       .then((res) => {
         const data = res.data;
         setFormData({
@@ -170,7 +172,7 @@ export default function UpdateProduct() {
     };
   
     try {
-      await axios.put(`http://localhost:8080/products/${id}`, dataToSend, {
+      await axios.put(`${apiUrl}/products/${id}`, dataToSend, {
         headers: { "Content-Type": "application/json" },
       });
   
@@ -311,7 +313,7 @@ export default function UpdateProduct() {
           <div className={styles.inputGroup}>
             <label>Reglas</label>
             <textarea value={formData.policy.rules} onChange={(e) =>
-              setFormData((prev) => ({ ...prev, policy: { ...prev.policy, rules: e.target.value } }))
+              setFormData((prev) => ({ ...prev, policy: { ...prev, rules: e.target.value } }))
             } required />
           </div>
         </div>

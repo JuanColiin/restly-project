@@ -4,6 +4,8 @@ import CategoryCarousel from "../CouroselCategory/CategoryCarousel";
 import { RecomendationCard } from "../Recomendations/RecomendationCard";
 import CategoryFilter from "../CategoryFilter/CategoryFilter";
 
+const apiUrl = import.meta.env.VITE_BACKEND_URL;
+
 export const PagePrincipal = () => {
   const [products, setProducts] = useState([]);
   const [allProducts, setAllProducts] = useState([]); 
@@ -11,7 +13,7 @@ export const PagePrincipal = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch("http://localhost:8080/products");
+        const response = await fetch(`${apiUrl}/products`);
         if (!response.ok) {
           throw new Error(`Error HTTP: ${response.status}`);
         }

@@ -14,9 +14,11 @@ const CategoryList = () => {
     imageUrl: ""
   });
 
+  const apiUrl = import.meta.env.VITE_BACKEND_URL;
+
   const fetchCategories = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/categories");
+      const response = await axios.get(`${apiUrl}/categories`);
       const data = response.data;
 
       if (Array.isArray(data)) {
@@ -47,7 +49,7 @@ const CategoryList = () => {
 
     if (result.isConfirmed) {
       try {
-        await axios.delete(`http://localhost:8080/categories/${id}`);
+        await axios.delete(`${apiUrl}/categories/${id}`);
         Swal.fire("Eliminado", `La categoría "${name}" fue eliminada.`, "success");
         fetchCategories();
       } catch {
@@ -67,7 +69,7 @@ const CategoryList = () => {
 
   const handleUpdate = async () => {
     try {
-      await axios.put(`http://localhost:8080/categories/${editingCategory.id}`, {
+      await axios.put(`${apiUrl}/categories/${editingCategory.id}`, {
         id: editingCategory.id,
         ...formData
       });

@@ -5,10 +5,11 @@ import * as Icons from "@mui/icons-material";
 import bookingIcons from "../../../utils/bookingicons";
 import "./FeatureForm.css";
 
-
 const uniqueIconOptions = Array.from(new Set(bookingIcons))
   .filter(icon => Icons[icon])
   .map(icon => ({ label: icon, component: Icons[icon] }));
+
+const apiUrl = import.meta.env.VITE_BACKEND_URL;
 
 const FeatureForm = ({ onSubmit = () => {} }) => { 
   const [feature, setFeature] = useState({ title: "", icon: "" });
@@ -32,7 +33,7 @@ const FeatureForm = ({ onSubmit = () => {} }) => {
 
     setLoading(true);
     try {
-      const response = await axios.post("http://localhost:8080/features", feature);
+      const response = await axios.post(`${apiUrl}/features`, feature);
       if (typeof onSubmit === "function") {
         onSubmit(response.data);
       }

@@ -40,6 +40,8 @@ export const RecomendationCard = ({ products }) => {
   const currentProducts = products.slice(indexOfFirstProduct, indexOfLastProduct);
   const totalPages = Math.ceil(products.length / productsPerPage);
 
+  const apiUrl = import.meta.env.VITE_BACKEND_URL;
+
   useEffect(() => {
     const fetchFavorites = async () => {
       if (!user?.token) {
@@ -48,7 +50,7 @@ export const RecomendationCard = ({ products }) => {
       }
 
       try {
-        const response = await fetch("http://localhost:8080/favorites", {
+        const response = await fetch(`${apiUrl}/favorites`, {
           headers: { Authorization: `Bearer ${user.token}` },
         });
 
@@ -83,7 +85,7 @@ export const RecomendationCard = ({ products }) => {
     const fetchAverages = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:8080/reviews/average-ratings?productIds=${productIds.join(",")}`
+          `${apiUrl}/reviews/average-ratings?productIds=${productIds.join(",")}`
         );
         setAverageRatings(prev => ({ ...prev, ...res.data }));
   
@@ -108,7 +110,7 @@ export const RecomendationCard = ({ products }) => {
 
     try {
       const response = await fetch(
-        `http://localhost:8080/favorites/${productId}`,
+        `${apiUrl}/favorites/${productId}`,
         {
           method: isCurrentlyFavorite ? "DELETE" : "POST",
           headers: {

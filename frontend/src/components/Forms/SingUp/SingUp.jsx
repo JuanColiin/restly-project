@@ -6,6 +6,8 @@ import { Link, useNavigate } from "react-router-dom";
 import AuthContext from "../../../context/AuthContext";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
+const apiUrl = import.meta.env.VITE_BACKEND_URL;
+
 export default function SignUp() {
   const [formData, setFormData] = useState({
     nombre: "",
@@ -85,10 +87,7 @@ export default function SignUp() {
     };
 
     try {
-      const response = await axios.post(
-        "http://localhost:8080/auth/register",
-        registerData
-      );
+      const response = await axios.post(`${apiUrl}/auth/register`, registerData);
 
       const userData = {
         token: response.data.token,

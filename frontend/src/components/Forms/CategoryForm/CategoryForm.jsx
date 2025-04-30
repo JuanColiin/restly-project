@@ -2,6 +2,8 @@ import { useState } from "react";
 import axios from "axios";
 import "./CategoryForm.css";
 
+const apiUrl = import.meta.env.VITE_BACKEND_URL;
+
 const CategoryForm = () => {
   const [formData, setFormData] = useState({
     name: "",
@@ -17,7 +19,7 @@ const CategoryForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:8080/categories", formData);
+      await axios.post(`${apiUrl}/categories`, formData);
       setMessage("Categoría creada exitosamente");
       setFormData({ name: "", description: "", imageUrl: "" });
     } catch (error) {

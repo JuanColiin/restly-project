@@ -8,10 +8,12 @@ export default function CategoryCarousel({ onSelectCategory }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
+  const apiUrl = import.meta.env.VITE_BACKEND_URL;
+
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/categories");
+        const response = await axios.get(`${apiUrl}/categories`); 
         const data = response.data;
 
         if (Array.isArray(data)) {
@@ -34,13 +36,13 @@ export default function CategoryCarousel({ onSelectCategory }) {
   const handleCategoryClick = async (categoryId) => {
     try {
       const response = await axios.get(
-        `http://localhost:8080/products/category/${categoryId}`
+        `${apiUrl}/products/category/${categoryId}`
       );
       onSelectCategory(response.data);
     } catch (error) {
       if (error.response?.status === 404) {
         console.warn(`No se encontraron productos para la categoría ID ${categoryId}.`);
-        onSelectCategory([]); // Limpia los productos si no hay ninguno
+        onSelectCategory([]); 
       } else {
         console.error("Error fetching products by category:", error);
       }

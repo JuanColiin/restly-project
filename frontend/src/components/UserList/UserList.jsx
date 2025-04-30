@@ -3,6 +3,8 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import "./UserList.css";
 
+const apiUrl = import.meta.env.VITE_BACKEND_URL;
+
 const UserList = () => {
   const [users, setUsers] = useState([]);
   const [modifiedUsers, setModifiedUsers] = useState({});
@@ -11,7 +13,7 @@ const UserList = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8080/users")
+      .get(`${apiUrl}/users`)
       .then((response) => {
         setUsers(response.data);
         setLoading(false);
@@ -31,7 +33,7 @@ const UserList = () => {
 
     try {
       await axios.put(
-        `http://localhost:8080/users/update-role/${userId}`,
+        `${apiUrl}/users/update-role/${userId}`,
         { role: modifiedUsers[userId] },
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },

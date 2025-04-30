@@ -32,6 +32,8 @@ const MyReserves = () => {
     });
   }, [reserves]);
 
+  const apiUrl = import.meta.env.VITE_BACKEND_URL;
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -42,7 +44,7 @@ const MyReserves = () => {
         }
 
         const reservesResponse = await axios.get(
-          `http://localhost:8080/reserves/user/${user.userId}`,
+          `${apiUrl}/reserves/user/${user.userId}`,
           {
             headers: {
               Authorization: `Bearer ${user.token}`
@@ -55,7 +57,7 @@ const MyReserves = () => {
         }
 
         const productPromises = reservesResponse.data.map(reserve =>
-          axios.get(`http://localhost:8080/products/${reserve.productId}`, {
+          axios.get(`${apiUrl}/products/${reserve.productId}`, {
             headers: {
               Authorization: `Bearer ${user.token}`
             }
@@ -125,7 +127,7 @@ const MyReserves = () => {
       const formattedDate = newCheckOut.toISOString().split('T')[0];
 
       const response = await axios.put(
-        `http://localhost:8080/reserves/${extendingReserveId}/extend`,
+        `${apiUrl}/reserves/${extendingReserveId}/extend`,
         null,
         {
           params: { newCheckOut: formattedDate },

@@ -6,6 +6,8 @@ import { FaStar } from 'react-icons/fa';
 import Swal from 'sweetalert2';
 import PropTypes from 'prop-types';
 
+const apiUrl = import.meta.env.VITE_BACKEND_URL;
+
 const ProductReviews = ({ productId }) => {
   const { user } = useContext(AuthContext);
   const [reviews, setReviews] = useState([]);
@@ -15,7 +17,7 @@ const ProductReviews = ({ productId }) => {
 
   const fetchReviews = async () => {
     try {
-      const res = await axios.get(`http://localhost:8080/reviews/product/${productId}`);
+      const res = await axios.get(`${apiUrl}/reviews/product/${productId}`);
       setReviews(res.data);
     } catch (err) {
       console.error("Error al obtener reseñas", err);
@@ -24,12 +26,12 @@ const ProductReviews = ({ productId }) => {
 
   const fetchAverageAndCount = async () => {
     try {
-      const avgRes = await axios.get(`http://localhost:8080/reviews/average-ratings`, {
+      const avgRes = await axios.get(`${apiUrl}/reviews/average-ratings`, {
         params: { productIds: productId }
       });
       setAverageRating(avgRes.data[productId] || 0.0);
 
-      const countRes = await axios.get(`http://localhost:8080/reviews/product/${productId}/count`);
+      const countRes = await axios.get(`${apiUrl}/reviews/product/${productId}/count`);
       setTotalReviews(countRes.data);
     } catch (err) {
       console.error("Error al obtener promedio o total de reseñas", err);
@@ -40,7 +42,7 @@ const ProductReviews = ({ productId }) => {
     if (!user?.token) return false;
     try {
       const res = await axios.get(
-        `http://localhost:8080/reserves/has-finished?productId=${productId}`,
+        `${apiUrl}/reserves/has-finished?productId=${productId}`,
         { headers: { Authorization: `Bearer ${user.token}` } }
       );
       return res.data;
@@ -69,7 +71,7 @@ const ProductReviews = ({ productId }) => {
     }
 
     try {
-      await axios.post('http://localhost:8080/reviews', {
+      await axios.post(`${apiUrl}/reviews`, {
         productId,
         rating: newReview.rating,
         comment: newReview.comment
@@ -88,7 +90,7 @@ const ProductReviews = ({ productId }) => {
 
   const handleDelete = async (reviewId) => {
     try {
-      await axios.delete(`http://localhost:8080/reviews/${reviewId}`, {
+      await axios.delete(`${apiUrl}/reviews/${reviewId}`, {
         headers: { Authorization: `Bearer ${user.token}` }
       });
       await fetchReviews();

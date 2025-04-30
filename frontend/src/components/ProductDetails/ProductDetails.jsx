@@ -24,7 +24,7 @@ import ProductMap from "../ProductMap/ProductMap";
 
 import WhatsAppButton from './WhatsAppButton';
 
-
+const apiUrl = import.meta.env.VITE_BACKEND_URL;
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -57,7 +57,7 @@ const ProductDetails = () => {
         setIsLoading(true);
         setError(null);
 
-        const productResponse = await fetch(`http://localhost:8080/products/${productId}`, {
+        const productResponse = await fetch(`${apiUrl}/products/${productId}`, {
           signal: controller.signal,
         });
         if (!productResponse.ok) throw new Error("Error al obtener los datos del producto.");
@@ -65,7 +65,7 @@ const ProductDetails = () => {
         setProduct(productData);
 
         if (user?.token) {
-          const favResponse = await fetch(`http://localhost:8080/favorites/${productId}`, {
+          const favResponse = await fetch(`${apiUrl}/favorites/${productId}`, {
             headers: {
               Authorization: `Bearer ${user.token}`,
             },
@@ -133,7 +133,7 @@ const ProductDetails = () => {
     }
 
     try {
-      const endpoint = `http://localhost:8080/favorites/${productId}`;
+      const endpoint = `${apiUrl}/favorites/${productId}`;
       const method = isFavorite ? "DELETE" : "POST";
 
       const response = await fetch(endpoint, {

@@ -18,10 +18,12 @@ const FeatureSelector = ({ selectedFeatures, setSelectedFeatures }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
+  const apiUrl = import.meta.env.VITE_BACKEND_URL;
+
   useEffect(() => {
     const fetchFeatures = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/features");
+        const response = await axios.get(`${apiUrl}/features`);
 
         if (Array.isArray(response.data)) {
           const formattedFeatures = response.data.map((feature) => ({

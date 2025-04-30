@@ -3,6 +3,8 @@ import axios from "axios";
 import AuthContext from "../../context/AuthContext";
 import "./UserProfile.css";
 
+const apiUrl = import.meta.env.VITE_BACKEND_URL;
+
 export default function UserProfile() {
   const { user } = useContext(AuthContext);
   const [userData, setUserData] = useState(null);
@@ -11,7 +13,7 @@ export default function UserProfile() {
 
   useEffect(() => {
     if (user?.userId) {
-      axios.get(`http://localhost:8080/users/${user.userId}`, {
+      axios.get(`${apiUrl}/users/${user.userId}`, {
         headers: { Authorization: `Bearer ${user.token}` },
       })
       .then((response) => {

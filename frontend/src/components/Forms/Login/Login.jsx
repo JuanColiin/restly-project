@@ -18,6 +18,8 @@ export default function Login() {
   const navigate = useNavigate();
   const { login } = useContext(AuthContext);
 
+  const apiUrl = import.meta.env.VITE_BACKEND_URL;
+
   useEffect(() => {
     const fromRedirect = sessionStorage.getItem('redirectAfterLogin');
     if (fromRedirect?.includes('/details/')) {
@@ -37,7 +39,7 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:8080/auth/login', formData);
+      const response = await axios.post(`${apiUrl}/auth/login`, formData);
 
       const userData = {
         token: response.data.token,

@@ -13,6 +13,8 @@ const FavoritesList = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    const apiUrl = import.meta.env.VITE_BACKEND_URL;
+
     const fetchFavorites = async () => {
         if (!token) {
             setLoading(false);
@@ -20,7 +22,7 @@ const FavoritesList = () => {
         }
 
         try {
-            const response = await axios.get("http://localhost:8080/favorites/my-favorites", {
+            const response = await axios.get(`${apiUrl}/favorites/my-favorites`, { 
                 headers: { Authorization: `Bearer ${token}` },
             });
             setFavorites(response.data);
@@ -43,7 +45,7 @@ const FavoritesList = () => {
 
     const handleRemoveFavorite = async (productId) => {
         try {
-            await axios.delete(`http://localhost:8080/favorites/${productId}`, {
+            await axios.delete(`${apiUrl}/favorites/${productId}`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             fetchFavorites();

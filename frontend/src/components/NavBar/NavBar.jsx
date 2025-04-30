@@ -4,6 +4,8 @@ import { FaSearch, FaRegCalendar, FaChevronLeft, FaChevronRight } from 'react-ic
 import PropTypes from 'prop-types';
 import './NavBar.css';
 
+const apiUrl = import.meta.env.VITE_BACKEND_URL;
+
 const NavBar = ({ setFilteredProducts }) => {
   const [showCalendars, setShowCalendars] = useState(false);
   const [checkIn, setCheckIn] = useState(null);
@@ -39,7 +41,7 @@ const NavBar = ({ setFilteredProducts }) => {
   useEffect(() => {
     if (searchQuery.length > 1) {
       axios
-        .get(`http://localhost:8080/products/suggestions?query=${searchQuery}`)
+        .get(`${apiUrl}/products/suggestions?query=${searchQuery}`)
         .then((response) => setSuggestions(response.data))
         .catch((error) => console.error('Error obteniendo sugerencias:', error));
     } else {
@@ -54,7 +56,7 @@ const NavBar = ({ setFilteredProducts }) => {
   };
 
   const handleSearch = async () => {
-    let url = "http://localhost:8080/products/filter";
+    let url = `${apiUrl}/products/filter`;
     const params = new URLSearchParams();
   
     // Validar que al menos un parámetro sea proporcionado antes de ejecutar la búsqueda

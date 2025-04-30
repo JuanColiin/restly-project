@@ -3,18 +3,20 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import './ProductList.css';
 
+const apiUrl = import.meta.env.VITE_BACKEND_URL;
+
 const ProductList = () => {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:8080/products')
+    axios.get(`${apiUrl}/products`)
       .then(response => setProducts(response.data))
       .catch(error => console.error('Error fetching products:', error));
   }, []);
 
   const handleDelete = (id) => {
     if (window.confirm('¿Estás seguro de que deseas eliminar este producto?')) {
-      axios.delete(`http://localhost:8080/products/${id}`)
+      axios.delete(`${apiUrl}/products/${id}`)
         .then(() => setProducts(products.filter(product => product.id !== id)))
         .catch(error => console.error('Error deleting product:', error));
     }

@@ -8,6 +8,8 @@ import bookingIcons from "../../utils/bookingicons";
 
 Modal.setAppElement("#root");
 
+const apiUrl = import.meta.env.VITE_BACKEND_URL;
+
 const FeaturesList = () => {
   const [features, setFeatures] = useState([]);
   const [selectedFeature, setSelectedFeature] = useState(null);
@@ -19,7 +21,7 @@ const FeaturesList = () => {
 
   const fetchFeatures = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/features");
+      const response = await axios.get(`${apiUrl}/features`);
       setFeatures(response.data);
     } catch (error) {
       console.error("Error al obtener características:", error);
@@ -29,7 +31,7 @@ const FeaturesList = () => {
   const handleDelete = async (id) => {
     if (window.confirm("¿Estás seguro de eliminar esta característica?")) {
       try {
-        await axios.delete(`http://localhost:8080/features/${id}`);
+        await axios.delete(`${apiUrl}/features/${id}`);
         alert("Característica eliminada correctamente");
         fetchFeatures();
       } catch (error) {
@@ -39,7 +41,7 @@ const FeaturesList = () => {
   };
 
   const openModal = (feature) => {
-    setSelectedFeature({ ...feature }); // Copia del objeto para evitar mutaciones directas
+    setSelectedFeature({ ...feature });
     setModalIsOpen(true);
   };
 
@@ -52,7 +54,7 @@ const FeaturesList = () => {
     if (!selectedFeature) return;
 
     try {
-      await axios.put(`http://localhost:8080/features/${selectedFeature.id}`, {
+      await axios.put(`${apiUrl}/features/${selectedFeature.id}`, {
         title: selectedFeature.title,
         icon: selectedFeature.icon,
       });
@@ -123,7 +125,7 @@ const FeaturesList = () => {
             <div className={styles.iconGrid}>
               {bookingIcons.map((iconName, index) => (
                 <div
-                  key={`${iconName}-${index}`} // Se asegura de que la key sea única
+                  key={`${iconName}-${index}`} 
                   className={`${styles.iconOption} ${
                     selectedFeature.icon === iconName ? styles.selected : ""
                   }`}

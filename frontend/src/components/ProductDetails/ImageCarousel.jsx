@@ -32,11 +32,12 @@ CustomNextArrow.propTypes = {
 
 const ImageCarousel = ({ productId }) => {
     const [images, setImages] = useState([]);
+    const apiUrl = import.meta.env.VITE_BACKEND_URL;
 
     useEffect(() => {
         if (!productId) return;
 
-        fetch(`http://localhost:8080/products/${productId}`)
+        fetch(`${apiUrl}/products/${productId}`)
             .then((response) => response.json())
             .then((data) => {
                 if (data.images) {

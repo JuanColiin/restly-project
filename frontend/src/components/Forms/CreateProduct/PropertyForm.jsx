@@ -6,6 +6,7 @@ import styles from "./PropertyForm.module.css"
 import Swal from 'sweetalert2';
 import FeatureSelector from "./FeatureSelector"
 
+const apiUrl = import.meta.env.VITE_BACKEND_URL;
 
 export default function PropertyForm() {
   const [formData, setFormData] = useState({
@@ -77,7 +78,7 @@ export default function PropertyForm() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/categories");
+        const response = await axios.get(`${apiUrl}/categories`);
         if (response.data && Array.isArray(response.data)) {
           setCategories(response.data);
         } else {
@@ -187,10 +188,8 @@ export default function PropertyForm() {
 
     console.log("Datos a enviar:", JSON.stringify(dataToSend, null, 2));
 
-    const endpoint = "http://localhost:8080/products/create";
-
     try {
-      const response = await axios.post(endpoint, dataToSend, {
+      const response = await axios.post(`${apiUrl}/products/create`, dataToSend, {
         headers: {
           "Content-Type": "application/json",
         },

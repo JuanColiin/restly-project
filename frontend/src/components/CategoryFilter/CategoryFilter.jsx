@@ -9,15 +9,17 @@ const CategoryFilter = ({ onProductsUpdate }) => {
   const [totalProducts, setTotalProducts] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
 
+  const apiUrl = import.meta.env.VITE_BACKEND_URL;
+
   useEffect(() => {
-    axios.get("http://localhost:8080/categories")
+    axios.get(`${apiUrl}/categories`)
       .then(response => setCategories(response.data))
       .catch(error => console.error("Error fetching categories:", error));
   }, []);
 
   const fetchProducts = () => {
     if (selectedCategories.length === 0) {
-      axios.get("http://localhost:8080/products")
+      axios.get(`${apiUrl}/categories`)
         .then(response => {
           onProductsUpdate(response.data);
           setTotalProducts(response.data.length);
@@ -27,7 +29,7 @@ const CategoryFilter = ({ onProductsUpdate }) => {
     }
 
     const requests = selectedCategories.map(id =>
-      axios.get(`http://localhost:8080/products/category/${id}`)
+      axios.get(`${apiUrl}/products/category/${id}`)
     );
 
     Promise.all(requests)

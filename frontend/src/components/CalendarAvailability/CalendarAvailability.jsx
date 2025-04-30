@@ -21,6 +21,9 @@ const CalendarAvailability = ({ productId }) => {
   const [showModal, setShowModal] = useState(false);
   const [product, setProduct] = useState(null);
 
+  const apiUrl = import.meta.env.VITE_BACKEND_URL;
+
+
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
@@ -33,7 +36,7 @@ const CalendarAvailability = ({ productId }) => {
     setError(null);
     try {
       const response = await axios.get(
-        `http://localhost:8080/reserves/product/${numericProductId}`
+        `${apiUrl}/reserves/product/${numericProductId}`
       );
 
       const ranges = response.data.map(reserve => {
@@ -59,7 +62,7 @@ const CalendarAvailability = ({ productId }) => {
 
   const fetchProductDetails = async () => {
     try {
-      const res = await axios.get(`http://localhost:8080/products/${numericProductId}`);
+      const res = await axios.get(`${apiUrl}/products/${numericProductId}`);
       setProduct(res.data);
     } catch {
       setError("Error al obtener los detalles del producto");
@@ -152,7 +155,7 @@ const CalendarAvailability = ({ productId }) => {
 
   const confirmReservation = async () => {
     try {
-      await axios.post("http://localhost:8080/reserves", {
+      await axios.post(`${apiUrl}/reserves`, {
         startTime: "14:00:00",
         checkIn: checkIn.toISOString().split("T")[0],
         checkOut: checkOut.toISOString().split("T")[0],
