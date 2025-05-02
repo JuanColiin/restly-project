@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import Swal from 'sweetalert2';
 import './ProductList.css';
 
 const apiUrl = import.meta.env.VITE_BACKEND_URL;
@@ -11,15 +12,53 @@ const ProductList = () => {
   useEffect(() => {
     axios.get(`${apiUrl}/products`)
       .then(response => setProducts(response.data))
-      .catch(error => console.error('Error fetching products:', error));
+      .catch(error => {
+        console.error('Error fetching products:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'No se pudieron cargar los productos.',
+          confirmButtonColor: '#00c98c',
+        });
+      });
   }, []);
 
   const handleDelete = (id) => {
-    if (window.confirm('¿Estás seguro de que deseas eliminar este producto?')) {
-      axios.delete(`${apiUrl}/products/${id}`)
-        .then(() => setProducts(products.filter(product => product.id !== id)))
-        .catch(error => console.error('Error deleting product:', error));
-    }
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: 'Esta acción eliminará el producto de forma permanente.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#00c98c',     // Color principal
+      cancelButtonColor: '#2b2c28',      // Gris oscuro
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar',
+      customClass: {
+        popup: 'restly-alert',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios.delete(`${apiUrl}/products/${id}`)
+          .then(() => {
+            setProducts(products.filter(product => product.id !== id));
+            Swal.fire({
+              title: 'Eliminado',
+              text: 'El producto ha sido eliminado.',
+              icon: 'success',
+              confirmButtonColor: '#00c98c',
+            });
+          })
+          .catch(error => {
+            console.error('Error deleting product:', error);
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'Hubo un problema al eliminar el producto.',
+              confirmButtonColor: '#00c98c',
+            });
+          });
+      }
+    });
   };
 
   return (
@@ -43,7 +82,7 @@ const ProductList = () => {
               <td className="actions">
                 <button className="delete-btn-product" onClick={() => handleDelete(product.id)}>Eliminar</button>
                 <Link to={`/edit/${product.id}`}>
-                  <button className="edit-btn">Actualizar</button>
+                  <button className="edit-btn-list">Actualizar</button>
                 </Link>
                 <Link to={`/details/${product.id}`}>
                   <button className="details-btn">Detalles</button>

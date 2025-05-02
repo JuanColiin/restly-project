@@ -207,6 +207,18 @@
   background-color: #f5f5f5;
 }
 
+.suggestion-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.location-icon {
+  color: #00c98c;
+  font-size: 1rem;
+}
+
+
 .suggestions-list:empty {
   display: none;
 }

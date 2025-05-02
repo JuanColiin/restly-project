@@ -62,13 +62,32 @@
 }
 
 
+.restly-alert .swal2-popup {
+  font-family: 'Segoe UI', sans-serif;
+  border-radius: 12px;
+}
 
-.product-list .edit-btn {
+.restly-alert .swal2-title {
+  color: #2b2c28;
+}
+
+.restly-alert .swal2-confirm {
+  background-color: #00c98c !important;
+}
+
+.restly-alert .swal2-cancel {
+  background-color: #2b2c28 !important;
+}
+
+
+
+
+.product-list .edit-btn-list {
   background-color: #7DE2D1;
   color: #131515;
 }
 
-.product-list .edit-btn:hover {
+.product-list .edit-btn-list:hover {
   background-color: #339989;
   color: white;
 }

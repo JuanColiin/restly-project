@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { FaSearch, FaRegCalendar, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { FaSearch, FaRegCalendar, FaChevronLeft, FaChevronRight, FaMapMarkerAlt } from 'react-icons/fa';
 import PropTypes from 'prop-types';
 import './NavBar.css';
+
+
 
 const apiUrl = import.meta.env.VITE_BACKEND_URL;
 
@@ -12,7 +14,7 @@ const NavBar = ({ setFilteredProducts }) => {
   const [checkOut, setCheckOut] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [suggestions, setSuggestions] = useState([]);
-  const [monthOffset, setMonthOffset] = useState(0); 
+  const [monthOffset, setMonthOffset] = useState(0);
 
   const formatDate = (date) => {
     if (!date) return '';
@@ -58,15 +60,14 @@ const NavBar = ({ setFilteredProducts }) => {
   const handleSearch = async () => {
     let url = `${apiUrl}/products/filter`;
     const params = new URLSearchParams();
-  
-    // Validar que al menos un parámetro sea proporcionado antes de ejecutar la búsqueda
+
     if (!searchQuery && !checkIn && !checkOut) {
       console.warn("Debe ingresar al menos un criterio de búsqueda.");
       return;
     }
-  
+
     if (searchQuery) params.append("location", searchQuery.trim());
-  
+
     if (checkIn && checkOut) {
       try {
         params.append("checkIn", new Date(checkIn).toISOString().split("T")[0]);
@@ -76,7 +77,7 @@ const NavBar = ({ setFilteredProducts }) => {
         return;
       }
     }
-  
+
     try {
       const response = await axios.get(`${url}?${params.toString()}`);
       setFilteredProducts(response.data);
@@ -84,7 +85,7 @@ const NavBar = ({ setFilteredProducts }) => {
       console.error("Error en la búsqueda:", error);
     }
   };
-  
+
 
   const renderCalendar = (offset) => {
     const today = new Date();
@@ -160,10 +161,12 @@ const NavBar = ({ setFilteredProducts }) => {
           {suggestions.length > 0 && (
             <ul className="suggestions-list">
               {suggestions.map((s, index) => (
-                <li key={index} onClick={() => handleSuggestionClick(s)}>
+                <li key={index} onClick={() => handleSuggestionClick(s)} className="suggestion-item">
+                  <FaMapMarkerAlt className="location-icon" />
                   {s}
                 </li>
               ))}
+
             </ul>
           )}
         </div>

@@ -3,7 +3,7 @@ import './Login.css';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import AuthContext from '../../../context/AuthContext';
-// Si usás react-icons:
+import Swal from 'sweetalert2';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 export default function Login() {
@@ -15,6 +15,7 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState(null);
   const [showReservationMessage, setShowReservationMessage] = useState(false);
+  const [fromReservation, setFromReservation] = useState(false);
   const navigate = useNavigate();
   const { login } = useContext(AuthContext);
 
@@ -24,7 +25,7 @@ export default function Login() {
     const fromRedirect = sessionStorage.getItem('redirectAfterLogin');
     if (fromRedirect?.includes('/details/')) {
       setShowReservationMessage(true);
-      sessionStorage.removeItem('redirectAfterLogin');
+      setFromReservation(true); // <-- para mostrar la alerta luego del login
     }
   }, []);
 
@@ -51,9 +52,31 @@ export default function Login() {
 
       login(userData);
 
+      const isMobile = window.innerWidth <= 768;
+      if (userData.role === 'ADMIN' && isMobile) {
+        Swal.fire({
+          title: 'Atención',
+          text: 'El panel de administrador solo está disponible en la versión de escritorio.',
+          icon: 'info',
+          confirmButtonColor: '#00c98c',
+        });
+      }
+
       const redirectPath = sessionStorage.getItem('redirectAfterLogin') || '/';
       sessionStorage.removeItem('redirectAfterLogin');
-      navigate(redirectPath);
+
+      if (fromReservation) {
+        Swal.fire({
+          title: 'Bienvenido',
+          text: 'Has iniciado sesión correctamente. Ahora puedes continuar con tu reserva.',
+          icon: 'success',
+          confirmButtonColor: '#00c98c',
+        }).then(() => {
+          navigate(redirectPath);
+        });
+      } else {
+        navigate(redirectPath);
+      }
     } catch (err) {
       console.error('Error en el login:', err);
       const backendMessage = err?.response?.data?.error;

@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import AuthContext from "../../context/AuthContext";
 import Dropdown from "./DropDown";
 
+
 const Header = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -12,6 +13,7 @@ const Header = () => {
   const profileRef = useRef(null);
   const navigate = useNavigate();
   const { user, logout } = useContext(AuthContext);
+  const logoUrl = "/Logo-Restly.svg";
 
   const updateScreenSize = () => {
     setIsDesktop(window.innerWidth > 768);
@@ -71,13 +73,13 @@ const Header = () => {
       <div className="header-left">
         <Link
           to="/"
-          className="logo"
+          className="logo-container"
           onClick={(e) => {
             e.preventDefault();
             window.location.href = "/";
           }}
         >
-          Restly
+          <img src={logoUrl} alt="Restly Logo" className="logo-image" />
         </Link>
         <span className="slogan">Comodidad en cada destino</span>
       </div>
