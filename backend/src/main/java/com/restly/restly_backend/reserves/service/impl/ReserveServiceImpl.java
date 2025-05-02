@@ -56,18 +56,21 @@ public class ReserveServiceImpl implements IReserveService {
 
         reserve = reserveRepository.save(reserve);
 
+
+        String whatsappNumber = product.get().getWhatsappNumber();
+
         emailService.sendReservationEmail(
                 user.get().getEmail(),
                 user.get().getFirstname(),
                 product.get().getTitle(),
                 newCheckIn.toString(),
                 newCheckOut.toString(),
-                false // no es extensión
+                false,
+                whatsappNumber
         );
 
         return reserveMapper.toDTO(reserve);
     }
-
 
     @Override
     public List<ReserveDTO> getAllReserves() {
@@ -127,6 +130,7 @@ public class ReserveServiceImpl implements IReserveService {
         return reserveRepository.findByUserAndProduct(user, product).stream()
                 .anyMatch(reserve -> reserve.getCheckOut().isBefore(LocalDate.now()));
     }
+
     @Override
     public ReserveDTO extendReserve(Long reserveId, LocalDate newCheckOut) {
         Reserve reserve = reserveRepository.findById(reserveId)
@@ -158,17 +162,19 @@ public class ReserveServiceImpl implements IReserveService {
         reserve.setCheckOut(newCheckOut);
         reserve = reserveRepository.save(reserve);
 
+
+        String whatsappNumber = reserve.getProduct().getWhatsappNumber();
+
         emailService.sendReservationEmail(
                 reserve.getUser().getEmail(),
                 reserve.getUser().getFirstname(),
                 reserve.getProduct().getTitle(),
                 reserve.getCheckIn().toString(),
                 newCheckOut.toString(),
-                true
+                true,
+                whatsappNumber
         );
 
         return reserveMapper.toDTO(reserve);
     }
-
-
 }
