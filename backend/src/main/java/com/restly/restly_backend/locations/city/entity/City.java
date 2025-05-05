@@ -3,10 +3,7 @@ package com.restly.restly_backend.locations.city.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.restly.restly_backend.locations.state.entity.State;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Table(name = "CITIES", uniqueConstraints = @UniqueConstraint(columnNames = {"name", "state_id"}))
@@ -14,6 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
+@Builder
 public class City {
 
     @Id

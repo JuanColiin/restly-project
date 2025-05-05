@@ -3,10 +3,7 @@ package com.restly.restly_backend.image.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.restly.restly_backend.product.entity.Product;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Table(name = "IMAGES")
@@ -14,6 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
+@Builder
 public class Image {
 
     @Id
