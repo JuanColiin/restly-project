@@ -46,31 +46,14 @@ export default function PropertyForm() {
   const [features, setFeatures] = useState([]);
   const [selectedFeatures, setSelectedFeatures] = useState([]);
 
-
-
-  const countryTranslations = {
-    "United States": "Estados Unidos",
-    Mexico: "México",
-    Brazil: "Brasil",
-    Canada: "Canadá",
-    Argentina: "Argentina",
-    Spain: "España",
-    France: "Francia",
-    Germany: "Alemania",
-  }
-
   useEffect(() => {
     axios
       .get("https://countriesnow.space/api/v0.1/countries/states")
       .then((response) => {
-        const translatedCountries = response.data.data.map((country) => ({
-          ...country,
-          name: countryTranslations[country.name] || country.name,
-        }))
-        setCountries(translatedCountries)
+        setCountries(response.data.data);
       })
-      .catch((error) => console.error("Error fetching countries:", error))
-  }, [])
+      .catch((error) => console.error("Error fetching countries:", error));
+  }, []);
 
   const [categories, setCategories] = useState([]);
 
