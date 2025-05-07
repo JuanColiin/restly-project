@@ -44,8 +44,16 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/features/{id}").hasRole("ADMIN")
                         //user
                         .requestMatchers(HttpMethod.PUT, "/users/update-role/{userId}").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/users").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/users").hasRole("ADMIN")
                         .requestMatchers("/favorites/**").authenticated()
+                        //reserves
+                        .requestMatchers(HttpMethod.POST, "/reserves").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/reserves/product/{productId}").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/reserves/user/{userId}").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/reserves/{id}").authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/reserves/{id}/extend").authenticated()
+
+
                         // Swagger
                         .requestMatchers(HttpMethod.GET, "/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
                         // Reglas generales después

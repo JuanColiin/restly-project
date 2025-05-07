@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -23,6 +24,7 @@ public class ReserveController {
 
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     public ResponseEntity<ReserveDTO> createReserve(@RequestBody ReserveDTO reserveDTO) {
         return ResponseEntity.ok(reserveService.createReserve(reserveDTO));
     }
@@ -38,6 +40,7 @@ public class ReserveController {
     }
 
     @GetMapping("/user/{userId}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     public ResponseEntity<List<ReserveDTO>> getReservesByUser(@PathVariable Long userId) {
         return ResponseEntity.ok(reserveService.getReservesByUser(userId));
     }
@@ -80,6 +83,7 @@ public class ReserveController {
     }
 
     @PutMapping("/{id}/extend")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     public ResponseEntity<?> extendReserve(
             @PathVariable Long id,
             @RequestParam("newCheckOut") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate newCheckOut,
