@@ -7,21 +7,30 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const login = (userData) => {
+  const login = (userData, rememberMe = false) => {
     const { token, firstname, email, role, userId } = userData;
     const user = { token, firstname, email, role, userId };
 
     setUser(user);
-    localStorage.setItem('user', JSON.stringify(user));
+
+    const storage = rememberMe ? localStorage : sessionStorage;
+    storage.setItem('user', JSON.stringify(user));
+    // Limpia el otro storage para evitar conflictos
+    if (rememberMe) sessionStorage.removeItem('user');
+    else localStorage.removeItem('user');
   };
 
   const logout = () => {
     setUser(null);
     localStorage.removeItem('user');
+    sessionStorage.removeItem('user');
   };
 
   useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem('user'));
+    const storedUser =
+      JSON.parse(sessionStorage.getItem('user')) ||
+      JSON.parse(localStorage.getItem('user'));
+
     if (storedUser) {
       setUser(storedUser);
     }

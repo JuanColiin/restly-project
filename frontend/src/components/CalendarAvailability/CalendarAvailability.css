@@ -2,8 +2,14 @@
     display: flex;
     justify-content: center;
     align-items: flex-start;
+    margin-top: 15px;
     gap: 20px; 
     flex-wrap: wrap; 
+}
+.checks {
+  display: flex;
+  margin-top: 15px;
+  justify-content: center;
 }
 
 

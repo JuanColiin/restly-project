@@ -19,14 +19,15 @@ const CategoryFilter = ({ onProductsUpdate }) => {
 
   const fetchProducts = () => {
     if (selectedCategories.length === 0) {
-      axios.get(`${apiUrl}/categories`)
+      axios.get(`${apiUrl}/products`)
         .then(response => {
-          onProductsUpdate(response.data);
+          onProductsUpdate(response.data); 
           setTotalProducts(response.data.length);
         })
         .catch(error => console.error("Error fetching all products:", error));
       return;
     }
+    
 
     const requests = selectedCategories.map(id =>
       axios.get(`${apiUrl}/products/category/${id}`)

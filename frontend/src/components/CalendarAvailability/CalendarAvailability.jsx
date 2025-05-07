@@ -239,6 +239,8 @@ const CalendarAvailability = ({ productId }) => {
   return (
     <div className="ca-calendar-container">
       <h3><FaRegCalendar className="ca-calendar-icon" /> Disponibilidad</h3>
+      <div className="checks"><p >Para confirmar una reserva selecciona la fecha del Check in y Check out</p></div>
+ 
 
       {loading && <p className="ca-loading">Cargando disponibilidad...</p>}
       {error && <p className="ca-error-message">{error}</p>}

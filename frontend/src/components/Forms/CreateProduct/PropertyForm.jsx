@@ -168,16 +168,19 @@ export default function PropertyForm() {
         : []
     };
 
-
     console.log("Datos a enviar:", JSON.stringify(dataToSend, null, 2));
 
     try {
-      const response = await axios.post(`${apiUrl}/products/create`, dataToSend, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      console.log("Producto creado exitosamente:", response.data);
+      await axios.post(
+        `${apiUrl}/products/create`,
+        dataToSend,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${localStorage.getItem("token")}`, // Agrega el encabezado Authorization
+          },
+        }
+      );
 
       Swal.fire({
         icon: 'success',

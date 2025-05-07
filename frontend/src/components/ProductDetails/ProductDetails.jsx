@@ -270,7 +270,7 @@ const ProductDetails = () => {
             )}
 
             <button className="ver-fotos-btn" onClick={openCalendarModal}>
-              <i className="fas fa-calendar"></i> Ver fechas disponibles
+              <i className="fas fa-calendar"></i> Ver fechas disponibles / Reservas
             </button>
           </div>
         )
@@ -361,7 +361,7 @@ const ProductDetails = () => {
         </Alert>
       </Snackbar>
 
-      <h3 className="product-description-title">Ubicacion</h3>
+      <h3 className="product-description-title">Ubicación</h3>
 
       <ProductMap address={product.address} />
 
