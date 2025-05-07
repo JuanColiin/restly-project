@@ -34,7 +34,7 @@ public class FeatureInitializer implements CommandLineRunner {
             );
 
             featureRepository.saveAll(features);
-            System.out.println("✅ 8 features iniciales creados (Wi-Fi, Piscina, Estacionamiento, etc.)");
+            System.out.println("8 features iniciales creados (Wi-Fi, Piscina, Estacionamiento, etc.)");
         }
     }
 }

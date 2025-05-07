@@ -31,7 +31,7 @@ public class AuthenticationService {
                 .lastname(request.getLastname())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .role(Role.ADMIN)
+                .role(Role.USER)
                 .build();
 
         userRepository.save(user);
@@ -53,11 +53,10 @@ public class AuthenticationService {
 
 
     public AuthenticationResponse login(AuthenticationRequest request) {
-        // 🔐 Verificamos si el correo está registrado antes de autenticar
+
         var user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 
-        // Ahora autenticamos solo si existe
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),
