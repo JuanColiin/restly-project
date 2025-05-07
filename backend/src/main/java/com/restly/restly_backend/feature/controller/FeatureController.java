@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -42,6 +43,7 @@ public class FeatureController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<?> saveFeature(@RequestBody FeatureDTO featureDTO) {
         try {
             FeatureDTO savedFeature = featureService.saveFeature(featureDTO);
@@ -60,6 +62,7 @@ public class FeatureController {
 
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<?> updateFeature(@PathVariable Long id, @RequestBody FeatureDTO featureDTO) {
         try {
             FeatureDTO updatedFeature = featureService.updateFeature(id, featureDTO);
@@ -75,6 +78,7 @@ public class FeatureController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<?> deleteFeatureById(@PathVariable Long id) {
         try {
             String message = featureService.deleteFeatureById(id);

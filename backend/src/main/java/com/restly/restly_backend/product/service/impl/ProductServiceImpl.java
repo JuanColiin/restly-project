@@ -23,6 +23,7 @@ import com.restly.restly_backend.product.exception.ProductAlreadyExistsException
 import com.restly.restly_backend.product.exception.ProductNotFoundException;
 import com.restly.restly_backend.product.repository.IProductRepository;
 import com.restly.restly_backend.product.service.IProductService;
+import com.restly.restly_backend.reserves.repository.IReserveRepository;
 import com.restly.restly_backend.review.repository.IReviewRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -46,6 +47,8 @@ public class ProductServiceImpl implements IProductService {
     private final ICityRepository cityRepository;
     private final IFeatureRepository featureRepository;
     private final ICategoryRepository categoryRepository;
+    private final IReserveRepository reserveRepository;
+
 
     @Override
     public List<ProductDTO> getAllProducts() {
@@ -196,16 +199,17 @@ public class ProductServiceImpl implements IProductService {
                 .orElseThrow(() -> new ProductNotFoundException("Producto no encontrado con ID: " + id));
 
         if (!product.getReserves().isEmpty()) {
-            throw new RuntimeException("No se puede eliminar el producto porque tiene reservas asociadas.");
+            reserveRepository.deleteAll(product.getReserves());
+            product.getReserves().clear();
         }
 
         product.setCity(null);
-
         product.getFeatures().clear();
         product.getImages().clear();
 
         productRepository.delete(product);
     }
+
 
 
     @Override

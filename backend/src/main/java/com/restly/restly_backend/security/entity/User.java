@@ -1,6 +1,5 @@
 package com.restly.restly_backend.security.entity;
 
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.restly.restly_backend.reserves.entity.Reserve;
 import jakarta.persistence.*;
@@ -9,9 +8,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-
 import java.util.Collection;
 import java.util.List;
+
 @Entity
 @Table(name = "USERS")
 @Data
@@ -34,10 +33,10 @@ public class User implements UserDetails {
     @Column(name = "username")
     private String username;
 
-    @Column(name = "email")
+    @Column(name = "email", unique = true, nullable = false)
     private String email;
 
-    @Column(name = "password")
+    @Column(name = "password", nullable = false)
     private String password;
 
     @JsonBackReference("user-reserves")
@@ -47,9 +46,15 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    // --- UserDetails implementation ---
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
+        return List.of(new SimpleGrantedAuthority(role.name())); // Usa directamente el nombre del enum
+    }
+
+    @Override
+    public String getUsername() {
+        return email; // Login se realiza con email
     }
 
     @Override
@@ -71,17 +76,4 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-
-    @Override
-    public String getUsername() {
-        return email; // Añadido el método getUsername()
-    }
-
-    @Override
-    public String getPassword() {
-        return password;
-    }
 }
-
-
-

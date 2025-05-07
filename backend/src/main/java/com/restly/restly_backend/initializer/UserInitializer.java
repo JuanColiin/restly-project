@@ -30,7 +30,7 @@ public class UserInitializer implements CommandLineRunner {
                     .lastname("Sistema")
                     .email(adminEmail)
                     .password(passwordEncoder.encode("Admin1234"))
-                    .role(Role.ADMIN)
+                    .role(Role.ROLE_ADMIN)
                     .build();
 
             userRepository.save(admin);
@@ -49,10 +49,10 @@ public class UserInitializer implements CommandLineRunner {
                     .lastname("Prueba")
                     .email(userEmail)
                     .password(passwordEncoder.encode("User1234"))
-                    .role(Role.USER)
+                    .role(Role.ROLE_USER)
                     .build();
 
-            userRepository.save(admin);
+            userRepository.save(user1);
             System.out.println("""
                 \n
                 ***********************************************
