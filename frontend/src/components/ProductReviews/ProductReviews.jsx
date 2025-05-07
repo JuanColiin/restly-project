@@ -41,9 +41,12 @@ const ProductReviews = ({ productId }) => {
   const checkIfUserCanReview = async () => {
     if (!user?.token) return false;
     try {
+      const storedUser = JSON.parse(localStorage.getItem('user')) || JSON.parse(sessionStorage.getItem('user'));
+      const token = storedUser?.token; 
+
       const res = await axios.get(
         `${apiUrl}/reserves/has-finished?productId=${productId}`,
-        { headers: { Authorization: `Bearer ${user.token}` } }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
       return res.data;
     } catch (err) {
@@ -71,12 +74,15 @@ const ProductReviews = ({ productId }) => {
     }
 
     try {
+      const storedUser = JSON.parse(localStorage.getItem('user')) || JSON.parse(sessionStorage.getItem('user'));
+      const token = storedUser?.token; // Extraer token
+
       await axios.post(`${apiUrl}/reviews`, {
         productId,
         rating: newReview.rating,
         comment: newReview.comment
       }, {
-        headers: { Authorization: `Bearer ${user.token}` }
+        headers: { Authorization: `Bearer ${token}` }
       });
 
       setNewReview({ rating: 0, comment: '' });
@@ -90,8 +96,11 @@ const ProductReviews = ({ productId }) => {
 
   const handleDelete = async (reviewId) => {
     try {
+      const storedUser = JSON.parse(localStorage.getItem('user')) || JSON.parse(sessionStorage.getItem('user'));
+      const token = storedUser?.token; // Extraer token
+
       await axios.delete(`${apiUrl}/reviews/${reviewId}`, {
-        headers: { Authorization: `Bearer ${user.token}` }
+        headers: { Authorization: `Bearer ${token}` }
       });
       await fetchReviews();
       await fetchAverageAndCount();

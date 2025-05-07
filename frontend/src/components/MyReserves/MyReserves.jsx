@@ -37,6 +37,9 @@ const MyReserves = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        const storedUser = JSON.parse(localStorage.getItem('user')) || JSON.parse(sessionStorage.getItem('user'));
+        const token = storedUser?.token; 
+
         if (!user?.userId) {
           setLoading(false);
           setError('Usuario no autenticado');
@@ -47,7 +50,7 @@ const MyReserves = () => {
           `${apiUrl}/reserves/user/${user.userId}`,
           {
             headers: {
-              Authorization: `Bearer ${user.token}`
+              Authorization: `Bearer ${token}`
             }
           }
         );
@@ -59,7 +62,7 @@ const MyReserves = () => {
         const productPromises = reservesResponse.data.map(reserve =>
           axios.get(`${apiUrl}/products/${reserve.productId}`, {
             headers: {
-              Authorization: `Bearer ${user.token}`
+              Authorization: `Bearer ${token}`
             }
           })
         );
@@ -124,6 +127,9 @@ const MyReserves = () => {
     setExtensionError(null);
 
     try {
+      const storedUser = JSON.parse(localStorage.getItem('user')) || JSON.parse(sessionStorage.getItem('user'));
+      const token = storedUser?.token; // Extraer token
+
       const formattedDate = newCheckOut.toISOString().split('T')[0];
 
       const response = await axios.put(
@@ -131,7 +137,7 @@ const MyReserves = () => {
         null,
         {
           params: { newCheckOut: formattedDate },
-          headers: { Authorization: `Bearer ${user.token}` }
+          headers: { Authorization: `Bearer ${token}` }
         }
       );
 

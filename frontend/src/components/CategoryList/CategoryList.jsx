@@ -57,7 +57,7 @@ const CategoryList = () => {
     if (result.isConfirmed) {
       try {
         const storedUser = JSON.parse(localStorage.getItem('user')) || JSON.parse(sessionStorage.getItem('user'));
-        const token = storedUser?.token; // Extraer token
+        const token = storedUser?.token;
 
         await axios.delete(`${apiUrl}/categories/${id}`, {
           headers: {

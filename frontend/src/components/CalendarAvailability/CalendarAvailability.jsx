@@ -35,8 +35,14 @@ const CalendarAvailability = ({ productId }) => {
     setLoading(true);
     setError(null);
     try {
+      const storedUser = JSON.parse(localStorage.getItem('user')) || JSON.parse(sessionStorage.getItem('user'));
+      const token = storedUser?.token;
+
       const response = await axios.get(
-        `${apiUrl}/reserves/product/${numericProductId}`
+        `${apiUrl}/reserves/product/${numericProductId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
       );
 
       const ranges = response.data.map(reserve => {
@@ -62,7 +68,12 @@ const CalendarAvailability = ({ productId }) => {
 
   const fetchProductDetails = async () => {
     try {
-      const res = await axios.get(`${apiUrl}/products/${numericProductId}`);
+      const storedUser = JSON.parse(localStorage.getItem('user')) || JSON.parse(sessionStorage.getItem('user'));
+      const token = storedUser?.token; // Extraer token
+
+      const res = await axios.get(`${apiUrl}/products/${numericProductId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       setProduct(res.data);
     } catch {
       setError("Error al obtener los detalles del producto");
@@ -155,13 +166,22 @@ const CalendarAvailability = ({ productId }) => {
 
   const confirmReservation = async () => {
     try {
-      await axios.post(`${apiUrl}/reserves`, {
-        startTime: "14:00:00",
-        checkIn: checkIn.toISOString().split("T")[0],
-        checkOut: checkOut.toISOString().split("T")[0],
-        productId: numericProductId,
-        userId: user.userId,
-      });
+      const storedUser = JSON.parse(localStorage.getItem('user')) || JSON.parse(sessionStorage.getItem('user'));
+      const token = storedUser?.token; // Extraer token
+
+      await axios.post(
+        `${apiUrl}/reserves`,
+        {
+          startTime: "14:00:00",
+          checkIn: checkIn.toISOString().split("T")[0],
+          checkOut: checkOut.toISOString().split("T")[0],
+          productId: numericProductId,
+          userId: user.userId,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
 
       Swal.fire({
         title: "Reserva exitosa",
