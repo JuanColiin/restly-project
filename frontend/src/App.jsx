@@ -37,42 +37,42 @@ function App() {
 
             {/* Rutas protegidas solo para ADMIN */}
             <Route path="/CreateProduct" element={
-              <ProtectedRoute requiredRole="ADMIN">
+              <ProtectedRoute requiredRole="ROLE_ADMIN">
                 <PropertyForm />
               </ProtectedRoute>
             } />
             <Route path="/ProductList" element={
-              <ProtectedRoute requiredRole="ADMIN">
+              <ProtectedRoute requiredRole="ROLE_ADMIN">
                 <ProductList />
               </ProtectedRoute>
             } />
             <Route path="/categories" element={
-              <ProtectedRoute requiredRole="ADMIN">
+              <ProtectedRoute requiredRole="ROLE_ADMIN">
                 <CategoryForm />
               </ProtectedRoute>
             } />
             <Route path="/Createfeature" element={
-              <ProtectedRoute requiredRole="ADMIN">
+              <ProtectedRoute requiredRole="ROLE_ADMIN">
                 <FeatureForm />
               </ProtectedRoute>
             } />
             <Route path="/FeatureList" element={
-              <ProtectedRoute requiredRole="ADMIN">
+              <ProtectedRoute requiredRole="ROLE_ADMIN">
                 <FeaturesList />
               </ProtectedRoute>
             } />
             <Route path="/UserList" element={
-              <ProtectedRoute requiredRole="ADMIN">
+              <ProtectedRoute requiredRole="ROLE_ADMIN">
                 <UserList />
               </ProtectedRoute>
             } />
             <Route path="/CategoriesList" element={
-              <ProtectedRoute requiredRole="ADMIN">
+              <ProtectedRoute requiredRole="ROLE_ADMIN">
                 <CategoryList />
               </ProtectedRoute>
             } />
             <Route path="/edit/:id" element={
-              <ProtectedRoute requiredRole="ADMIN">
+              <ProtectedRoute requiredRole="ROLE_ADMIN">
                 <UpdateProduct />
               </ProtectedRoute>
             } />

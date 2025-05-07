@@ -88,7 +88,7 @@ const Header = () => {
         {user ? (
           <>
             <div className="user-info">
-              {isDesktop && user.role === "ADMIN" && (
+              {isDesktop && user.role === "ROLE_ADMIN" && (
                 <div className="admin-dropdown">
                   <Dropdown />
                 </div>

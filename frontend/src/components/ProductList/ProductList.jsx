@@ -26,11 +26,11 @@ const ProductList = () => {
   const handleDelete = (id) => {
     Swal.fire({
       title: '¿Estás seguro?',
-      text: 'Esta acción eliminará el producto de forma permanente.',
+      text: 'Esta acción eliminará el producto y todas las reservas asociadas de forma permanente.',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: '#00c98c',     // Color principal
-      cancelButtonColor: '#2b2c28',      // Gris oscuro
+      confirmButtonColor: '#00c98c',    
+      cancelButtonColor: '#2b2c28',      
       confirmButtonText: 'Sí, eliminar',
       cancelButtonText: 'Cancelar',
       customClass: {
@@ -38,7 +38,11 @@ const ProductList = () => {
       },
     }).then((result) => {
       if (result.isConfirmed) {
-        axios.delete(`${apiUrl}/products/${id}`)
+        axios.delete(`${apiUrl}/products/${id}`, {
+          headers: {
+            "Authorization": `Bearer ${JSON.parse(localStorage.getItem('user'))?.token || JSON.parse(sessionStorage.getItem('user'))?.token}`
+          }
+        })
           .then(() => {
             setProducts(products.filter(product => product.id !== id));
             Swal.fire({

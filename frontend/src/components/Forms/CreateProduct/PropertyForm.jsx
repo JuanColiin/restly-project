@@ -170,30 +170,37 @@ export default function PropertyForm() {
 
     console.log("Datos a enviar:", JSON.stringify(dataToSend, null, 2));
 
+
     try {
-      await axios.post(
+      const storedUser = JSON.parse(localStorage.getItem('user')) || JSON.parse(sessionStorage.getItem('user'));
+      const token = storedUser?.token; // Extraer token
+  
+      const response = await axios.post(
         `${apiUrl}/products/create`,
         dataToSend,
         {
           headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${localStorage.getItem("token")}`, // Agrega el encabezado Authorization
-          },
+            "Authorization": `Bearer ${token}` // Token correcto
+          }
         }
       );
-
-      Swal.fire({
-        icon: 'success',
-        title: '¡Éxito!',
-        text: 'Producto creado exitosamente.',
-      });
+  
+      if (response.status === 201) {
+        Swal.fire({
+          icon: 'success',
+          title: '¡Éxito!',
+          text: 'Producto creado exitosamente.',
+        });
+      }
     } catch (error) {
-      setErrorMessage(error.response?.data?.error || "Ocurrió un error al procesar la solicitud.");
-
+      const errorMessage = error.response?.data?.message || 'Error al crear el producto';
+      setErrorMessage(errorMessage);
+      
       Swal.fire({
         icon: 'error',
-        title: '¡Error!',
-        text: errorMessage || 'No se pudo crear el producto, porque el nombre ya existe.',
+        title: 'Error',
+        text: errorMessage,
       });
     }
   };

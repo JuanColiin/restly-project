@@ -5,6 +5,7 @@ import { Delete, Edit } from "@mui/icons-material";
 import * as Icons from "@mui/icons-material";
 import styles from "./FeaturesList.module.css";
 import bookingIcons from "../../utils/bookingicons";
+import Swal from "sweetalert2";
 
 Modal.setAppElement("#root");
 
@@ -21,7 +22,14 @@ const FeaturesList = () => {
 
   const fetchFeatures = async () => {
     try {
-      const response = await axios.get(`${apiUrl}/features`);
+      const storedUser = JSON.parse(localStorage.getItem('user')) || JSON.parse(sessionStorage.getItem('user'));
+      const token = storedUser?.token; // Extraer token
+
+      const response = await axios.get(`${apiUrl}/features`, {
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
+      });
       setFeatures(response.data);
     } catch (error) {
       console.error("Error al obtener características:", error);
@@ -29,13 +37,41 @@ const FeaturesList = () => {
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm("¿Estás seguro de eliminar esta característica?")) {
+    const result = await Swal.fire({
+      title: '¿Estás seguro?',
+      text: 'Esta acción eliminará la característica de forma permanente.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#00c98c',
+      cancelButtonColor: '#2b2c28',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar',
+    });
+
+    if (result.isConfirmed) {
       try {
-        await axios.delete(`${apiUrl}/features/${id}`);
-        alert("Característica eliminada correctamente");
+        const storedUser = JSON.parse(localStorage.getItem('user')) || JSON.parse(sessionStorage.getItem('user'));
+        const token = storedUser?.token; 
+
+        await axios.delete(`${apiUrl}/features/${id}`, {
+          headers: {
+            "Authorization": `Bearer ${token}`
+          }
+        });
+        Swal.fire({
+          icon: 'success',
+          title: '¡Eliminado!',
+          text: 'La característica ha sido eliminada correctamente.',
+          confirmButtonColor: '#00c98c',
+        });
         fetchFeatures();
       } catch (error) {
         console.error("Error al eliminar característica:", error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Hubo un problema al eliminar la característica.',
+        });
       }
     }
   };
@@ -54,15 +90,32 @@ const FeaturesList = () => {
     if (!selectedFeature) return;
 
     try {
+      const storedUser = JSON.parse(localStorage.getItem('user')) || JSON.parse(sessionStorage.getItem('user'));
+      const token = storedUser?.token; // Extraer token
+
       await axios.put(`${apiUrl}/features/${selectedFeature.id}`, {
         title: selectedFeature.title,
         icon: selectedFeature.icon,
+      }, {
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
       });
-      alert("Característica actualizada correctamente");
+      Swal.fire({
+        icon: 'success',
+        title: '¡Éxito!',
+        text: 'Característica actualizada correctamente.',
+        confirmButtonColor: '#00c98c',
+      });
       fetchFeatures();
       closeModal();
     } catch (error) {
       console.error("Error al actualizar característica:", error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Hubo un problema al actualizar la característica.',
+      });
     }
   };
 

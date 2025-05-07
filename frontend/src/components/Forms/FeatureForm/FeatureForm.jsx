@@ -4,6 +4,7 @@ import axios from "axios";
 import * as Icons from "@mui/icons-material";
 import bookingIcons from "../../../utils/bookingicons";
 import "./FeatureForm.css";
+import Swal from "sweetalert2";
 
 const uniqueIconOptions = Array.from(new Set(bookingIcons))
   .filter(icon => Icons[icon])
@@ -33,12 +34,25 @@ const FeatureForm = ({ onSubmit = () => {} }) => {
 
     setLoading(true);
     try {
-      const response = await axios.post(`${apiUrl}/features`, feature);
+      const storedUser = JSON.parse(localStorage.getItem('user')) || JSON.parse(sessionStorage.getItem('user'));
+      const token = storedUser?.token; // Extraer token
+
+      const response = await axios.post(`${apiUrl}/features`, feature, {
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
+      });
+
       if (typeof onSubmit === "function") {
         onSubmit(response.data);
       }
       setFeature({ title: "", icon: "" });
-      alert("Característica creada con éxito");
+      Swal.fire({
+        icon: 'success',
+        title: '¡Éxito!',
+        text: 'Característica creada con éxito.',
+        confirmButtonColor: '#00c98c',
+      });
     } catch (error) {
       console.error("Error:", error);
       alert("Hubo un problema al guardar la característica");

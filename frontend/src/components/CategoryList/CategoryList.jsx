@@ -18,7 +18,14 @@ const CategoryList = () => {
 
   const fetchCategories = async () => {
     try {
-      const response = await axios.get(`${apiUrl}/categories`);
+      const storedUser = JSON.parse(localStorage.getItem('user')) || JSON.parse(sessionStorage.getItem('user'));
+      const token = storedUser?.token; 
+
+      const response = await axios.get(`${apiUrl}/categories`, {
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
+      });
       const data = response.data;
 
       if (Array.isArray(data)) {
@@ -49,7 +56,14 @@ const CategoryList = () => {
 
     if (result.isConfirmed) {
       try {
-        await axios.delete(`${apiUrl}/categories/${id}`);
+        const storedUser = JSON.parse(localStorage.getItem('user')) || JSON.parse(sessionStorage.getItem('user'));
+        const token = storedUser?.token; // Extraer token
+
+        await axios.delete(`${apiUrl}/categories/${id}`, {
+          headers: {
+            "Authorization": `Bearer ${token}`
+          }
+        });
         Swal.fire("Eliminado", `La categoría "${name}" fue eliminada.`, "success");
         fetchCategories();
       } catch {
@@ -69,9 +83,16 @@ const CategoryList = () => {
 
   const handleUpdate = async () => {
     try {
+      const storedUser = JSON.parse(localStorage.getItem('user')) || JSON.parse(sessionStorage.getItem('user'));
+      const token = storedUser?.token; // Extraer token
+
       await axios.put(`${apiUrl}/categories/${editingCategory.id}`, {
         id: editingCategory.id,
         ...formData
+      }, {
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
       });
       Swal.fire("Actualizado", "La categoría fue actualizada con éxito.", "success");
       setEditingCategory(null);

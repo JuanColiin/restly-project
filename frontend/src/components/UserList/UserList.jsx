@@ -12,16 +12,23 @@ const UserList = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    axios
-      .get(`${apiUrl}/users`)
-      .then((response) => {
+    const fetchUsers = async () => {
+      try {
+        const storedUser = JSON.parse(localStorage.getItem('user')) || JSON.parse(sessionStorage.getItem('user'));
+        const token = storedUser?.token;
+
+        const response = await axios.get(`${apiUrl}/users`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         setUsers(response.data);
-        setLoading(false);
-      })
-      .catch(() => {
+      } catch {
         setError("Error al cargar los usuarios");
+      } finally {
         setLoading(false);
-      });
+      }
+    };
+
+    fetchUsers();
   }, []);
 
   const handleRoleChange = (userId, newRole) => {
@@ -32,11 +39,14 @@ const UserList = () => {
     if (!modifiedUsers[userId]) return;
 
     try {
+      const storedUser = JSON.parse(localStorage.getItem('user')) || JSON.parse(sessionStorage.getItem('user'));
+      const token = storedUser?.token; // Extraer token
+
       await axios.put(
         `${apiUrl}/users/update-role/${userId}`,
         { role: modifiedUsers[userId] },
         {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
 
@@ -94,8 +104,9 @@ const UserList = () => {
                   value={modifiedUsers[user.id] || user.role}
                   onChange={(e) => handleRoleChange(user.id, e.target.value)}
                 >
-                  <option value="USER">USER</option>
-                  <option value="ADMIN">ADMIN</option>
+                    <option value="ROLE_USER">USER</option>
+                    <option value="ROLE_ADMIN">ADMIN</option>
+
                 </select>
               </td>
               <td className="user-list-td">

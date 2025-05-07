@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import Swal from "sweetalert2";
 import "./CategoryForm.css";
 
 const apiUrl = import.meta.env.VITE_BACKEND_URL;
@@ -19,7 +20,20 @@ const CategoryForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`${apiUrl}/categories`, formData);
+      const storedUser = JSON.parse(localStorage.getItem('user')) || JSON.parse(sessionStorage.getItem('user'));
+      const token = storedUser?.token;
+
+      await axios.post(`${apiUrl}/categories`, formData, {
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
+      });
+      Swal.fire({
+        icon: 'success',
+        title: '¡Éxito!',
+        text: 'Categoría creada exitosamente.',
+        confirmButtonColor: '#00c98c',
+      });
       setMessage("Categoría creada exitosamente");
       setFormData({ name: "", description: "", imageUrl: "" });
     } catch (error) {

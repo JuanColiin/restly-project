@@ -42,25 +42,10 @@ export default function UpdateProduct() {
   const [selectedFeatures, setSelectedFeatures] = useState([]);
   const [categories, setCategories] = useState([]);
 
-  const countryTranslations = {
-    "United States": "Estados Unidos",
-    Mexico: "México",
-    Brazil: "Brasil",
-    Canada: "Canadá",
-    Argentina: "Argentina",
-    Spain: "España",
-    France: "Francia",
-    Germany: "Alemania",
-  };
-
   useEffect(() => {
     axios.get("https://countriesnow.space/api/v0.1/countries/states")
       .then((res) => {
-        const translated = res.data.data.map((c) => ({
-          ...c,
-          name: countryTranslations[c.name] || c.name,
-        }));
-        setCountries(translated);
+        setCountries(res.data.data);
       }).catch(console.error);
   }, []);
 
@@ -172,9 +157,19 @@ export default function UpdateProduct() {
     };
   
     try {
-      await axios.put(`${apiUrl}/products/${id}`, dataToSend, {
-        headers: { "Content-Type": "application/json" },
-      });
+      const storedUser = JSON.parse(localStorage.getItem('user')) || JSON.parse(sessionStorage.getItem('user'));
+      const token = storedUser?.token; // Extraer token
+  
+      await axios.put(
+        `${apiUrl}/products/${id}`,
+        dataToSend,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`, // Token correcto
+          },
+        }
+      );
   
       Swal.fire({
         icon: "success",
