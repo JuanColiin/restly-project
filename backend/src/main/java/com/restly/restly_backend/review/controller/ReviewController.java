@@ -4,6 +4,7 @@ import com.restly.restly_backend.review.dto.ReviewDTO;
 import com.restly.restly_backend.review.service.IReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -22,8 +23,9 @@ public class ReviewController {
 
     private final Map<Long, Double> ratingCache = new ConcurrentHashMap<>();
 
-    // 1. Crear una nueva reseña
+
     @PostMapping
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     public ResponseEntity<ReviewDTO> createReview(
             @RequestBody ReviewDTO reviewDTO,
             @AuthenticationPrincipal UserDetails userDetails
@@ -34,15 +36,14 @@ public class ReviewController {
         return ResponseEntity.ok(createdReview);
     }
 
-    // 2. Obtener todas las reseñas de un producto
+
     @GetMapping("/product/{productId}")
     public ResponseEntity<List<ReviewDTO>> getReviewsByProductId(@PathVariable Long productId) {
         List<ReviewDTO> reviews = reviewService.getReviewsByProductId(productId);
         return ResponseEntity.ok(reviews);
     }
 
-    // 3. Obtener el promedio de rating de un producto
-    // Modificar el método getAverageRating
+
     @GetMapping("/product/{productId}/average")
     public ResponseEntity<Double> getAverageRating(@PathVariable Long productId) {
         // Verificar cache primero
@@ -55,14 +56,14 @@ public class ReviewController {
         ratingCache.put(productId, average);
         return ResponseEntity.ok(average);
     }
-    // 4. Obtener el total de reseñas de un producto
+
     @GetMapping("/product/{productId}/count")
     public ResponseEntity<Long> getTotalReviews(@PathVariable Long productId) {
         Long total = reviewService.getTotalReviewsByProductId(productId);
         return ResponseEntity.ok(total);
     }
 
-    // 5. Obtener todas las reseñas hechas por un usuario
+
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<ReviewDTO>> getReviewsByUserId(@PathVariable Long userId) {
         List<ReviewDTO> reviews = reviewService.getReviewsByUserId(userId);
@@ -70,6 +71,7 @@ public class ReviewController {
     }
 
     @DeleteMapping("/{reviewId}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     public ResponseEntity<Map<String, String>> deleteReview(
             @PathVariable Long reviewId,
             @AuthenticationPrincipal UserDetails userDetails

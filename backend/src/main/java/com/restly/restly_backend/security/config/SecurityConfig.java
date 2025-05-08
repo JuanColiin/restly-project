@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -15,7 +16,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity(prePostEnabled = true) // Habilitar anotaciones de seguridad
+@EnableMethodSecurity(prePostEnabled = true)
 @RequiredArgsConstructor
 public class SecurityConfig {
 
@@ -45,6 +46,7 @@ public class SecurityConfig {
                         //user
                         .requestMatchers(HttpMethod.PUT, "/users/update-role/{userId}").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/users").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/users/{id}").hasAnyRole("ADMIN", "USER")
                         .requestMatchers("/favorites/**").authenticated()
                         //reserves
                         .requestMatchers(HttpMethod.POST, "/reserves").authenticated()
@@ -52,8 +54,11 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/reserves/user/{userId}").authenticated()
                         .requestMatchers(HttpMethod.DELETE, "/reserves/{id}").authenticated()
                         .requestMatchers(HttpMethod.PUT, "/reserves/{id}/extend").authenticated()
-
-
+                        //reviews
+                        .requestMatchers(HttpMethod.POST, "/reviews").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/reviews/product/{productId}").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/reviews/user/{userId}").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/reviews/{id}").authenticated()
                         // Swagger
                         .requestMatchers(HttpMethod.GET, "/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
                         // Reglas generales después
