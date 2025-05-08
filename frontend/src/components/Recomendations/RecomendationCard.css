@@ -167,30 +167,30 @@
 
 .features {
   display: flex;
+  flex-wrap: wrap; 
   align-items: center;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
+  gap: 0.5rem; 
+  margin-bottom: 1rem;
 }
 
 .feature {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: center;
-  padding: 6px;
+  padding: 4px;
   border-radius: 8px;
-  margin-right: 6px;
 }
 
 .feature svg {
-  width: 30px;
-  height: 30px;
+  width: 23px; 
+  height: 23px;
   color: #00c98c;
 }
 
-
 .feature span {
-  font-size: 0.875rem;
+  font-size: 0.75rem;
 }
+
 
 .details-button {
   width: 100%;

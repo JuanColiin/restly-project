@@ -53,7 +53,7 @@ export default function Login() {
       login(userData);
 
       const isMobile = window.innerWidth <= 768;
-      if (userData.role === 'ADMIN' && isMobile) {
+      if (userData.role === 'ROLE_ADMIN' && isMobile) {
         Swal.fire({
           title: 'Atención',
           text: 'El panel de administrador solo está disponible en la versión de escritorio.',
