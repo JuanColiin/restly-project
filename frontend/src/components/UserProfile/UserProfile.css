@@ -1,0 +1,41 @@
+.user-profile-container {
+  max-width: 350px;
+  margin: 200px auto;
+  padding: 20px;
+  background: linear-gradient(135deg, #6e8efb, #77e39b);
+  border-radius: 15px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  color: white;
+}
+
+.user-avatar {
+  width: 100px;
+  height: 100px;
+  margin: 0 auto 15px;
+  background-color: white;
+  color: #6e8efb;
+  font-size: 36px;
+  font-weight: bold;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-transform: uppercase;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.user-name {
+  margin: 10px 0;
+  font-size: 24px;
+}
+
+.user-email {
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+
+.user-role {
+  font-size: 14px;
+  opacity: 0.8;
+}

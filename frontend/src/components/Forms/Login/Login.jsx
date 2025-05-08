@@ -1,8 +1,10 @@
-import { useState, useContext } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import './Login.css';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import AuthContext from '../../../context/AuthContext';
+import Swal from 'sweetalert2';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 export default function Login() {
   const [formData, setFormData] = useState({
@@ -10,9 +12,22 @@ export default function Login() {
     password: ''
   });
 
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState(null);
+  const [showReservationMessage, setShowReservationMessage] = useState(false);
+  const [fromReservation, setFromReservation] = useState(false);
   const navigate = useNavigate();
-  const { login } = useContext(AuthContext); // Obtener la función de login del contexto
+  const { login } = useContext(AuthContext);
+
+  const apiUrl = import.meta.env.VITE_BACKEND_URL;
+
+  useEffect(() => {
+    const fromRedirect = sessionStorage.getItem('redirectAfterLogin');
+    if (fromRedirect?.includes('/details/')) {
+      setShowReservationMessage(true);
+      setFromReservation(true); // <-- para mostrar la alerta luego del login
+    }
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -25,31 +40,64 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:8080/auth/login', formData);
+      const response = await axios.post(`${apiUrl}/auth/login`, formData);
 
-      // Verifica y extrae los datos correctos del response
       const userData = {
         token: response.data.token,
-        firstname: response.data.firstname, // Obtén el firstname del response
+        firstname: response.data.firstname,
         email: response.data.email,
-        role: response.data.role, // Agregado si se necesita en otros componentes
-        userId: response.data.userId // Agregado si es necesario
+        role: response.data.role,
+        userId: response.data.userId
       };
 
-      // Llamada a login para actualizar el contexto
       login(userData);
 
-      // Redirige al dashboard o página principal tras login exitoso
-      navigate('/dashboard');
+      const isMobile = window.innerWidth <= 768;
+      if (userData.role === 'ROLE_ADMIN' && isMobile) {
+        Swal.fire({
+          title: 'Atención',
+          text: 'El panel de administrador solo está disponible en la versión de escritorio.',
+          icon: 'info',
+          confirmButtonColor: '#00c98c',
+        });
+      }
+
+      const redirectPath = sessionStorage.getItem('redirectAfterLogin') || '/';
+      sessionStorage.removeItem('redirectAfterLogin');
+
+      if (fromReservation) {
+        Swal.fire({
+          title: 'Bienvenido',
+          text: 'Has iniciado sesión correctamente. Ahora puedes continuar con tu reserva.',
+          icon: 'success',
+          confirmButtonColor: '#00c98c',
+        }).then(() => {
+          navigate(redirectPath);
+        });
+      } else {
+        navigate(redirectPath);
+      }
     } catch (err) {
       console.error('Error en el login:', err);
-      setError('Correo electrónico o contraseña incorrectos');
+      const backendMessage = err?.response?.data?.error;
+      if (backendMessage && backendMessage.includes("User not found")) {
+        setError("El correo electrónico no está registrado. Por favor registrate.");
+      } else {
+        setError("Correo electrónico o contraseña incorrectos");
+      }
     }
   };
 
   return (
     <div className="login-container">
-      <h1>Iniciar Sesión</h1>
+      <h1 className='titleForm'>Iniciar Sesión</h1>
+
+      {showReservationMessage && (
+        <p className="reservation-warning">
+          Debes iniciar sesión para poder realizar una reserva. Si aún no tenés cuenta, <Link to="/singup">registrate aquí</Link>.
+        </p>
+      )}
+
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label htmlFor="email">Correo electrónico</label>
@@ -63,16 +111,24 @@ export default function Login() {
           />
         </div>
 
-        <div className="form-group">
+        <div className="form-group password-wrapper">
           <label htmlFor="password">Contraseña</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-          />
+          <div className="password-input-container">
+            <input
+              type={showPassword ? 'text' : 'password'}
+              id="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+            />
+            <span
+              className="password-toggle-icon"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
+            </span>
+          </div>
         </div>
 
         <button type="submit" className="submit-button">
@@ -88,4 +144,3 @@ export default function Login() {
     </div>
   );
 }
-

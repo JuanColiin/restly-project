@@ -1,0 +1,270 @@
+.cards-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 15px;
+  padding: 1.6rem;
+}
+
+.stars-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.stars-container {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+.rating-number {
+  font-size: 0.9rem;
+  background-color: #00c98c;
+  border-radius: 5px;
+  padding: 3px;
+  color: #4b5563;
+  margin-left: 4px;
+  font-weight: 500;
+}
+
+
+
+.card {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(1, 300px);
+  background: white;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  transition: transform 0.2s ease;
+  width: 100%;
+}
+
+.favorite-button svg {
+  color: #4b5563;
+  transition: color 0.3s ease;
+}
+
+.favorite-button:hover svg {
+  color: #ff5a5f; 
+}
+
+.favorite-button svg[color="error"] {
+  color: #ff5a5f !important; 
+}
+
+.favorite-button:hover svg[color="error"] {
+  color: #e0484d !important; 
+}
+
+.favorite-button {
+  padding: 8px;
+  background: rgba(255, 255, 255, 0.8);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.favorite-button:hover {
+  background: white;
+  transform: scale(1.1);
+}
+
+.card-image-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.favorite-button {
+  position: relative;
+  padding: 0.25rem;
+  background: rgba(255, 255, 255, 0.8);
+  border: none;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.favorite-button:hover {
+  background: white;
+}
+
+.favorite-button svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: #4b5563;
+}
+
+.favorite-button:hover svg {
+  color: #ef4444;
+}
+
+.category-badge {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  z-index: 1;
+}
+
+.category-badge span {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #1f2937;
+}
+
+.card-content {
+  display: grid;
+  align-content: space-between;
+  padding: 10px;
+  gap: 5px;
+}
+
+.card-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 0;
+}
+
+.address {
+  display: flex;
+  align-items: center;
+  color: #4b5563;
+  margin-bottom: 1rem;
+}
+
+.address svg {
+  width: 1rem;
+  height: 1rem;
+  margin-right: 0.5rem;
+}
+
+.address span {
+  font-size: 0.875rem;
+}
+
+.description {
+  color: #4b5563;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.features {
+  display: flex;
+  flex-wrap: wrap; 
+  align-items: center;
+  gap: 0.5rem; 
+  margin-bottom: 1rem;
+}
+
+.feature {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border-radius: 8px;
+}
+
+.feature svg {
+  width: 23px; 
+  height: 23px;
+  color: #00c98c;
+}
+
+.feature span {
+  font-size: 0.75rem;
+}
+
+
+.details-button {
+  width: 100%;
+  background: #00c98c;
+  color: white;
+  border: none;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.details-button:hover {
+  background: #339989;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.title-content {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.card-title {
+  margin: 0;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
+}
+
+.pagination button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  margin: 0 5px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.pagination button:disabled {
+  background-color: #00c98c;
+  cursor: not-allowed;
+}
+
+.pagination span {
+  margin: 0 10px;
+  font-size: 1rem;
+  color: #333;
+}
+
+
+@media (max-width: 768px) {
+  .cards-container {
+    grid-template-columns: 1fr;
+  }
+
+  .card {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+  }
+
+  .card-image-container {
+    height: 200px;
+  }
+}

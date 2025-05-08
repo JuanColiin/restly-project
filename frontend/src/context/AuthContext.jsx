@@ -1,34 +1,36 @@
-import { createContext, useState, useEffect } from 'react';
-import PropTypes from 'prop-types'; // Importar PropTypes
+import { createContext, useState, useEffect, useContext } from 'react';
+import PropTypes from 'prop-types';
 
-// Creamos el contexto de autenticación
 const AuthContext = createContext();
 
-// Proveedor de contexto para envolver tu aplicación
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Función para guardar el token y los datos del usuario en el localStorage
-  const login = (userData) => {
+  const login = (userData, rememberMe = false) => {
     const { token, firstname, email, role, userId } = userData;
-
-    // Organiza los datos que guardarás en el estado y localStorage
     const user = { token, firstname, email, role, userId };
 
-    setUser(user); // Actualiza el estado
-    localStorage.setItem('user', JSON.stringify(user)); // Guarda en el localStorage
+    setUser(user);
+
+    const storage = rememberMe ? localStorage : sessionStorage;
+    storage.setItem('user', JSON.stringify(user));
+    // Limpia el otro storage para evitar conflictos
+    if (rememberMe) sessionStorage.removeItem('user');
+    else localStorage.removeItem('user');
   };
 
-  // Función para cerrar sesión
   const logout = () => {
     setUser(null);
-    localStorage.removeItem('user'); // Elimina del localStorage
+    localStorage.removeItem('user');
+    sessionStorage.removeItem('user');
   };
 
-  // Verificar si hay un usuario en el localStorage al iniciar la aplicación
   useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem('user'));
+    const storedUser =
+      JSON.parse(sessionStorage.getItem('user')) ||
+      JSON.parse(localStorage.getItem('user'));
+
     if (storedUser) {
       setUser(storedUser);
     }
@@ -36,18 +38,22 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, login, logout, loading }}>
       {!loading && children}
     </AuthContext.Provider>
   );
 };
 
-// Validación de props para `AuthProvider`
 AuthProvider.propTypes = {
-  children: PropTypes.node.isRequired, // Validar que `children` es un nodo de React
+  children: PropTypes.node.isRequired,
 };
 
-// Exportamos el contexto para que los componentes puedan usarlo
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth debe usarse dentro de un AuthProvider');
+  }
+  return context;
+};
+
 export default AuthContext;
-
-

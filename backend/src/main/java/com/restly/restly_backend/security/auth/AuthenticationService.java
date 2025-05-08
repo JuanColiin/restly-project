@@ -5,10 +5,12 @@ import com.restly.restly_backend.security.entity.Role;
 import com.restly.restly_backend.security.entity.User;
 import com.restly.restly_backend.security.repository.IUserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
@@ -20,22 +22,25 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
 
     public AuthenticationResponse register(RegisterRequest request) {
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "El correo electrónico ya está registrado.");
+        }
+
         var user = User.builder()
                 .firstname(request.getFirstname())
                 .lastname(request.getLastname())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .role(Role.USER)
+                .role(Role.ROLE_USER)
                 .build();
 
         userRepository.save(user);
 
         var jwt = jwtService.generateToken(user);
 
-        // Agregar mensaje en la respuesta
         return AuthenticationResponse.builder()
                 .token(jwt)
-                .message("User registered successfully")
+                .message("Usuario registrado con éxito")
                 .userId(user.getId())
                 .firstname(user.getFirstname())
                 .username(user.getUsername())
@@ -45,7 +50,13 @@ public class AuthenticationService {
     }
 
 
+
+
     public AuthenticationResponse login(AuthenticationRequest request) {
+
+        var user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),
@@ -53,20 +64,17 @@ public class AuthenticationService {
                 )
         );
 
-        var user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
         var jwt = jwtService.generateToken(user);
 
-        // Si el username debe ser el correo electrónico:
         return AuthenticationResponse.builder()
                 .token(jwt)
                 .message("Login successful")
                 .userId(user.getId())
                 .firstname(user.getFirstname())
-                .username(user.getUsername()) // Aquí username es el correo
+                .username(user.getUsername())
                 .email(user.getEmail())
                 .role(user.getRole().name())
                 .build();
     }
+
 }

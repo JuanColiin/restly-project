@@ -1,0 +1,332 @@
+.ca-calendars-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    margin-top: 15px;
+    gap: 20px; 
+    flex-wrap: wrap; 
+}
+.checks {
+  display: flex;
+  margin-top: 15px;
+  justify-content: center;
+}
+
+
+.ca-calendar-icon {
+    color: #00c98c;
+    margin-right: 8px;
+}
+
+
+.ca-loading {
+    color: #339989;
+    font-size: 16px;
+}
+
+.ca-error-message {
+    color: #ff0000;
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+.ca-error-message button {
+    background: #00c95c;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 5px;
+}
+
+.ca-error-message button:hover {
+    background: #339989;
+}
+
+.ca-calendar {
+    background: #ffffff;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 10px;
+}
+
+
+.ca-calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.ca-nav-button {
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    color: #2b2c28;
+}
+
+
+.ca-calendar-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #2b2c28;
+}
+
+
+.ca-calendar-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+}
+
+
+.ca-calendar-day {
+    width: 35px;
+    height: 35px;
+    line-height: 35px;
+    text-align: center;
+    border-radius: 50%;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out, color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    background: #e0f7ec;
+    color: #2b2c28;
+}
+
+
+.ca-calendar-day.ca-booked {
+    background: #ff0000;
+    color: white;
+    pointer-events: none;
+    font-weight: bold;
+    border: 2px solid #d60000;
+    box-shadow: 0px 0px 8px rgba(255, 0, 0, 0.7);
+}
+
+.ca-button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.popup-style {
+    text-align: center;
+  }
+  
+  .title-style {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #2b2c28;  
+  }
+  
+  .content-style {
+    font-size: 1em;
+    color: #339989;  
+  }
+  
+
+/* Fechas deshabilitadas */
+.ca-calendar-day.ca-disabled {
+    background: #4747470f; 
+    color: gray;
+    pointer-events: none;
+}
+
+.ca-range-selected {
+    background-color: rgba(0, 201, 141, 0.401); 
+    border-radius: 5px;
+}
+
+.ca-reserve-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.ca-calendar-day.ca-selected {
+    background: #00c98c;
+    color: white;
+    font-weight: bold;
+    border: 2px solid #339989;
+    box-shadow: 0px 0px 10px rgba(51, 153, 137, 0.9);
+    border-radius: 50%;
+}
+
+.calendar-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.confirm-reservation-box {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    border-top: 2px solid #ccc;
+    text-align: center;
+    width: 100%;
+}
+
+.confirm-btn {
+    background-color: #00c98c;
+    color: white;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    font-size: 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 0.5rem;
+    transition: background-color 0.3s ease;
+}
+
+.confirm-btn:hover {
+    background-color: #339989;
+}
+
+.ca-selected-dates-summary {
+    margin: 20px 0;
+    background-color: #f0f8ff;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+    color: #333;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.ca-selected-dates-summary p {
+    margin: 5px 0;
+    font-size: 16px;
+}
+
+
+.ca-calendar-day.ca-range {
+    background: rgba(0, 201, 140, 0.3);
+    color: #2b2c28;
+    font-weight: bold;
+    border-radius: 10px;
+    border: 2px solid #00c98c;
+    box-shadow: 0px 0px 8px rgba(0, 201, 140, 0.6);
+}
+
+.ca-calendar-day.ca-range:hover {
+    background: rgba(0, 201, 140, 0.5);
+    border: 2px solid #339989;
+    box-shadow: 0px 0px 12px rgba(51, 153, 137, 0.8);
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.ca-reserve-btn {
+    margin-top: 15px;
+    background: #00c98c;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.ca-reserve-btn:hover {
+    background: #339989;
+}
+
+.ca-empty {
+    visibility: hidden;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(43, 44, 40, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+  
+  .modal-box {
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 0 15px rgba(0, 201, 140, 0.4);
+    color: #2b2c28;
+    text-align: center;
+  }
+  
+  .modal-product-details img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 10px;
+  }
+  
+  .modal-product-details h3 {
+    margin-top: 10px;
+    font-size: 20px;
+    color: #00c98c;
+  }
+  
+  .modal-location {
+    font-size: 14px;
+    color: #555;
+  }
+  
+  .modal-description {
+    font-size: 14px;
+    color: #444;
+    margin-bottom: 15px;
+  }
+  
+  .modal-user-info p {
+    margin: 6px 0;
+  }
+  
+  .modal-buttons {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-around;
+  }
+  
+  .confirm-btn, .cancel-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 16px;
+  }
+  
+  .confirm-btn {
+    background-color: #00c98c;
+    color: white;
+  }
+  
+  .confirm-btn:hover {
+    background-color: #339989;
+  }
+  
+  .cancel-btn {
+    background-color: #ccc;
+    color: #2b2c28;
+  }
+  
+  .cancel-btn:hover {
+    background-color: #999;
+  }
+  

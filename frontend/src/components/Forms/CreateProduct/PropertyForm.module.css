@@ -1,0 +1,231 @@
+:root {
+  --color-primary: #339989;
+  --color-secondary: #7de2d1;
+  --color-dark: #131515;
+  --color-dark-secondary: #2b2c28;
+  --color-light: #ffffff;
+}
+
+.form {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: var(--color-light);
+  border-radius: 12px;
+}
+
+.error {
+  color: red;
+  background-color: #ffecec;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+
+.header {
+  display: flex
+  ;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      color: var(--color-dark);
+      justify-content: center;
+}
+
+.headerIcon {
+  font-size: 2rem;
+  color: var(--color-primary);
+}
+
+.section {
+  margin-bottom: 2rem;
+}
+
+.section h2 {
+  color: var(--color-dark);
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+  border-bottom: 2px solid var(--color-secondary);
+  padding-bottom: 0.5rem;
+}
+
+.section h3 {
+  color: var(--color-dark-secondary);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.2rem;
+}
+
+.inputGroup {
+  margin-bottom: 1.5rem;
+}
+
+.inputGroup label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--color-dark-secondary);
+  font-weight: 500;
+}
+
+.inputGroup input,
+.inputGroup select,
+.inputGroup textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--color-secondary);
+  border-radius: 6px;
+  background-color: white;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.inputGroup input:focus,
+.inputGroup select:focus,
+.inputGroup textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(51, 153, 137, 0.1);
+}
+
+.addressGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+
+.imageInputGroup {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.imageInput {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.imageInput input {
+  flex-grow: 1;
+  padding: 0.75rem;
+  border: 1px solid var(--color-secondary);
+  border-radius: 6px;
+  background-color: white;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.imageInput input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(51, 153, 137, 0.1);
+}
+
+.addImageButton {
+  background-color: var(--color-secondary);
+  color: var(--color-dark);
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.2s;
+  margin-top: 1rem;
+}
+
+.addImageButton:hover {
+  background-color: var(--color-primary);
+  color: var(--color-light);
+}
+
+.submitButton {
+  margin-top: 2rem;
+}
+
+.submitButton button {
+  width: 100%;
+  padding: 1rem;
+  background-color: var(--color-primary);
+  color: var(--color-light);
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.submitButton button:hover {
+  background-color: #2a8274;
+}
+
+.submitButton button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(51, 153, 137, 0.3);
+}
+
+.policySection {
+  margin-bottom: 2rem;
+}
+
+.policySection h3 {
+  color: var(--color-dark-secondary);
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.policySection textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+@media (max-width: 640px) {
+  .form {
+    padding: 1rem;
+    margin: 1rem;
+  }
+
+  .imageInput {
+    flex-direction: column;
+  }
+
+  .addressGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .submitButton button {
+    padding: 0.75rem;
+  }
+
+  .addImageButton {
+    width: 100%;
+    padding: 0.75rem;
+  }
+}
+
+.categoryGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.categoryItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.categoryIcon {
+  font-size: 1.5rem;
+  color: var(--color-primary);
+}
+
+@media (max-width: 768px) {
+  .categoryGrid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  }
+}
+

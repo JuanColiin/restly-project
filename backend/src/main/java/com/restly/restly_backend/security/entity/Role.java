@@ -1,7 +1,7 @@
 package com.restly.restly_backend.security.entity;
 
 public enum Role {
-    USER,
-    ADMIN,
-    HOST
+    ROLE_USER,
+    ROLE_ADMIN,
+    ROLE_HOST
 }

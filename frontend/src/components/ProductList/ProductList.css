@@ -1,0 +1,103 @@
+.product-list {
+  margin: 110px 20px;
+  padding: 20px;
+  border-radius: 8px;
+  background: #FFFAFB; 
+  box-shadow: 0px 4px 10px rgba(19, 21, 21, 0.2); 
+}
+
+.product-list h2 {
+  text-align: center;
+  color: #2B2C28; 
+}
+
+.product-list table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  background: #FFFAFB;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.product-list th, .product-list td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #7DE2D1; 
+}
+
+.product-list th {
+  background-color: #00c98c; 
+  color: white;
+  text-align: left;
+}
+
+.product-list tr:hover {
+  background-color: #E0F7F3; 
+}
+
+.product-list .actions-column {
+  text-align: right;
+}
+
+.product-list .actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.product-list button {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.3s ease;
+}
+
+
+.product-list .delete-btn-product {
+  background-color: #64d3d3;
+  color: white;
+}
+
+
+.restly-alert .swal2-popup {
+  font-family: 'Segoe UI', sans-serif;
+  border-radius: 12px;
+}
+
+.restly-alert .swal2-title {
+  color: #2b2c28;
+}
+
+.restly-alert .swal2-confirm {
+  background-color: #00c98c !important;
+}
+
+.restly-alert .swal2-cancel {
+  background-color: #2b2c28 !important;
+}
+
+
+
+
+.product-list .edit-btn-list {
+  background-color: #7DE2D1;
+  color: #131515;
+}
+
+.product-list .edit-btn-list:hover {
+  background-color: #339989;
+  color: white;
+}
+
+
+.product-list .details-btn {
+  background-color: #0bd196;
+  color: white;
+}
+
+.product-list .details-btn:hover {
+  color: #2B2C28;
+}

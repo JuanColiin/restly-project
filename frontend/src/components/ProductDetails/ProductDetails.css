@@ -1,0 +1,595 @@
+
+.product-details-container {
+    max-width: 1200px;
+    margin: 90px auto;
+    padding: 20px;
+}
+
+
+.product-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.product-title h2 {
+    flex-grow: 1;
+    align-items: center;
+    justify-self: start;
+}
+
+.back-to-home {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+    margin-left: 10px;
+}
+
+.back-to-home:hover {
+    color: #007bff;
+}
+
+.product-description-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    color: #333;
+}
+
+
+.product-policies-section {
+    width: 100%;
+    margin-top: 20px;
+    box-sizing: border-box;
+    border-radius: 8px;
+}
+
+.product-policies-section {
+    width: 100%;
+    margin-top: 20px;
+    box-sizing: border-box;
+    border-radius: 8px;
+}
+
+.title-policy-section {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: left;
+    margin-bottom: 20px;
+    color: #333;
+    text-decoration: underline;
+}
+
+.product-policies-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: flex-start; 
+}
+
+.policy-block {
+    flex: 1 1 calc(33.333% - 20px); 
+    min-width: 250px;
+    max-width: 100%; 
+    box-sizing: border-box;
+    overflow-wrap: break-word; 
+    word-break: break-word; 
+}
+
+.product-policies-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #444;
+    text-decoration: underline;
+}
+
+.product-policies {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: #666;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    white-space: pre-line; 
+
+}
+
+
+.product-category-pd{
+    font-size: 1.2rem;
+    color: #00c98c;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.product-address {
+    font-size: 1rem;
+    color: #777;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.calendar-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-top: 20px;
+    
+}
+
+.product-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+  
+  .favorite-btn {
+    transition: transform 0.2s ease;
+  }
+  
+  .favorite-btn:hover {
+    transform: scale(1.1);
+  }
+  
+  .back-btn {
+    transition: transform 0.2s ease;
+  }
+  
+  .back-btn:hover {
+    transform: scale(1.1);
+    color: #007bff;
+  }
+  
+  .loading,
+  .error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 50vh;
+    text-align: center;
+  }
+  
+  .error {
+    color: #ff5a5f;
+  }
+  
+  .back-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #ff5a5f;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .back-button:hover {
+    background-color: #e0484d;
+  }
+
+  [aria-busy="true"] {
+    opacity: 0.7;
+    cursor: progress;
+  }
+
+
+.image-gallery {
+    display: grid;
+    grid-template-columns: 1fr 1fr; 
+    gap: 10px;
+    margin-top: 20px;
+    width: 100%;
+}
+
+.ver-fotos-btn {
+    margin-top: 16px;
+    background-color: #00c98c;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    font-size: 16px;
+    font-weight: 500;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .ver-fotos-btn:hover {
+    background-color: #00c98c;
+  }
+  
+  .ver-fotos-btn i {
+    font-size: 18px;
+  }
+  
+
+.main-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+    aspect-ratio: 16/9;
+}
+
+
+.grid-images {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 10px;
+    width: 100%;
+    height: 100%;
+}
+
+.grid-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+    aspect-ratio: 16/9;
+}
+
+.availability-section {
+    margin-top: 30px;
+    text-align: center;
+  }
+  
+  .availability-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #333;
+  }
+  
+
+.view-more-btn {
+    align-self: flex-end;
+    margin-top: 10px;
+    padding: 10px 18px;
+    background-color: #00c98c;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background 0.3s ease-in-out;
+}
+
+.view-more-btn:hover,
+.view-more-btn:focus {
+    background-color: #e0484d;
+    outline: none;
+}
+
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: white;
+    padding: 43px;
+    border-radius: 10px;
+    z-index: 1001;
+    width: 90%;
+    max-width: 900px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    box-sizing: border-box;
+    position: relative;
+}
+
+body.modal-open {
+    overflow: hidden;
+}
+
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: transparent;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    color: #ff5a5f;
+}
+
+.close-btn:hover,
+.close-btn:focus {
+    color: #e0484d;
+    outline: none;
+}
+
+
+.slider {
+    width: 100%;
+    position: relative;
+}
+
+.slick-slide {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.slider-item {
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    padding-top: 56.25%;
+    border-radius: 10px;
+}
+
+.slider-item img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+
+.slick-prev,
+.slick-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 50px;
+    height: 50px;
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    z-index: 10;
+    transition: background 0.3s ease-in-out;
+}
+
+.slick-prev {
+    left: -25px;
+}
+
+.slick-next {
+    right: -25px;
+}
+
+.slick-prev::before,
+.slick-next::before {
+    font-size: 30px;
+    opacity: 1;
+    color: white;
+    filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.5));
+}
+
+.slick-prev:hover,
+.slick-next:hover {
+    background: rgba(0, 0, 0, 0.8);
+}
+
+
+.features-section {
+    margin-top: 20px;
+}
+
+.features-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.features-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+}
+
+.feature-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1rem;
+    padding: 10px;
+    border-radius: 8px;
+    transition: background 0.3s ease;
+}
+
+
+
+.feature-icon svg {
+    width: 24px;
+    height: 24px;
+    color: #00c98c;
+    flex-shrink: 0;
+}
+
+/* Overlay de fondo oscuro */
+.calendar-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6); /* Fondo oscurecido */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  /* Contenedor principal de la modal */
+  .calendar-modal-content {
+    position: relative;
+    background-color: #ffffff;
+    padding: 30px 20px;
+    width: 90%;
+    max-width: 700px;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: fadeInScale 0.3s ease;
+  }
+  
+  /* Contenido interno de la modal */
+  .calendar-modal-inner {
+    position: relative;
+  }
+  
+  /* Botón para cerrar la modal */
+  .calendar-close-btn {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    font-size: 1.5rem;
+    background: transparent;
+    border: none;
+    color: #333;
+    cursor: pointer;
+    transition: color 0.2s ease;
+  }
+  
+  .calendar-close-btn:hover {
+    color: #f44336;
+  }
+  
+  /* Animación suave */
+  @keyframes fadeInScale {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  
+
+
+@media (max-width: 1024px) {
+    .image-gallery {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .main-image {
+        width: 100%;
+        height: auto;
+    }
+
+    .grid-images {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 5px;
+    }
+
+    .grid-image {
+        width: calc(50% - 5px);
+        height: auto;
+    }
+
+    .modal-content {
+        width: 90%;
+        padding: 15px;
+    }
+
+    .slick-prev {
+        left: -10px;
+    }
+
+    .slick-next {
+        right: -10px;
+    }
+
+    .slick-prev::before,
+    .slick-next::before {
+        font-size: 28px;
+    }
+}
+
+@media (max-width: 600px) {
+    .product-title {
+        font-size: 2rem;
+    }
+
+    .product-category {
+        font-size: 1rem;
+    }
+
+    .product-address {
+        font-size: 0.9rem;
+    }
+
+    .grid-image {
+        width: 100%;
+    }
+
+    .slick-prev,
+    .slick-next {
+        width: 40px;
+        height: 40px;
+    }
+
+    .slick-prev::before,
+    .slick-next::before {
+        font-size: 24px;
+    }
+}
+@media (max-width: 600px) {
+    .product-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        flex-wrap: nowrap;
+    }
+
+    .product-title h2 {
+        font-size: 1rem;
+        flex-grow: 1;
+        margin-right: 10px;
+    }
+
+    .product-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .favorite-btn,
+    .back-btn {
+        width: 30px;
+        height: 30px;
+    }
+
+    .favorite-btn svg,
+    .back-btn svg {
+        width: 24px;
+        height: 24px;
+    }
+
+    
+}
