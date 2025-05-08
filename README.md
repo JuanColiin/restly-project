@@ -1,7 +1,7 @@
 
 # Restly — Plataforma de Reservas de Alojamientos
 
-**Restly** es una plataforma web diseñada para facilitar la búsqueda, reserva y gestión de alojamientos en línea. Con un enfoque intuitivo y moderno, permite a los usuarios encontrar el lugar ideal para sus viajes personales o de negocios, con funcionalidades como reseñas, filtros personalizados y gestión de favoritos.. Está construida con **React (JSX) + Vite** en el frontend y **Spring Boot + MySQL** en el backend. Incluye autenticación, filtrado, reservas, reseñas, favoritos y un completo panel administrativo.
+**Restly** es una plataforma web diseñada para facilitar la búsqueda, reserva y gestión de alojamientos en línea. Con un enfoque intuitivo y moderno, permite a los usuarios encontrar el lugar ideal para sus viajes personales o de negocios. Está construida con **React (JSX) + Vite** en el frontend y **Spring Boot + MySQL** en el backend. Incluye autenticación, filtrado, reservas, reseñas, favoritos y un completo panel administrativo.
 
 ---
 
