@@ -101,7 +101,7 @@ public class ProductInitializer implements CommandLineRunner {
 
                 new ProductDefinition(
                         "Hotel Tequendama Bogotá",
-                        "Iconico hotel en el centro de Bogotá",
+                        "Tequendama Suites Bogota es un alojamiento muy bien ubicado en el centro de Bogotá que dispone de wifi gratis en todo el alojamiento, centro de fitness y parking privado gratis. El alojamiento se encuentra en el barrio de Centro Internacional y ofrece sauna, hammam y restaurante. El alojamiento ofrece servicio de habitaciones, recepción 24 horas y cambio de moneda.",
                         "Hotel 5 estrellas en el corazón de la capital",
                         "Bogotá",
                         "Bogotá D.C.",
@@ -150,7 +150,7 @@ public class ProductInitializer implements CommandLineRunner {
 
                 new ProductDefinition(
                         "Sofitel Legend Santa Clara",
-                        "Ex convento colonial de lujo",
+                        "Este antiguo monasterio del siglo XVII ofrece habitaciones con balcón privado con vistas a los jardines del hotel o al Caribe. Todas las habitaciones del Sofitel Legend Santa Clara Cartagena incluyen TV de pantalla plana y WiFi gratuita. La plaza de Santo Domingo se encuentra a 600 metros y el aeropuerto Rafael Núñez, a 4,5 km.",
                         "Experiencia histórica en Cartagena",
                         "Cartagena",
                         "Bolívar",
@@ -174,7 +174,7 @@ public class ProductInitializer implements CommandLineRunner {
 
                 new ProductDefinition(
                         "Casa Panorama ",
-                        "Panorama Pueblo Tapao  ubicado a tan solo 10 minutos del parque del café y a 30 minutos de Aeropuerto de Armenia",
+                        "Panorama Pueblo Tapao está en Armenia, a 4,1 km de Parque Nacional del Café y a 23 km de Parque Nacional de la Cultura Agropecuaria (PANACA), y ofrece alojamiento con wifi gratis, jardín con terraza y vistas a la montaña.",
                         "Experiencia en una casa de campo tipica en Pueblo Tapao",
                         "Montenegro",
                         "Quindío",
